@@ -1,0 +1,15 @@
+.login-button {
+  color: #1cc29f;
+  padding: 4px;
+  background-color: white;
+  border-radius: 4px;
+  position: relative;
+}
+
+.signup-button {
+  position: relative;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: #1cc29f;
+  color: white;
+}
