@@ -1,6 +1,8 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import { BrowserRouter } from "react-router-dom";
+import Main from "./Components/Main";
 
 class App extends React.Component {
   constructor(props) {
@@ -21,13 +23,9 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome</h1>
-        </header>
-        <p className="App-intro">{this.state.message}</p>
-      </div>
+      <BrowserRouter>
+        <div>{<Main />}</div>
+      </BrowserRouter>
     );
   }
 }

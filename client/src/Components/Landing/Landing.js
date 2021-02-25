@@ -1,19 +1,26 @@
 import React from "react";
 import "./Landing.css";
+import { Link } from "react-router-dom";
 
 class Landing extends React.Component {
   render() {
     return (
       //React.createElement()
-      <div className="nav-bar">
-        <p>Splitwise</p>
-        <button type="button" id="login-button" className="login-button">
-          Log in
-        </button>
-        <button type="button" id="signup-button" className="signup-button">
-          Sign Up
-        </button>
-      </div>
+      <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand">Splitwise</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li class="active">
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/signup">Sign up</Link>
+            </li>
+          </ul>
+        </div>
+      </nav>
     );
   }
 }
