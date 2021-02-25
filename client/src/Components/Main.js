@@ -3,6 +3,7 @@ import { Route } from "react-router-dom";
 import Login from "./Login/Login";
 import Signup from "./Signup/Signup";
 import Landing from "./Landing/Landing";
+import Dashboard from "./Dashboard/Dashboard";
 
 class Main extends Component {
   render() {
@@ -11,6 +12,7 @@ class Main extends Component {
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/landing" component={Landing} />
+        <Route path="/dashboard" component={Dashboard} />
       </div>
     );
   }
