@@ -1,15 +1,31 @@
-.login-button {
-  color: #1cc29f;
-  padding: 4px;
-  background-color: white;
-  border-radius: 4px;
-  position: relative;
+span {
+  width: 100%;
+  display: inline-block;
+}
+span.align-right {
+  text-align: right;
 }
 
-.signup-button {
-  position: relative;
-  padding: 4px;
-  border-radius: 4px;
-  background-color: #1cc29f;
+a.signup {
+  font-size: 16px;
   color: white;
+  font: mont;
+  display: block;
+  width: 115px;
+  height: 25px;
+  background: rgba(255, 166, 0, 0.726);
+  padding: 8px;
+  padding-right: 5px;
+  border-radius: 5px;
+  text-align: center;
+}
+a.login {
+  color: teal;
+  display: block;
+  width: 115px;
+  height: 25px;
+  text-align: center;
+  font: mont;
+  padding: 8px;
+  font-family: "semibold";
 }

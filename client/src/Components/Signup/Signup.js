@@ -42,7 +42,7 @@ class Signup extends Component {
   };
 
   submitSignup(e) {
-    let headers = new Headers();
+    //let headers = new Headers();
     e.preventDefault();
     const data = {
       fullname: this.state.fullname,
@@ -67,7 +67,21 @@ class Signup extends Component {
   render() {
     return (
       <div class="container">
-        <p>Introduce yourself</p>
+        <div class="login_links">
+          <h3>Introduce yourself</h3>
+          <span class="align-right">
+            <div class="login_links">
+              <a class="login" href="/login">
+                Log in
+              </a>
+
+              <a class="signup" href="/signup">
+                Sign up
+              </a>
+            </div>
+          </span>
+        </div>
+
         <div class="login-form">
           <div class="main-div">
             <label>Name</label>
@@ -95,7 +109,7 @@ class Signup extends Component {
             <label>Passowrd</label>
             <div class="form-group">
               <input
-                type="passowrd"
+                type="password"
                 class="form-control"
                 name="password"
                 onChange={this.passwordChangeHandler}

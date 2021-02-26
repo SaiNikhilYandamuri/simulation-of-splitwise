@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Component } from "react";
+import "../Landing/Landing.css";
 
 class Login extends Component {
   constructor(props) {
@@ -34,7 +35,7 @@ class Login extends Component {
   };
 
   submitLogin(e) {
-    let headers = new Headers();
+    //let headers = new Headers();
     e.preventDefault();
     const data = {
       email: this.state.email,
@@ -55,7 +56,21 @@ class Login extends Component {
   render() {
     return (
       <div class="container">
-        <h2>Welcome to splitwise</h2>
+        <div class="login_links">
+          <h2>Welcome to splitwise</h2>
+          <span class="align-right">
+            <div class="login_links">
+              <a class="login" href="/login">
+                Log in
+              </a>
+
+              <a class="signup" href="/signup">
+                Sign up
+              </a>
+            </div>
+          </span>
+        </div>
+
         <div class="login-form">
           <div class="main-div">
             <label>Email</label>
@@ -72,7 +87,7 @@ class Login extends Component {
             <label>Passowrd</label>
             <div class="form-group">
               <input
-                type="passowrd"
+                type="password"
                 class="form-control"
                 name="password"
                 onChange={this.passwordChangeHandler}
