@@ -43,15 +43,26 @@ class Login extends Component {
     };
 
     //axios.defaults.withCredentials = true;
+    if (this.verifyEmailAddressFormat(data.email)) {
+      axios
+        .post("http://localhost:4000/login", data)
+        .then((response) => {
+          console.log(response.status);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      alert("Email format wrong!");
+    }
+  }
 
-    axios
-      .post("http://localhost:4000/login", data)
-      .then((response) => {
-        console.log(response.status);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  verifyEmailAddressFormat(email) {
+    if (email.includes("@") && email.includes(".com")) {
+      return true;
+    } else {
+      return false;
+    }
   }
   render() {
     return (
