@@ -1,25 +1,20 @@
-import axios from "axios";
-import { Component } from "react";
-import "../Landing/Landing.css";
+import axios from 'axios';
+import { Component, React } from 'react';
+import alert from 'alert';
+import '../Landing/Landing.css';
 
 class Login extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      email: "",
-      password: "",
-      authFlag: false,
+      email: '',
+      password: '',
     };
     this.emailChangeHandler = this.emailChangeHandler.bind(this);
     this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
     this.submitLogin = this.submitLogin.bind(this);
-  }
-
-  componentWillMount() {
-    this.setState({
-      authFlag: false,
-    });
+    this.verifyEmailAddressFormat = this.verifyEmailAddressFormat.bind(this);
   }
 
   emailChangeHandler = (e) => {
@@ -34,18 +29,24 @@ class Login extends Component {
     });
   };
 
+  verifyEmailAddressFormat = (email) => {
+    if (email.includes('@') && email.includes('.com')) {
+      return true;
+    }
+    return false;
+  };
+
   submitLogin(e) {
-    //let headers = new Headers();
     e.preventDefault();
+    const { email, password } = this.state;
     const data = {
-      email: this.state.email,
-      passowrd: this.state.password,
+      email,
+      password,
     };
 
-    //axios.defaults.withCredentials = true;
     if (this.verifyEmailAddressFormat(data.email)) {
       axios
-        .post("http://localhost:4000/login", data)
+        .post('http://localhost:4000/login', data)
         .then((response) => {
           console.log(response.status);
         })
@@ -53,58 +54,57 @@ class Login extends Component {
           console.log(err);
         });
     } else {
-      alert("Email format wrong!");
+      alert('Email format wrong!');
     }
   }
 
-  verifyEmailAddressFormat(email) {
-    if (email.includes("@") && email.includes(".com")) {
-      return true;
-    } else {
-      return false;
-    }
-  }
   render() {
     return (
-      <div class="container">
-        <div class="login_links">
+      <div className="container">
+        <div className="login_links">
           <h2>Welcome to splitwise</h2>
-          <span class="align-right">
-            <div class="login_links">
-              <a class="login" href="/login">
+          <span className="align-right">
+            <div className="login_links">
+              <a className="login" href="/login">
                 Log in
               </a>
 
-              <a class="signup" href="/signup">
+              <a className="signup" href="/signup">
                 Sign up
               </a>
             </div>
           </span>
         </div>
 
-        <div class="login-form">
-          <div class="main-div">
-            <label>Email</label>
-            <div class="form-group">
-              <input
-                type="email"
-                class="form-control"
-                name="email"
-                onChange={this.emailChangeHandler}
-                autoFocus
-                required
-              />
+        <div className="login-form">
+          <div className="main-div">
+            <div className="form-group">
+              <label htmlFor="email">
+                Email
+                <input
+                  type="email"
+                  className="form-control"
+                  name="email"
+                  onChange={this.emailChangeHandler}
+                  required
+                />
+              </label>
             </div>
-            <label>Passowrd</label>
-            <div class="form-group">
-              <input
-                type="password"
-                class="form-control"
-                name="password"
-                onChange={this.passwordChangeHandler}
-              />
+
+            <div className="form-group">
+              <label htmlFor="passowrd">
+                Passowrd
+                <input
+                  type="password"
+                  className="form-control"
+                  name="password"
+                  onChange={this.passwordChangeHandler}
+                />
+              </label>
             </div>
-            <button onClick={this.submitLogin}>Log in</button>
+            <button type="button" onClick={this.submitLogin}>
+              Log in
+            </button>
           </div>
         </div>
       </div>

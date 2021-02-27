@@ -1,30 +1,23 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import { BrowserRouter } from "react-router-dom";
-import Main from "./Components/Main";
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import './App.css';
+
+import Main from './Components/Main';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { message: "" };
+    this.state = {};
   }
 
-  callApi() {
-    fetch("http://localhost:4000")
-      .then((res) => res.text())
-      .then((res) => this.setState({ message: res }))
-      .catch((err) => err);
-  }
-
-  componentDidMount() {
-    this.callApi();
-  }
+  componentDidMount() {}
 
   render() {
     return (
       <BrowserRouter>
-        <div>{<Main />}</div>
+        <div>
+          <Main />
+        </div>
       </BrowserRouter>
     );
   }

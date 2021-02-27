@@ -37,7 +37,7 @@ app.post("/signup", function (req, res) {
   console.log(req.body);
   const fullname = req.body.fullname;
   const email = req.body.email;
-  const password = req.body.passowrd;
+  const password = req.body.password;
   const insertUserQuery =
     "INSERT INTO user (email, fullname, password) VALUES ('" +
     email +
@@ -58,7 +58,7 @@ app.post("/signup", function (req, res) {
 app.post("/login", function (req, res) {
   //console.log(req.body);
   const email = req.body.email;
-  const password = req.body.passowrd;
+  const password = req.body.password;
   const selectLoginQuery =
     "Select * from user where email='" +
     email +
