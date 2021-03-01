@@ -50,8 +50,16 @@ app.post("/signup", function (req, res) {
   console.log(insertUserQuery);
 
   con.query(insertUserQuery, (err, result) => {
-    if (err) throw err;
-    console.log("Inserted");
+    //console.log(err.code);
+    if (err) {
+      if (err.code === "ER_DUP_ENTRY") {
+        console.log("User already present!!");
+        res.status(409).json({ message: "User already exists!" });
+      }
+    } else {
+      console.log("Inserted");
+      res.status(200).json({ message: "Inserted" });
+    }
   });
 });
 
@@ -69,8 +77,14 @@ app.post("/login", function (req, res) {
   con.query(selectLoginQuery, (err, result) => {
     if (err) throw err;
     if (result) {
-      res.writeHead(200);
-      res.end("Successful Login");
+      if (result.length) {
+        res.writeHead(200);
+        res.end("Successful Login");
+      } else if (result.length === 0) {
+        res.status(404).json({ message: "Invalid credentials!" });
+      }
+
+      console.log(result);
     }
   });
 });

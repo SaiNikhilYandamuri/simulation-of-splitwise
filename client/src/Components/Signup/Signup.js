@@ -1,6 +1,7 @@
 import { Component, React } from 'react';
 import axios from 'axios';
 import alert from 'alert';
+import { Redirect } from 'react-router';
 
 class Signup extends Component {
   constructor(props) {
@@ -10,6 +11,7 @@ class Signup extends Component {
       fullname: '',
       email: '',
       password: '',
+      redirect: null,
     };
     this.fullnameChangeHandler = this.fullnameChangeHandler.bind(this);
     this.emailChangeHandler = this.emailChangeHandler.bind(this);
@@ -59,10 +61,12 @@ class Signup extends Component {
       axios
         .post('http://localhost:4000/signup', data)
         .then((response) => {
-          console.log(response.status);
+          console.log(response);
+          const redirectToHome = <Redirect to="/dashboard" />;
+          this.setState({ redirect: redirectToHome });
         })
         .catch((err) => {
-          console.log(err);
+          alert(err.response.data.message);
         });
     } else {
       alert('Email format wrong!');
@@ -71,66 +75,70 @@ class Signup extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="login_links">
-          <h3>Introduce yourself</h3>
-          <span className="align-right">
-            <div className="login_links">
-              <a className="login" href="/login">
-                Log in
-              </a>
+      <div>
+        {/* eslint-disable-next-line react/destructuring-assignment */}
+        {this.state.redirect};
+        <div className="container">
+          <div className="login_links">
+            <h3>Introduce yourself</h3>
+            <span className="align-right">
+              <div className="login_links">
+                <a className="login" href="/login">
+                  Log in
+                </a>
 
-              <a className="signup" href="/signup">
-                Sign up
-              </a>
-            </div>
-          </span>
-        </div>
+                <a className="signup" href="/signup">
+                  Sign up
+                </a>
+              </div>
+            </span>
+          </div>
 
-        <div className="login-form">
-          <div className="main-div">
-            <div className="form-group">
-              <label htmlFor="fullname">
-                Name
-                <input
-                  type="text"
-                  className="form-control"
-                  name="fullname"
-                  onChange={this.fullnameChangeHandler}
-                  pattern="[A-Za-z\s]{1,32}"
-                  required
-                />
-              </label>
-            </div>
+          <div className="login-form">
+            <div className="main-div">
+              <div className="form-group">
+                <label htmlFor="fullname">
+                  Name
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="fullname"
+                    onChange={this.fullnameChangeHandler}
+                    pattern="[A-Za-z\s]{1,32}"
+                    required
+                  />
+                </label>
+              </div>
 
-            <div className="form-group">
-              <label htmlFor="email">
-                Email
-                <input
-                  type="email"
-                  className="form-control"
-                  name="email"
-                  onChange={this.emailChangeHandler}
-                  required
-                />
-              </label>
-            </div>
+              <div className="form-group">
+                <label htmlFor="email">
+                  Email
+                  <input
+                    type="email"
+                    className="form-control"
+                    name="email"
+                    onChange={this.emailChangeHandler}
+                    required
+                  />
+                </label>
+              </div>
 
-            <div className="form-group">
-              <label htmlFor="passowrd">
-                Passowrd
-                <input
-                  type="password"
-                  className="form-control"
-                  name="password"
-                  onChange={this.passwordChangeHandler}
-                  required
-                />
-              </label>
+              <div className="form-group">
+                <label htmlFor="passowrd">
+                  Passowrd
+                  <input
+                    type="password"
+                    className="form-control"
+                    name="password"
+                    onChange={this.passwordChangeHandler}
+                    required
+                  />
+                </label>
+              </div>
+              <button type="button" onClick={this.submitSignup}>
+                Sign me up!
+              </button>
             </div>
-            <button type="button" onClick={this.submitSignup}>
-              Sign me up!
-            </button>
           </div>
         </div>
       </div>

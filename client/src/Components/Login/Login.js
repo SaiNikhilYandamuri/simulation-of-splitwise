@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Component, React } from 'react';
 import alert from 'alert';
+import { Redirect } from 'react-router';
 import '../Landing/Landing.css';
 
 class Login extends Component {
@@ -10,6 +11,7 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
+      redirect: null,
     };
     this.emailChangeHandler = this.emailChangeHandler.bind(this);
     this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
@@ -49,9 +51,11 @@ class Login extends Component {
         .post('http://localhost:4000/login', data)
         .then((response) => {
           console.log(response.status);
+          const redirectToHome = <Redirect to="/dashboard" />;
+          this.setState({ redirect: redirectToHome });
         })
         .catch((err) => {
-          console.log(err);
+          alert(err.response.data.message);
         });
     } else {
       alert('Email format wrong!');
@@ -60,51 +64,55 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="login_links">
-          <h2>Welcome to splitwise</h2>
-          <span className="align-right">
-            <div className="login_links">
-              <a className="login" href="/login">
+      <div>
+        {/* eslint-disable-next-line react/destructuring-assignment */}
+        {this.state.redirect};
+        <div className="container">
+          <div className="login_links">
+            <h2>Welcome to splitwise</h2>
+            <span className="align-right">
+              <div className="login_links">
+                <a className="login" href="/login">
+                  Log in
+                </a>
+
+                <a className="signup" href="/signup">
+                  Sign up
+                </a>
+              </div>
+            </span>
+          </div>
+
+          <div className="login-form">
+            <div className="main-div">
+              <div className="form-group">
+                <label htmlFor="email">
+                  Email
+                  <input
+                    type="email"
+                    className="form-control"
+                    name="email"
+                    onChange={this.emailChangeHandler}
+                    required
+                  />
+                </label>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="passowrd">
+                  Passowrd
+                  <input
+                    type="password"
+                    className="form-control"
+                    name="password"
+                    onChange={this.passwordChangeHandler}
+                  />
+                </label>
+              </div>
+              <button type="button" onClick={this.submitLogin}>
                 Log in
-              </a>
-
-              <a className="signup" href="/signup">
-                Sign up
-              </a>
+              </button>
             </div>
-          </span>
-        </div>
-
-        <div className="login-form">
-          <div className="main-div">
-            <div className="form-group">
-              <label htmlFor="email">
-                Email
-                <input
-                  type="email"
-                  className="form-control"
-                  name="email"
-                  onChange={this.emailChangeHandler}
-                  required
-                />
-              </label>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="passowrd">
-                Passowrd
-                <input
-                  type="password"
-                  className="form-control"
-                  name="password"
-                  onChange={this.passwordChangeHandler}
-                />
-              </label>
-            </div>
-            <button type="button" onClick={this.submitLogin}>
-              Log in
-            </button>
           </div>
         </div>
       </div>
