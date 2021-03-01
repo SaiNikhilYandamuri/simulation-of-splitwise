@@ -50,8 +50,12 @@ app.post("/signup", function (req, res) {
   console.log(insertUserQuery);
 
   con.query(insertUserQuery, (err, result) => {
-    if (err) throw err;
-    console.log("Inserted");
+    console.log(err.code);
+    if (err.code === "ER_DUP_ENTRY") {
+      console.log("User already present!!");
+    } else {
+      console.log("Inserted");
+    }
   });
 });
 
