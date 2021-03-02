@@ -125,6 +125,44 @@ app.post("/login", function (req, res) {
   });
 });
 
+app.get("/mygroups", function (req, res) {
+  const useremail = req.body.email;
+  const getGroupQuery =
+    "select * from usergroup where email='" + useremail + "'";
+  con.query(getGroupQuery, (err, result) => {
+    if (err) throw err;
+    Object.keys(result).forEach(function (key) {
+      const row = result[key];
+      console.log(row.group_name);
+    });
+  });
+});
+
+app.post("/addgroup", function (req, res) {
+  const groupName = req.body.groupName;
+  const users = req.body.users;
+  const insertGroup =
+    "insert into groupinfo(group_name, group_pic) values('" +
+    groupName +
+    "','picture')";
+  const usergroupQUery =
+    "insert into usergroup(email,group_name,inviteacceptance) values('" +
+    users +
+    "','" +
+    groupName +
+    "',0)";
+  console.log(insertGroup);
+  console.log(usergroupQUery);
+  con.query(insertGroup, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+  });
+  con.query(usergroupQUery, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+  });
+});
+
 app.listen(port, () => {
   console.log("Server connected to port 4000");
 });
