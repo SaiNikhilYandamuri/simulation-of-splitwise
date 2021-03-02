@@ -2,8 +2,11 @@ import axios from 'axios';
 import { Component, React } from 'react';
 import alert from 'alert';
 import cookie from 'react-cookies';
-import { Redirect } from 'react-router';
+import Navbar from 'react-bootstrap/Navbar';
+import Button from 'react-bootstrap/Button';
 import '../Landing/Landing.css';
+import Nav from 'react-bootstrap/esm/Nav';
+import Form from 'react-bootstrap/Form';
 
 class Login extends Component {
   constructor(props) {
@@ -62,62 +65,49 @@ class Login extends Component {
   }
 
   render() {
-    let redirectVar = null;
-    if (cookie.load('cookie')) {
-      console.log('Hello');
-      redirectVar = <Redirect to="/dashboard" />;
-    }
     return (
       <div>
-        {redirectVar}
-        <div className="container">
-          <div className="login_links">
-            <h2>Welcome to splitwise</h2>
-            <span className="align-right">
-              <div className="login_links">
-                <a className="login" href="/login">
-                  Log in
-                </a>
+        <Navbar bg="success" expand="lg">
+          <Navbar.Brand href="#home">Splitwise</Navbar.Brand>
+          <Nav className="mr-auto">
+            <Nav.Link href="#home" />
+          </Nav>
+          <Button variant="success" href="./login">
+            Login
+          </Button>
+          <Button variant="danger" href="./signup">
+            Signup
+          </Button>{' '}
+        </Navbar>
+        <center>
+          <Form>
+            <Form.Text className="text-muted">Welcome to Splitwise</Form.Text>
 
-                <a className="signup" href="/signup">
-                  Sign up
-                </a>
-              </div>
-            </span>
-          </div>
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control
+                size="sm"
+                type="email"
+                placeholder="Enter email"
+                onChange={this.emailChangeHandler}
+              />
+            </Form.Group>
 
-          <div className="login-form">
-            <div className="main-div">
-              <div className="form-group">
-                <label htmlFor="email">
-                  Email
-                  <input
-                    type="email"
-                    className="form-control"
-                    name="email"
-                    onChange={this.emailChangeHandler}
-                    required
-                  />
-                </label>
-              </div>
+            <Form.Group controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                size="sm"
+                type="password"
+                placeholder="Password"
+                onChange={this.passwordChangeHandler}
+              />
+            </Form.Group>
 
-              <div className="form-group">
-                <label htmlFor="passowrd">
-                  Passowrd
-                  <input
-                    type="password"
-                    className="form-control"
-                    name="password"
-                    onChange={this.passwordChangeHandler}
-                  />
-                </label>
-              </div>
-              <button type="button" onClick={this.submitLogin}>
-                Log in
-              </button>
-            </div>
-          </div>
-        </div>
+            <Button variant="danger" type="submit" onClick={this.submitLogin}>
+              Log in
+            </Button>
+          </Form>
+        </center>
       </div>
     );
   }

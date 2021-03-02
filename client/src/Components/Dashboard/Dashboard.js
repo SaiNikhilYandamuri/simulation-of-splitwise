@@ -1,37 +1,24 @@
 import { React } from 'react';
+import Navbar from 'react-bootstrap/Navbar';
+import Nav from 'react-bootstrap/Nav';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 import './Dashboard.css';
 
 const Dashboard = function () {
   return (
     <div className="dashboard">
-      <div className="dashboard header">
-        <div className="topbar">
-          <h1>Dashboard</h1>
-          <div className="actions">
-            <a className="button-expense" data-toggle="modal" href="#add_bill">
-              Add an expense
-            </a>
-            <a className="button-settleup" data-toggle="modal" href="#settle_up_form">
-              Settle up
-            </a>
-          </div>
-        </div>
-      </div>
-      <div className="total_balances">
-        <div className="block">
-          <div className="title">total balance</div>
+      <Navbar bg="success" expand="lg">
+        <Navbar.Brand href="#home">Splitwise</Navbar.Brand>
+        <Nav className="mr-auto">
+          <Nav.Link href="#home" />
+        </Nav>
+        <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+          <NavDropdown.Item href="">Profile</NavDropdown.Item>
 
-          <span className="negative" />
-        </div>
-        <div className="block">
-          <div className="title">you owe</div>
-          <span className="negative" />
-        </div>
-        <div className="block">
-          <div className="title">you are owed</div>
-          <span className="neutral" />
-        </div>
-      </div>
+          <NavDropdown.Divider />
+          <NavDropdown.Item href="">Logout</NavDropdown.Item>
+        </NavDropdown>
+      </Navbar>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 // eslint-disable-next-line import/no-named-as-default
 import reportWebVitals from './reportWebVitals';
 import './index.css';
