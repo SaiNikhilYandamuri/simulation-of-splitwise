@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Component, React } from 'react';
 import alert from 'alert';
+import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import '../Landing/Landing.css';
 
@@ -11,7 +12,6 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      redirect: null,
     };
     this.emailChangeHandler = this.emailChangeHandler.bind(this);
     this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
@@ -51,8 +51,7 @@ class Login extends Component {
         .post('http://localhost:4000/login', data)
         .then((response) => {
           console.log(response.status);
-          const redirectToHome = <Redirect to="/dashboard" />;
-          this.setState({ redirect: redirectToHome });
+          console.log(cookie);
         })
         .catch((err) => {
           alert(err.response.data.message);
@@ -63,10 +62,14 @@ class Login extends Component {
   }
 
   render() {
+    let redirectVar = null;
+    if (cookie.load('cookie')) {
+      console.log('Hello');
+      redirectVar = <Redirect to="/dashboard" />;
+    }
     return (
       <div>
-        {/* eslint-disable-next-line react/destructuring-assignment */}
-        {this.state.redirect};
+        {redirectVar}
         <div className="container">
           <div className="login_links">
             <h2>Welcome to splitwise</h2>

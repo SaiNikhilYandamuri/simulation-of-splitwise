@@ -4,8 +4,20 @@ const port = 4000;
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const mysql = require("mysql");
+const session = require("express-session");
+const cookieParser = require("cookie-parser");
 
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+
+app.use(
+  session({
+    secret: "compe273_lab1_splitwise",
+    resave: false,
+    saveUninitialized: false,
+    duration: 60 * 60 * 1000,
+    activeDuration: 5 * 60 * 1000,
+  })
+);
 
 app.use(bodyParser.json());
 app.use(express.json());
@@ -58,7 +70,19 @@ app.post("/signup", function (req, res) {
       }
     } else {
       console.log("Inserted");
-      res.status(200).json({ message: "Inserted" });
+      res.cookie("cookie", "admin", {
+        maxAge: 900000,
+        httpOnly: false,
+        path: "/",
+      });
+      const user = { username: req.body.email, password: req.body.password };
+      req.session.user = user;
+
+      res.writeHead(200, {
+        "Content-Type": "text/plain",
+      });
+      res.end("Successful Login");
+      //res.status(200).json({ message: "Inserted" });
     }
   });
 });
@@ -78,8 +102,20 @@ app.post("/login", function (req, res) {
     if (err) throw err;
     if (result) {
       if (result.length) {
-        res.writeHead(200);
+        res.cookie("cookie", "admin", {
+          maxAge: 900000,
+          httpOnly: false,
+          path: "/",
+        });
+        const user = { username: req.body.email, password: req.body.password };
+        console.log("Inside login if");
+        req.session.user = user;
+        res.writeHead(200, {
+          "Content-Type": "text/plain",
+        });
         res.end("Successful Login");
+        //console.log(res);
+        console.log(req.session);
       } else if (result.length === 0) {
         res.status(404).json({ message: "Invalid credentials!" });
       }

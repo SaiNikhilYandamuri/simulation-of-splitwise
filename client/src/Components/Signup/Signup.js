@@ -2,6 +2,7 @@ import { Component, React } from 'react';
 import axios from 'axios';
 import alert from 'alert';
 import { Redirect } from 'react-router';
+import cookie from 'react-cookies';
 
 class Signup extends Component {
   constructor(props) {
@@ -11,7 +12,6 @@ class Signup extends Component {
       fullname: '',
       email: '',
       password: '',
-      redirect: null,
     };
     this.fullnameChangeHandler = this.fullnameChangeHandler.bind(this);
     this.emailChangeHandler = this.emailChangeHandler.bind(this);
@@ -62,8 +62,7 @@ class Signup extends Component {
         .post('http://localhost:4000/signup', data)
         .then((response) => {
           console.log(response);
-          const redirectToHome = <Redirect to="/dashboard" />;
-          this.setState({ redirect: redirectToHome });
+          console.log(cookie);
         })
         .catch((err) => {
           alert(err.response.data.message);
@@ -74,10 +73,14 @@ class Signup extends Component {
   }
 
   render() {
+    let redirectVar = null;
+    if (cookie.load('cookie')) {
+      console.log('Hello');
+      redirectVar = <Redirect to="/dashboard" />;
+    }
     return (
       <div>
-        {/* eslint-disable-next-line react/destructuring-assignment */}
-        {this.state.redirect};
+        {redirectVar}
         <div className="container">
           <div className="login_links">
             <h3>Introduce yourself</h3>
