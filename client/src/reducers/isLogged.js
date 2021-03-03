@@ -1,11 +1,15 @@
-const loggedReducer = (state = false, action) => {
+const loggedReducer = (state = { username: '' }, action) => {
   switch (action.type) {
     case 'LOG_IN':
-      return true;
+      // eslint-disable-next-line no-param-reassign
+      state = { username: action.payload };
+      return state;
     case 'SIGN_IN':
-      return true;
+      // eslint-disable-next-line no-param-reassign
+      state = { username: action.payload };
+      return state;
     case 'LOG_OUT':
-      return false;
+      return state;
     default:
       console.log('here');
       return state;

@@ -1,4 +1,4 @@
-const logged = () => ({ type: 'LOG_IN' });
+const logged = (username) => ({ type: 'LOG_IN', payload: username });
 
-const signed = () => ({ type: 'SIGN_IN' });
+const signed = (username) => ({ type: 'SIGN_IN', payload: username });
 export { signed, logged as default };
