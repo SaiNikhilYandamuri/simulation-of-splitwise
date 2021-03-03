@@ -70,18 +70,15 @@ app.post("/signup", function (req, res) {
       }
     } else {
       console.log("Inserted");
-      res.cookie("cookie", "admin", {
+      /*res.cookie("cookie", "admin", {
         maxAge: 900000,
         httpOnly: false,
         path: "/",
-      });
+      });*/
       const user = { username: req.body.email, password: req.body.password };
       req.session.user = user;
+      res.status(200).json({ fullname: req.body.fullname });
 
-      res.writeHead(200, {
-        "Content-Type": "text/plain",
-      });
-      res.end("Successful Login");
       //res.status(200).json({ message: "Inserted" });
     }
   });
@@ -102,17 +99,16 @@ app.post("/login", function (req, res) {
     if (err) throw err;
     if (result) {
       if (result.length) {
-        res.cookie("cookie", "admin", {
+        /*res.cookie("cookie", "admin", {
           maxAge: 900000,
           httpOnly: false,
           path: "/",
-        });
+        });*/
         const user = { username: req.body.email, password: req.body.password };
         console.log("Inside login if");
         req.session.user = user;
-        res.writeHead(200, {
-          "Content-Type": "text/plain",
-        });
+        res.status(200).json({ fullname: result[0].fullname });
+
         res.end("Successful Login");
         //console.log(res);
         console.log(req.session);
