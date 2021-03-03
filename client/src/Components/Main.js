@@ -1,7 +1,7 @@
 import { React } from 'react';
 import { Route } from 'react-router-dom';
-import Login from './Login/Login';
-import Signup from './Signup/Signup';
+import Login from './Login';
+import Signup from './Signup';
 import Landing from './Landing/Landing';
 import Dashboard from './Dashboard/Dashboard';
 
