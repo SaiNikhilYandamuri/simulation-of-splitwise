@@ -15,9 +15,9 @@ function MyGroups() {
 
   return (
     <div>
-      <ListGroup>
+      <ListGroup variant="flush">
         {groups.map((item) => (
-          <ListGroup.Item action href="./group/{item}" key={item}>
+          <ListGroup.Item href="./group/{item}" key={item}>
             {item}
           </ListGroup.Item>
         ))}

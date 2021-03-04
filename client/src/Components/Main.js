@@ -6,6 +6,7 @@ import Landing from './Landing/Landing';
 import Dashboard from './Dashboard/Dashboard';
 import Profile from './Profile/Profile';
 import MyGroups from './MyGroups/MyGroups';
+import GroupPage from './GroupPage/GroupPage';
 
 const Main = function () {
   return (
@@ -16,6 +17,7 @@ const Main = function () {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/profile" component={Profile} />
       <Route path="/mygroups" component={MyGroups} />
+      <Route path="/groupPage" component={GroupPage} />
     </div>
   );
 };

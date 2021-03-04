@@ -5,7 +5,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import NavBarAfterLogin from '../NavBarAfterLogin';
 
-import MyGroups from '../MyGroups/MyGroups';
+import LeftSideNavBar from '../LeftSideNavBar';
 
 const Dashboard = function () {
   return (
@@ -14,11 +14,7 @@ const Dashboard = function () {
       <Container>
         <Row>
           <Col xs={3}>
-            <Nav defaultActiveKey="/home" className="flex-column">
-              <Nav.Link href="/dashboard">Dashboard</Nav.Link>
-              <Nav.Link href="/dashboard">Recent Activity</Nav.Link>
-            </Nav>
-            <MyGroups />
+            <LeftSideNavBar />
           </Col>
           <Col xs={8}>
             <Navbar bg="light" expand="lg">
@@ -27,7 +23,7 @@ const Dashboard = function () {
                 <Nav.Link href="#home" />
               </Nav>
               <Button variant="danger" href="./dashboard">
-                Add a Bill
+                Create a group
               </Button>
               <Button variant="success" href="./dashboard">
                 Settle Up
@@ -43,6 +39,10 @@ const Dashboard = function () {
               <Col>
                 <p>You are owed:</p>
               </Col>
+            </Row>
+            <Row>
+              <Col>You owe People:</Col>
+              <Col>You are owed:</Col>
             </Row>
           </Col>
           <Col>3 of 3</Col>
