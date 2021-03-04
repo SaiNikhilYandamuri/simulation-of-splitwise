@@ -121,16 +121,22 @@ app.post("/login", function (req, res) {
   });
 });
 
-app.get("/mygroups", function (req, res) {
-  const useremail = req.body.email;
+app.get("/mygroups/:email", function (req, res) {
+  console.log(req.params.email);
+  const useremail = req.params.email;
   const getGroupQuery =
     "select * from usergroup where email='" + useremail + "'";
+  const array = [];
   con.query(getGroupQuery, (err, result) => {
     if (err) throw err;
     Object.keys(result).forEach(function (key) {
       const row = result[key];
+      //const rowName = { groups_name: row.group_name };
       console.log(row.group_name);
+      array.push(row.group_name);
     });
+    res.status(200);
+    res.send(array);
   });
 });
 

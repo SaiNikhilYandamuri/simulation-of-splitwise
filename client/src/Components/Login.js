@@ -1,14 +1,13 @@
 import axios from 'axios';
 import { React, useState } from 'react';
 import alert from 'alert';
-import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import Nav from 'react-bootstrap/esm/Nav';
 import Form from 'react-bootstrap/Form';
 import Jumbotron from 'react-bootstrap/esm/Jumbotron';
 import logged from '../actions';
+import NavBarBeforeLogin from './NavBarBeforeLogin';
 
 function Login() {
   const [email, emailChangeHandler] = useState('');
@@ -48,18 +47,7 @@ function Login() {
   };
   return (
     <div>
-      <Navbar bg="success" expand="lg">
-        <Navbar.Brand href="#home">Splitwise</Navbar.Brand>
-        <Nav className="mr-auto">
-          <Nav.Link href="#home" />
-        </Nav>
-        <Button variant="success" href="./login">
-          Login
-        </Button>
-        <Button variant="danger" href="./signup">
-          Signup
-        </Button>{' '}
-      </Navbar>
+      <NavBarBeforeLogin />
       <Jumbotron>
         <center>
           <Form>
