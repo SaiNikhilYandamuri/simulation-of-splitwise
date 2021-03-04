@@ -77,7 +77,9 @@ app.post("/signup", function (req, res) {
       });*/
       const user = { username: req.body.email, password: req.body.password };
       req.session.user = user;
-      res.status(200).json({ fullname: req.body.fullname });
+      res
+        .status(200)
+        .json({ fullname: req.body.fullname, email: req.body.email });
 
       //res.status(200).json({ message: "Inserted" });
     }
@@ -107,7 +109,9 @@ app.post("/login", function (req, res) {
         const user = { username: req.body.email, password: req.body.password };
         console.log("Inside login if");
         req.session.user = user;
-        res.status(200).json({ fullname: result[0].fullname });
+        res
+          .status(200)
+          .json({ fullname: result[0].fullname, email: result[0].email });
 
         res.end("Successful Login");
         //console.log(res);
