@@ -15,7 +15,7 @@ function NavBarAfterLogin() {
           <Nav.Link href="#home" />
         </Nav>
         <NavDropdown title={isLogged} id="basic-nav-dropdown">
-          <NavDropdown.Item href="">Profile</NavDropdown.Item>
+          <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
 
           <NavDropdown.Divider />
           <NavDropdown.Item href="./landing">Logout</NavDropdown.Item>
