@@ -36,7 +36,7 @@ function Login() {
           console.log(isLogged);
 
           loadSuccess();
-          dispatch(logged(response.data.fullname));
+          dispatch(logged(response.data.fullname, response.data.email));
         })
         .catch((err) => {
           if (!err) alert(err.response.data.message);

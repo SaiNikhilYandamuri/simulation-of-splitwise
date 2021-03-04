@@ -37,7 +37,7 @@ function Signup() {
           console.log(response);
           console.log(isLogged);
           loadSuccess();
-          dispatch(signed(response.data.fullname));
+          dispatch(signed(response.data.fullname, response.data.email));
         })
         .catch((err) => {
           alert(err.response.data.message);
