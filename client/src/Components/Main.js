@@ -11,6 +11,7 @@ import GroupPage from './GroupPage/GroupPage';
 const Main = function () {
   return (
     <div>
+      <Route exact path="/" component={Landing} />
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Signup} />
       <Route path="/landing" component={Landing} />
