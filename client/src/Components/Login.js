@@ -34,7 +34,8 @@ function Login() {
         .then((response) => {
           console.log(response.status);
           console.log(isLogged);
-
+          sessionStorage.setItem('email', response.data.email);
+          sessionStorage.setItem('fullname', response.data.fullname);
           loadSuccess();
           dispatch(logged(response.data.fullname, response.data.email));
         })
@@ -77,7 +78,7 @@ function Login() {
               />
             </Form.Group>
 
-            <Button variant="danger" type="submit" onClick={submitLogin}>
+            <Button variant="warning" type="submit" onClick={submitLogin}>
               Log in
             </Button>
           </Form>

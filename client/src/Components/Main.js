@@ -7,6 +7,8 @@ import Dashboard from './Dashboard/Dashboard';
 import Profile from './Profile/Profile';
 import MyGroups from './MyGroups/MyGroups';
 import GroupPage from './GroupPage/GroupPage';
+import InviteList from './InviteList/InviteList';
+import CreateGroup from './CreateGroup/CreateGroup';
 
 const Main = function () {
   return (
@@ -19,6 +21,8 @@ const Main = function () {
       <Route path="/profile" component={Profile} />
       <Route path="/mygroups" component={MyGroups} />
       <Route path="/groupPage" component={GroupPage} />
+      <Route path="/inviteList" component={InviteList} />
+      <Route path="/createGroup" component={CreateGroup} />
     </div>
   );
 };

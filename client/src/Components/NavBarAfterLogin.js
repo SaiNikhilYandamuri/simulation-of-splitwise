@@ -2,10 +2,15 @@ import React from 'react';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import { useSelector } from 'react-redux';
+// import { useSelector, useDispatch } from 'react-redux';
 
 function NavBarAfterLogin() {
-  const isLogged = useSelector((state) => state.isLogged.username);
+  // const isLogged = useSelector((state) => state.isLogged.username);
+  const fullanme = sessionStorage.getItem('fullname');
+  const deleteStore = () => {
+    sessionStorage.removeItem('email');
+    sessionStorage.removeItem('fullname');
+  };
 
   return (
     <div>
@@ -14,11 +19,13 @@ function NavBarAfterLogin() {
         <Nav className="mr-auto">
           <Nav.Link href="#home" />
         </Nav>
-        <NavDropdown title={isLogged} id="basic-nav-dropdown">
+        <NavDropdown title={fullanme} id="basic-nav-dropdown">
           <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
 
           <NavDropdown.Divider />
-          <NavDropdown.Item href="./landing">Logout</NavDropdown.Item>
+          <NavDropdown.Item href="./landing" onClick={deleteStore}>
+            Logout
+          </NavDropdown.Item>
         </NavDropdown>
       </Navbar>
     </div>

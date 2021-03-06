@@ -129,7 +129,31 @@ app.get("/mygroups/:email", function (req, res) {
   console.log(req.params.email);
   const useremail = req.params.email;
   const getGroupQuery =
-    "select * from usergroup where email='" + useremail + "'";
+    "select * from usergroup where email='" +
+    useremail +
+    "' and inviteacceptance=1";
+  const array = [];
+  con.query(getGroupQuery, (err, result) => {
+    if (err) throw err;
+    Object.keys(result).forEach(function (key) {
+      const row = result[key];
+      //const rowName = { groups_name: row.group_name };
+      console.log(row.group_name);
+      array.push(row.group_name);
+    });
+    res.status(200);
+    res.send(array);
+  });
+});
+
+app.get("/invitegroups/:email", function (req, res) {
+  console.log(req.params.email);
+  const useremail = req.params.email;
+  const getGroupQuery =
+    "select * from usergroup where email='" +
+    useremail +
+    "' and inviteacceptance=0";
+  console.log(getGroupQuery);
   const array = [];
   con.query(getGroupQuery, (err, result) => {
     if (err) throw err;

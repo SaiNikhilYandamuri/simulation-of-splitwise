@@ -9,4 +9,10 @@ const signed = (username, emailaddress) => ({
   payload: username,
   email: emailaddress,
 });
-export { signed, logged as default };
+
+const logout = (username, emailaddress) => ({
+  type: 'LOG_OUT',
+  payload: username,
+  email: emailaddress,
+});
+export { signed, logout, logged as default };

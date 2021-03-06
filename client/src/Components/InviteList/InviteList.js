@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 // import { useSelector } from 'react-redux';
-import './MyGroups.css';
+
 import { ListGroup } from 'react-bootstrap';
 
-function MyGroups() {
+function InviteList() {
   const [groups, getGroups] = useState([]);
   // const isLogged = useSelector((state) => state.isLogged.email);
   const emailId = sessionStorage.getItem('email');
   console.log('On load');
   console.log(groups);
   useEffect(async () => {
-    const getURL = `http://localhost:4000/mygroups/${emailId}`;
+    const getURL = `http://localhost:4000/invitegroups/${emailId}`;
     const response = await axios.get(getURL);
     console.log(response.data);
     getGroups(response.data);
@@ -30,4 +30,4 @@ function MyGroups() {
   );
 }
 
-export default MyGroups;
+export default InviteList;
