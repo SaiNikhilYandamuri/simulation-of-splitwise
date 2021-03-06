@@ -10,10 +10,10 @@ function NavBarBeforeLogin() {
       <Nav className="mr-auto">
         <Nav.Link href="#home" />
       </Nav>
-      <Button variant="success" href="./login">
+      <Button variant="outline-light" href="./login">
         Login
       </Button>
-      <Button variant="danger" href="./signup">
+      <Button variant="warning" href="./signup">
         Signup
       </Button>{' '}
     </Navbar>

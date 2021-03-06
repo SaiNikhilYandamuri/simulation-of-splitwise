@@ -36,6 +36,8 @@ function Signup() {
         .then((response) => {
           console.log(response);
           console.log(isLogged);
+          sessionStorage.setItem('email', response.data.email);
+          sessionStorage.setItem('fullname', response.data.fullname);
           loadSuccess();
           dispatch(signed(response.data.fullname, response.data.email));
         })
@@ -88,7 +90,7 @@ function Signup() {
               />
             </Form.Group>
 
-            <Button variant="danger" type="submit" onClick={submitSignup}>
+            <Button variant="warning" type="submit" onClick={submitSignup}>
               Sign me up!
             </Button>
           </Form>

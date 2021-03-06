@@ -13,7 +13,7 @@ const Dashboard = function () {
       <NavBarAfterLogin />
       <Container>
         <Row>
-          <Col xs={3}>
+          <Col xs={2}>
             <LeftSideNavBar />
           </Col>
           <Col xs={8}>
@@ -22,7 +22,7 @@ const Dashboard = function () {
               <Nav className="mr-auto">
                 <Nav.Link href="#home" />
               </Nav>
-              <Button variant="danger" href="./dashboard">
+              <Button variant="danger" href="./createGroup">
                 Create a group
               </Button>
               <Button variant="success" href="./dashboard">
