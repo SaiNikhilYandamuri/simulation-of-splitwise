@@ -6,7 +6,7 @@ import LeftSideNavBar from '../LeftSideNavBar';
 import MyGroups from '../MyGroups/MyGroups';
 import InviteList from '../InviteList/InviteList';
 
-function GroupPage() {
+function GroupsPage() {
   return (
     <div>
       <NavBarAfterLogin />
@@ -46,4 +46,4 @@ function GroupPage() {
   );
 }
 
-export default GroupPage;
+export default GroupsPage;
