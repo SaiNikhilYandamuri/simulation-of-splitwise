@@ -194,6 +194,7 @@ app.get("/getBillsOfGroup/:groupName", function (req, res) {
 app.post("/addgroup", function (req, res) {
   const groupName = req.body.groupName;
   const users = req.body.users;
+  console.log("Hello");
   const insertGroup =
     "insert into groupinfo(group_name, group_pic) values('" +
     groupName +
@@ -214,6 +215,27 @@ app.post("/addgroup", function (req, res) {
     if (err) throw err;
     console.log(result);
   });
+});
+
+app.post("/addBill", function (req, res) {
+  const groupName = req.body.group;
+  const email = req.body.email;
+  const amount = req.body.amount;
+  const description = req.body.description;
+  const insertBill =
+    "insert into bill(group_name, total_amount, descirption, email) values(?,?,?,?)";
+
+  console.log(insertBill);
+  con.query(
+    insertBill,
+    [groupName, amount, description, email],
+    (err, result) => {
+      if (err) throw err;
+      console.log(result);
+      res.status(200);
+      res.send("Hello World");
+    }
+  );
 });
 
 app.listen(port, () => {
