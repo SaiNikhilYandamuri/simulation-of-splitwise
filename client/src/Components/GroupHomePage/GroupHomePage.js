@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row, Container, Nav, Button, ListGroup } from 'react-bootstrap';
+import { Col, Row, Nav, ListGroup } from 'react-bootstrap';
 
 import axios from 'axios';
 import Navbar from 'react-bootstrap/Navbar';
 import NavBarAfterLogin from '../NavBarAfterLogin';
-
+import AddBill from '../AddBill/AddBill';
 import LeftSideNavBar from '../LeftSideNavBar';
 
 function GroupHomePage() {
@@ -19,58 +19,31 @@ function GroupHomePage() {
   return (
     <div>
       <NavBarAfterLogin />
-      <Container>
-        <Row>
-          <Col xs={2}>
-            <LeftSideNavBar />
-          </Col>
-          <Col xs={8}>
-            <Navbar bg="light" expand="lg">
-              <Navbar.Brand href="./groupHomePage">{groupName}</Navbar.Brand>
-              <Nav className="mr-auto">
-                <Nav.Link href="#home" />
-              </Nav>
-              <Button variant="danger" href="">
-                Add A Bill
-              </Button>
-            </Navbar>
 
-            <Row>
-              <ListGroup variant="flush">
-                {bills.map((item) => (
-                  <Row>
-                    <Col>
-                      <ListGroup.Item
-                        variant="light"
-                        href=""
-                        value={item.descirption}
-                        key={item.descirption}
-                      >
-                        {item.descirption}
-                      </ListGroup.Item>
-                    </Col>
-                    <Col>
-                      <ListGroup.Item
-                        variant="light"
-                        href=""
-                        value={item.total_amount}
-                        key={item.total_amount}
-                      >
-                        {item.total_amount}
-                      </ListGroup.Item>
-                    </Col>
-                    <Col>
-                      <ListGroup.Item variant="light" href="" value={item.email} key={item.email}>
-                        {item.email}
-                      </ListGroup.Item>
-                    </Col>
-                  </Row>
-                ))}
-              </ListGroup>
-            </Row>
-          </Col>
-        </Row>
-      </Container>
+      <Row>
+        <Col xs={2}>
+          <LeftSideNavBar />
+        </Col>
+        <Col xs={8}>
+          <Navbar bg="light" expand="lg">
+            <Navbar.Brand href="./groupHomePage">{groupName}</Navbar.Brand>
+            <Nav className="mr-auto">
+              <Nav.Link href="#home" />
+            </Nav>
+            <AddBill />
+          </Navbar>
+
+          <Row>
+            <ListGroup variant="flush">
+              {bills.map((item) => (
+                <ListGroup.Item>
+                  {item.descirption}&nbsp;&nbsp;&nbsp;{item.total_amount}
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </Row>
+        </Col>
+      </Row>
     </div>
   );
 }
