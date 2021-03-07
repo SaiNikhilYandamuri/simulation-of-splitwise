@@ -168,6 +168,29 @@ app.get("/invitegroups/:email", function (req, res) {
   });
 });
 
+app.get("/getBillsOfGroup/:groupName", function (req, res) {
+  console.log(req.params.groupName);
+  const groupName = req.params.groupName;
+  const getBillsQuery =
+    "select descirption,total_amount,email from bill where group_name='" +
+    groupName +
+    "'";
+  console.log(getBillsQuery);
+  const array = [];
+  con.query(getBillsQuery, (err, result) => {
+    console.log(result);
+    if (err) throw err;
+    Object.keys(result).forEach(function (key) {
+      const row = result[key];
+      //const rowName = { groups_name: row.group_name };
+      console.log(row);
+      array.push(row);
+    });
+    res.status(200);
+    res.send(array);
+  });
+});
+
 app.post("/addgroup", function (req, res) {
   const groupName = req.body.groupName;
   const users = req.body.users;
