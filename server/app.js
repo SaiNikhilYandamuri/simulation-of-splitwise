@@ -191,29 +191,63 @@ app.get("/getBillsOfGroup/:groupName", function (req, res) {
   });
 });
 
-app.post("/addgroup", function (req, res) {
+app.post("/creategroup", function (req, res) {
   const groupName = req.body.groupName;
-  const users = req.body.users;
+  const form = req.body.form;
+  const email = req.body.email;
+  console.log("Hello");
+  console.log(form);
+
   const insertGroup =
-    "insert into groupinfo(group_name, group_pic) values('" +
-    groupName +
-    "','picture')";
-  const usergroupQUery =
-    "insert into usergroup(email,group_name,inviteacceptance) values('" +
-    users +
-    "','" +
-    groupName +
-    "',0)";
-  console.log(insertGroup);
-  console.log(usergroupQUery);
-  con.query(insertGroup, (err, result) => {
+    "insert into groupinfo(group_name, group_pic) values(?,?)";
+  con.query(insertGroup, [groupName, "picture"], (err, result) => {
     if (err) throw err;
     console.log(result);
   });
-  con.query(usergroupQUery, (err, result) => {
+  const usergroupQueryCreator =
+    "insert into usergroup(email,group_name,inviteacceptance) values(?,?,?)";
+  con.query(usergroupQueryCreator, [email, groupName, 1], (err, result) => {
     if (err) throw err;
     console.log(result);
   });
+
+  form.forEach((ele) => {
+    const emailOfUser = ele.Email;
+    console.log(emailOfUser);
+
+    const usergroupQuery =
+      "insert into usergroup(email,group_name,inviteacceptance) values(?,?,?)";
+    con.query(usergroupQuery, [emailOfUser, groupName, 0], (err, result) => {
+      if (err) throw err;
+      console.log(result);
+    });
+  });
+
+  res.status(200);
+  res.end("Successful");
+
+  console.log("Successful");
+});
+
+app.post("/addBill", function (req, res) {
+  const groupName = req.body.group;
+  const email = req.body.email;
+  const amount = req.body.amount;
+  const description = req.body.description;
+  const insertBill =
+    "insert into bill(group_name, total_amount, descirption, email) values(?,?,?,?)";
+
+  console.log(insertBill);
+  con.query(
+    insertBill,
+    [groupName, amount, description, email],
+    (err, result) => {
+      if (err) throw err;
+      console.log(result);
+      res.status(200);
+      res.send("Hello World");
+    }
+  );
 });
 
 app.listen(port, () => {
