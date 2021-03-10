@@ -111,7 +111,7 @@ function CreateGroup() {
           <LeftSideNavBar />
         </Col>
         <Col>
-          <div className="container mt-5 py-5">
+          <div className="container ">
             <h5>Start a new group:</h5>
             <h6>My group shall be called:</h6>
             <input
@@ -160,7 +160,7 @@ function CreateGroup() {
               ))}
 
               <button className="btn btn-primary mt-2" type="button" onClick={handleAddLink}>
-                Add a link
+                Add a member
               </button>
               <button className="btn btn-primary mt-2" type="button" onClick={createGroup}>
                 Create group

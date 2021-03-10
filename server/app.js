@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const mysql = require("mysql");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 
@@ -51,38 +53,25 @@ app.post("/signup", function (req, res) {
   const email = req.body.email;
   const password = req.body.password;
   const insertUserQuery =
-    "INSERT INTO user (email, fullname, password) VALUES ('" +
-    email +
-    "', '" +
-    fullname +
-    "', '" +
-    password +
-    "')";
+    "INSERT INTO user (email, fullname, password) VALUES (?,?,?)";
 
   console.log(insertUserQuery);
+  bcrypt.hash(password, saltRounds).then(function (hash) {
+    con.query(insertUserQuery, [email, fullname, hash], (err, result) => {
+      //console.log(err.code);
+      if (err) {
+        if (err.code === "ER_DUP_ENTRY") {
+          console.log("User already present!!");
+          res.status(409).json({ message: "User already exists!" });
+        }
+      } else {
+        console.log("Inserted");
 
-  con.query(insertUserQuery, (err, result) => {
-    //console.log(err.code);
-    if (err) {
-      if (err.code === "ER_DUP_ENTRY") {
-        console.log("User already present!!");
-        res.status(409).json({ message: "User already exists!" });
+        res
+          .status(200)
+          .json({ fullname: req.body.fullname, email: req.body.email });
       }
-    } else {
-      console.log("Inserted");
-      /*res.cookie("cookie", "admin", {
-        maxAge: 900000,
-        httpOnly: false,
-        path: "/",
-      });*/
-      const user = { username: req.body.email, password: req.body.password };
-      req.session.user = user;
-      res
-        .status(200)
-        .json({ fullname: req.body.fullname, email: req.body.email });
-
-      //res.status(200).json({ message: "Inserted" });
-    }
+    });
   });
 });
 
@@ -91,13 +80,10 @@ app.post("/login", function (req, res) {
   const email = req.body.email;
   const password = req.body.password;
   const selectLoginQuery =
-    "Select * from user where email='" +
-    email +
-    "' and password='" +
-    password +
-    "'";
+    "Select fullname,password,email from user where email=?";
+
   console.log(selectLoginQuery);
-  con.query(selectLoginQuery, (err, result) => {
+  con.query(selectLoginQuery, [email], (err, result) => {
     if (err) throw err;
     if (result) {
       if (result.length) {
@@ -106,16 +92,21 @@ app.post("/login", function (req, res) {
           httpOnly: false,
           path: "/",
         });*/
+        console.log(result[0] + "Hello");
+
+        bcrypt.compare(password, result[0].password).then(function (response) {
+          res
+            .status(200)
+            .json({ fullname: result[0].fullname, email: result[0].email });
+
+          res.end("Successful Login");
+        });
         const user = { username: req.body.email, password: req.body.password };
         console.log("Inside login if");
         req.session.user = user;
-        res
-          .status(200)
-          .json({ fullname: result[0].fullname, email: result[0].email });
 
-        res.end("Successful Login");
         //console.log(res);
-        console.log(req.session);
+        //console.log(req.session);
       } else if (result.length === 0) {
         res.status(404).json({ message: "Invalid credentials!" });
       }
@@ -204,13 +195,14 @@ app.post("/creategroup", function (req, res) {
     if (err) throw err;
     console.log(result);
   });
+  console.log("Group Creation Done");
   const usergroupQueryCreator =
     "insert into usergroup(email,group_name,inviteacceptance) values(?,?,?)";
   con.query(usergroupQueryCreator, [email, groupName, 1], (err, result) => {
     if (err) throw err;
     console.log(result);
   });
-
+  console.log("Usergroup info 1");
   form.forEach((ele) => {
     const emailOfUser = ele.Email;
     console.log(emailOfUser);
@@ -222,6 +214,8 @@ app.post("/creategroup", function (req, res) {
       console.log(result);
     });
   });
+
+  console.log("Usergroup info 2");
 
   res.status(200);
   res.end("Successful");
