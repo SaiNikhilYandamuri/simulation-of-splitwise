@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 // import { useSelector } from 'react-redux';
 
-import { ListGroup } from 'react-bootstrap';
+import { ListGroup, Button } from 'react-bootstrap';
 
 function InviteList() {
   const [groups, getGroups] = useState([]);
@@ -21,9 +21,9 @@ function InviteList() {
     <div>
       <ListGroup variant="flush">
         {groups.map((item) => (
-          <ListGroup.Item href="" key={item}>
+          <Button variant="light" href="" value={item} key={item}>
             {item}
-          </ListGroup.Item>
+          </Button>
         ))}
       </ListGroup>
     </div>
