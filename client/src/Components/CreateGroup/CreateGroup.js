@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import cookie from 'react-cookies';
 import { useHistory } from 'react-router-dom';
 import { Col, Row } from 'react-bootstrap';
 import NavBarAfterLogin from '../NavBarAfterLogin';
@@ -8,8 +9,8 @@ import LeftSideNavBar from '../LeftSideNavBar';
 function CreateGroup() {
   const [form, setForm] = useState([]);
   const [groupName, setGroupName] = useState('');
-  const name = sessionStorage.getItem('fullname');
-  const email = sessionStorage.getItem('email');
+  const name = cookie.load('name'); // sessionStorage.getItem('fullname');
+  const email = cookie.load('email'); // sessionStorage.getItem('email');
   const history = useHistory();
   // eslint-disable-next-line prefer-const
   let members = [];
@@ -99,7 +100,11 @@ function CreateGroup() {
 
     axios.post('http://localhost:4000/creategroup', groupDetails).then((response) => {
       console.log(response);
-      sessionStorage.setItem('groupSelected', groupName);
+      cookie.save('groupSelected', groupName, {
+        path: '/',
+        httpOnly: false,
+        maxAge: 90000,
+      }); // sessionStorage.setItem('groupSelected', groupName);
       history.push('/groupHomePage');
     });
   };

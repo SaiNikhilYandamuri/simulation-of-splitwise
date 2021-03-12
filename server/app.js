@@ -9,21 +9,31 @@ const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
-
 app.use(
-  session({
-    secret: "compe273_lab1_splitwise",
-    resave: false,
-    saveUninitialized: false,
-    duration: 60 * 60 * 1000,
-    activeDuration: 5 * 60 * 1000,
+  cors({
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST"],
+    credentials: true,
   })
 );
 
+app.use(cookieParser());
+
 app.use(bodyParser.json());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(
+  session({
+    key: "userid",
+    secret: "compe273_lab1_splitwise",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 60 * 60 * 24 * 1000,
+    },
+  })
+);
 
 const con = mysql.createConnection({
   host: "splitwise-instance.cxfc1pmp6ndg.us-east-2.rds.amazonaws.com",
@@ -75,6 +85,14 @@ app.post("/signup", function (req, res) {
   });
 });
 
+app.get("/login", (req, res) => {
+  if (req.session.user) {
+    res.send({ loggedIn: true, user: req.session.user });
+  } else {
+    res.send({ loggedIn: false });
+  }
+});
+
 app.post("/login", function (req, res) {
   //console.log(req.body);
   const email = req.body.email;
@@ -87,14 +105,16 @@ app.post("/login", function (req, res) {
     if (err) throw err;
     if (result) {
       if (result.length) {
-        /*res.cookie("cookie", "admin", {
-          maxAge: 900000,
-          httpOnly: false,
-          path: "/",
-        });*/
         console.log(result[0] + "Hello");
 
         bcrypt.compare(password, result[0].password).then(function (response) {
+          res.cookie("cookie", "admin", {
+            maxAge: 900000,
+            httpOnly: false,
+            path: "/",
+          });
+          req.session.user = result;
+          console.log(req.session.user);
           res
             .status(200)
             .json({ fullname: result[0].fullname, email: result[0].email });

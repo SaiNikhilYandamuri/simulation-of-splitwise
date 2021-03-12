@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import cookie from 'react-cookies';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 
@@ -13,7 +14,7 @@ function InviteList() {
   // const isLogged = useSelector((state) => state.isLogged.email);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const emailId = sessionStorage.getItem('email');
+  const emailId = cookie.load('email'); // sessionStorage.getItem('email');
   const accepetInvitation = (groupSelected) => {
     console.log(emailId);
     axios

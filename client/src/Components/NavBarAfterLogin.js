@@ -1,4 +1,5 @@
 import React from 'react';
+import cookie from 'react-cookies';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
@@ -6,10 +7,16 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 
 function NavBarAfterLogin() {
   // const isLogged = useSelector((state) => state.isLogged.username);
-  const fullanme = sessionStorage.getItem('fullname');
+  const fullanme = cookie.load('name'); // sessionStorage.getItem('fullname');
+
   const deleteStore = () => {
-    sessionStorage.removeItem('email');
-    sessionStorage.removeItem('fullname');
+    // sessionStorage.removeItem('email');
+    // sessionStorage.removeItem('fullname');
+    cookie.remove('email');
+    cookie.remove('name');
+    cookie.remove('userid');
+    cookie.remove('cookie');
+    cookie.remove('groupSelected');
   };
 
   return (

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import cookie from 'react-cookies';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 // import { useSelector } from 'react-redux';
@@ -8,7 +9,7 @@ import { ListGroup, Button } from 'react-bootstrap';
 function MyGroups() {
   const [groups, getGroups] = useState([]);
   // const isLogged = useSelector((state) => state.isLogged.email);
-  const emailId = sessionStorage.getItem('email');
+  const emailId = cookie.load('email'); // sessionStorage.getItem('email');
   const history = useHistory();
 
   console.log('On load');
@@ -21,7 +22,12 @@ function MyGroups() {
   }, []);
 
   const openGroupDetails = (groupSelected) => {
-    sessionStorage.setItem('groupSelected', groupSelected);
+    cookie.save('groupSelected', groupSelected, {
+      path: '/',
+      httpOnly: false,
+      maxAge: 90000,
+    });
+    // sessionStorage.setItem('groupSelected', groupSelected);
     history.push('/groupHomePage');
   };
 
