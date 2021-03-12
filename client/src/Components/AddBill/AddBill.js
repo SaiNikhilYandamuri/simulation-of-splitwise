@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import cookie from 'react-cookies';
 import { Button, Modal, InputGroup, FormControl } from 'react-bootstrap';
 import axios from 'axios';
 
@@ -6,8 +7,8 @@ function AddBill() {
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
-  const email = sessionStorage.getItem('email');
-  const group = sessionStorage.getItem('groupSelected');
+  const email = cookie.load('name'); // sessionStorage.getItem('email');
+  const group = cookie.load('groupSelected'); // sessionStorage.getItem('groupSelected');
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);

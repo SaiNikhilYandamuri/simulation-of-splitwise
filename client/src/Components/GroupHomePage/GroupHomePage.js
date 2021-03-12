@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import cookie from 'react-cookies';
 import { Col, Row, Nav, ListGroup, Modal, Button, InputGroup, FormControl } from 'react-bootstrap';
 
 import axios from 'axios';
@@ -8,14 +9,14 @@ import NavBarAfterLogin from '../NavBarAfterLogin';
 import LeftSideNavBar from '../LeftSideNavBar';
 
 function GroupHomePage() {
-  const groupName = sessionStorage.getItem('groupSelected');
+  const groupName = cookie.load('groupSelected'); // sessionStorage.getItem('groupSelected');
   const [bills, getBills] = useState([]);
   const [members, getMembers] = useState([]);
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
-  const email = sessionStorage.getItem('email');
-  const group = sessionStorage.getItem('groupSelected');
+  const email = cookie.load('email'); // sessionStorage.getItem('email');
+  const group = cookie.load('groupSelected');
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
