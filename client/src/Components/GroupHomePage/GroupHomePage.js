@@ -10,6 +10,7 @@ import LeftSideNavBar from '../LeftSideNavBar';
 function GroupHomePage() {
   const groupName = sessionStorage.getItem('groupSelected');
   const [bills, getBills] = useState([]);
+  const [members, getMembers] = useState([]);
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
@@ -25,6 +26,13 @@ function GroupHomePage() {
     console.log(response.data);
     getBills(response.data);
   };
+
+  const getMembersList = async () => {
+    const getURL = `http://localhost:4000/getMembersOfGroup/${groupName}`;
+    const response = await axios.get(getURL);
+    console.log(response.data);
+    getMembers(response.data);
+  };
   const handleBill = (e) => {
     e.preventDefault();
     console.log('hello');
@@ -39,6 +47,7 @@ function GroupHomePage() {
         console.log(response);
         handleClose();
         getBillsList();
+        getMembersList();
       })
       .catch((err) => {
         if (!err) console.log(err.response);
@@ -49,6 +58,7 @@ function GroupHomePage() {
     const response = await axios.get(getURL);
     console.log(response.data);
     getBills(response.data);
+    getMembersList();
   }, []);
   return (
     <div>
@@ -106,13 +116,22 @@ function GroupHomePage() {
           </Navbar>
 
           <Row>
-            <ListGroup variant="flush">
-              {bills.map((item) => (
-                <ListGroup.Item>
-                  {item.descirption}&nbsp;&nbsp;&nbsp;{item.total_amount}
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
+            <Col>
+              <ListGroup variant="flush">
+                {bills.map((item) => (
+                  <ListGroup.Item>
+                    {item.descirption}&nbsp;&nbsp;&nbsp;{item.total_amount}
+                  </ListGroup.Item>
+                ))}
+              </ListGroup>
+            </Col>
+            <Col>
+              <ListGroup variant="flush">
+                {members.map((item) => (
+                  <ListGroup.Item>{item.email}</ListGroup.Item>
+                ))}
+              </ListGroup>
+            </Col>
           </Row>
         </Col>
       </Row>

@@ -5,7 +5,8 @@ import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Jumbotron from 'react-bootstrap/Jumbotron';
+// import Jumbotron from 'react-bootstrap/Jumbotron';
+import { Row, Col } from 'react-bootstrap';
 import { signed } from '../actions';
 import NavBarBeforeLogin from './NavBarBeforeLogin';
 
@@ -51,51 +52,57 @@ function Signup() {
   return (
     <div>
       <NavBarBeforeLogin />
-      <Jumbotron>
-        <center>
-          <Form>
-            <Form.Text className="text-muted">Introduce Yourself</Form.Text>
-            <Form.Group controlId="formBasicName">
-              <Form.Label>Full Name</Form.Label>
-              <Form.Control
-                size="sm"
-                type="text"
-                placeholder="Enter Full name"
-                onChange={(e) => {
-                  fullnameChangeHandler(e.target.value);
-                }}
-              />
-            </Form.Group>
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                size="sm"
-                type="email"
-                placeholder="Enter email"
-                onChange={(e) => {
-                  emailChangeHandler(e.target.value);
-                }}
-              />
-            </Form.Group>
+      <Row>
+        <Col />
+        <Col>
+          <center>
+            <Form>
+              <Form.Text className="text-muted">
+                <h4>Introduce Yourself</h4>
+              </Form.Text>
+              <Form.Group controlId="formBasicName">
+                <Form.Label>Full Name</Form.Label>
+                <Form.Control
+                  size="sm"
+                  type="text"
+                  placeholder="Enter Full name"
+                  onChange={(e) => {
+                    fullnameChangeHandler(e.target.value);
+                  }}
+                />
+              </Form.Group>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  size="sm"
+                  type="email"
+                  placeholder="Enter email"
+                  onChange={(e) => {
+                    emailChangeHandler(e.target.value);
+                  }}
+                />
+              </Form.Group>
 
-            <Form.Group controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                size="sm"
-                type="password"
-                placeholder="Password"
-                onChange={(e) => {
-                  passwordChangeHandler(e.target.value);
-                }}
-              />
-            </Form.Group>
+              <Form.Group controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  size="sm"
+                  type="password"
+                  placeholder="Password"
+                  onChange={(e) => {
+                    passwordChangeHandler(e.target.value);
+                  }}
+                />
+              </Form.Group>
 
-            <Button variant="warning" type="submit" onClick={submitSignup}>
-              Sign me up!
-            </Button>
-          </Form>
-        </center>
-      </Jumbotron>
+              <Button variant="warning" type="submit" onClick={submitSignup}>
+                Sign me up!
+              </Button>
+            </Form>
+          </center>
+        </Col>
+        <Col />
+      </Row>
     </div>
   );
 }

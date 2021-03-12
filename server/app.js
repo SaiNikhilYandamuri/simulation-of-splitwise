@@ -182,6 +182,42 @@ app.get("/getBillsOfGroup/:groupName", function (req, res) {
   });
 });
 
+app.get("/getMembersOfGroup/:groupName", function (req, res) {
+  console.log(req.params.groupName);
+  const groupName = req.params.groupName;
+  const getMembersQuery =
+    "select email from usergroup where group_name=? && inviteacceptance=1";
+  console.log(getMembersQuery);
+  const array = [];
+  con.query(getMembersQuery, [groupName], (err, result) => {
+    console.log(result);
+    if (err) throw err;
+    Object.keys(result).forEach(function (key) {
+      const row = result[key];
+      //const rowName = { groups_name: row.group_name };
+      console.log(row);
+      array.push(row);
+    });
+    console.log(array);
+    res.status(200);
+    res.send(array);
+  });
+});
+
+app.post("/acceptInvite", function (req, res) {
+  const email = req.body.emailId;
+  const groupName = req.body.groupSelected;
+  const acceptInviteQuery =
+    "update usergroup SET inviteacceptance=1 where email=? && group_name=?";
+  console.log(acceptInviteQuery + email + groupName);
+  con.query(acceptInviteQuery, [email, groupName], (err, result) => {
+    console.log(result);
+    if (err) throw err;
+    console.log(result);
+    res.status(200).json({ message: "Successfully Updated" });
+  });
+});
+
 app.post("/creategroup", function (req, res) {
   const groupName = req.body.groupName;
   const form = req.body.form;

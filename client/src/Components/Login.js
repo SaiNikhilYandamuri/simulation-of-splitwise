@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Form from 'react-bootstrap/Form';
-import Jumbotron from 'react-bootstrap/esm/Jumbotron';
+import { Row, Col } from 'react-bootstrap';
 import logged from '../actions';
 import NavBarBeforeLogin from './NavBarBeforeLogin';
 
@@ -49,41 +49,47 @@ function Login() {
   return (
     <div>
       <NavBarBeforeLogin />
-      <Jumbotron>
-        <center>
-          <Form>
-            <Form.Text className="text-muted">Welcome to Splitwise</Form.Text>
+      <Row>
+        <Col />
+        <Col>
+          <center>
+            <Form>
+              <Form.Text className="text-muted">
+                <h4>Welcome to Splitwise</h4>
+              </Form.Text>
 
-            <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                size="sm"
-                type="email"
-                placeholder="Enter email"
-                onChange={(e) => {
-                  emailChangeHandler(e.target.value);
-                }}
-              />
-            </Form.Group>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  size="sm"
+                  type="email"
+                  placeholder="Enter email"
+                  onChange={(e) => {
+                    emailChangeHandler(e.target.value);
+                  }}
+                />
+              </Form.Group>
 
-            <Form.Group controlId="formBasicPassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                size="sm"
-                type="password"
-                placeholder="Password"
-                onChange={(e) => {
-                  passwordChangeHandler(e.target.value);
-                }}
-              />
-            </Form.Group>
+              <Form.Group controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  size="sm"
+                  type="password"
+                  placeholder="Password"
+                  onChange={(e) => {
+                    passwordChangeHandler(e.target.value);
+                  }}
+                />
+              </Form.Group>
 
-            <Button variant="warning" type="submit" onClick={submitLogin}>
-              Log in
-            </Button>
-          </Form>
-        </center>
-      </Jumbotron>
+              <Button variant="warning" type="submit" onClick={submitLogin}>
+                Log in
+              </Button>
+            </Form>
+          </center>
+        </Col>
+        <Col />
+      </Row>
     </div>
   );
 }
