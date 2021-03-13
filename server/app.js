@@ -7,6 +7,7 @@ const mysql = require("mysql");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
+
 const saltRounds = 10;
 
 app.use(
@@ -109,7 +110,7 @@ app.post("/login", function (req, res) {
 
         bcrypt.compare(password, result[0].password).then(function (response) {
           res.cookie("cookie", "admin", {
-            maxAge: 900000,
+            maxAge: 9000000,
             httpOnly: false,
             path: "/",
           });
@@ -269,6 +270,17 @@ app.post("/creategroup", function (req, res) {
       if (err) throw err;
       console.log(result);
     });
+
+    const updateTransactionTable =
+      "insert into transaction(user_1,user_2,final_amount,group_name) values(?,?,?,?)";
+    con.query(
+      updateTransactionTable,
+      [email, emailOfUser, 0, groupName],
+      (err, result) => {
+        if (err) throw err;
+        console.log(result);
+      }
+    );
   });
 
   console.log("Usergroup info 2");
@@ -280,24 +292,102 @@ app.post("/creategroup", function (req, res) {
 });
 
 app.post("/addBill", function (req, res) {
+  console.log(req.body.group);
   const groupName = req.body.group;
   const email = req.body.email;
   const amount = req.body.amount;
   const description = req.body.description;
-  const insertBill =
-    "insert into bill(group_name, total_amount, descirption, email) values(?,?,?,?)";
 
-  console.log(insertBill);
-  con.query(
-    insertBill,
-    [groupName, amount, description, email],
-    (err, result) => {
-      if (err) throw err;
-      console.log(result);
-      res.status(200);
-      res.send("Hello World");
-    }
-  );
+  const getMembersQuery =
+    "select email from usergroup where group_name=? && inviteacceptance=1 && email!=?";
+  console.log(getMembersQuery);
+  const array = [];
+  con.query(getMembersQuery, [groupName, email], (err, result) => {
+    console.log(result);
+    if (err) throw err;
+    Object.keys(result).forEach(function (key) {
+      const row = result[key];
+      //const rowName = { groups_name: row.group_name };
+      console.log(row);
+      array.push(row);
+    });
+    console.log("Hello" + array);
+    array.forEach((ele) => {
+      console.log("Hellosadhasdhsah" + ele);
+
+      const getAmount =
+        "select final_amount, user_1, user_2 from transaction where group_name=? and user_1 in (?, ?) and user_2 in (?, ?)";
+      con.query(
+        getAmount,
+        [groupName, email, ele.email, ele.email, email],
+        (err, result) => {
+          if (err) throw err;
+          console.log(result);
+          let amountDB = result[0].final_amount;
+          if (result[0].user_1 === email) {
+            amountDB = amountDB - amount / (array.length + 1);
+          } else {
+            amountDB = amountDB + amount / (array.length + 1);
+          }
+          const updateTransactionQuery =
+            "update transaction set final_amount=? where group_name=? and user_1 in (?, ?) and user_2 in (?, ?)";
+          con.query(
+            updateTransactionQuery,
+            [amountDB, groupName, email, ele.email, ele.email, email],
+            (err, result) => {
+              if (err) throw err;
+              console.log(result);
+              const insertBill =
+                "insert into bill(group_name, total_amount, descirption, email) values(?,?,?,?)";
+
+              console.log(insertBill);
+              con.query(
+                insertBill,
+                [groupName, amount, description, email],
+                (err, result) => {
+                  if (err) throw err;
+                  console.log(result);
+                  amountDB = 0;
+                  res.status(200);
+                  res.send("Hello World");
+                }
+              );
+              console.log("Done with bill");
+            }
+          );
+        }
+      );
+    });
+  });
+});
+
+app.get("/totalAmount/:email", function (req, res) {
+  const email = req.params.email;
+  console.log(email);
+  const getAmountQuery =
+    "select sum(final_amount) from transaction where user_1=? or user_2=?";
+  con.query(getAmountQuery, [email, email], (err, result) => {
+    if (err) throw err;
+    console.log(result[0]);
+    res.status(200);
+  });
+});
+
+app.get("/profile/:email", function (req, res) {
+  const email = req.params.email;
+  const profileQuery =
+    "select email, fullname, phonenumber, currency, timezone, language from user where email=?";
+  con.query(profileQuery, [email], (err, result) => {
+    if (err) throw err;
+    res.status(200).json({
+      email: result[0].email,
+      fullname: result[0].fullname,
+      phonenumber: result[0].phonenumber,
+      currency: result[0].currency,
+      timezone: result[0].timezone,
+      language: result[0].language,
+    });
+  });
 });
 
 app.listen(port, () => {

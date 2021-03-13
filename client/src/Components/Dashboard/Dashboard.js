@@ -1,4 +1,4 @@
-import { React } from 'react';
+import { React, useState } from 'react';
 import './Dashboard.css';
 import { Col, Row, Nav } from 'react-bootstrap';
 
@@ -11,6 +11,7 @@ import NavBarAfterLogin from '../NavBarAfterLogin';
 import LeftSideNavBar from '../LeftSideNavBar';
 
 const Dashboard = function () {
+  // const [totalAmount, settotalAmount] = useState('');
   let redirectVar = null;
   if (!cookie.load('cookie')) {
     redirectVar = <Redirect to="/login" />;
@@ -28,7 +29,7 @@ const Dashboard = function () {
           </Col>
           <Col xs={8}>
             <Navbar bg="light" expand="lg">
-              <Navbar.Brand href="./landing">Dashboard</Navbar.Brand>
+              <Navbar.Brand href="./dashboard">Dashboard</Navbar.Brand>
               <Nav className="mr-auto">
                 <Nav.Link href="#home" />
               </Nav>

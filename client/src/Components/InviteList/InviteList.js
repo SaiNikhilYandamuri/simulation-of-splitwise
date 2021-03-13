@@ -24,6 +24,7 @@ function InviteList() {
       })
       .then((response) => {
         console.log(response);
+
         sessionStorage.setItem('groupSelected', groupSelected);
         history.push('/groupHomePage');
       });
