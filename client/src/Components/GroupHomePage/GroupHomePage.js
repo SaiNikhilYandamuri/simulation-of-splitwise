@@ -121,7 +121,10 @@ function GroupHomePage() {
               <ListGroup variant="flush">
                 {bills.map((item) => (
                   <ListGroup.Item>
-                    {item.descirption}&nbsp;&nbsp;&nbsp;{item.total_amount}
+                    <Row>
+                      <Col>Bill Name: {item.descirption}</Col>
+                      <Col>Bill Amount: ${item.total_amount}</Col>
+                    </Row>
                   </ListGroup.Item>
                 ))}
               </ListGroup>

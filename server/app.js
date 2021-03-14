@@ -77,7 +77,13 @@ app.post("/signup", function (req, res) {
         }
       } else {
         console.log("Inserted");
-
+        res.cookie("cookie", "admin", {
+          maxAge: 9000000,
+          httpOnly: false,
+          path: "/",
+        });
+        req.session.user = result;
+        console.log(req.session.user);
         res
           .status(200)
           .json({ fullname: req.body.fullname, email: req.body.email });
@@ -184,12 +190,10 @@ app.get("/getBillsOfGroup/:groupName", function (req, res) {
   console.log(req.params.groupName);
   const groupName = req.params.groupName;
   const getBillsQuery =
-    "select descirption,total_amount,email from bill where group_name='" +
-    groupName +
-    "'";
+    "select descirption,total_amount,email from bill where group_name=? order by date desc";
   console.log(getBillsQuery);
   const array = [];
-  con.query(getBillsQuery, (err, result) => {
+  con.query(getBillsQuery, [groupName], (err, result) => {
     console.log(result);
     if (err) throw err;
     Object.keys(result).forEach(function (key) {
@@ -239,54 +243,106 @@ app.post("/acceptInvite", function (req, res) {
   });
 });
 
+app.get("/users/:email", function (req, res) {
+  const array = [];
+  console.log(req.params.email);
+  con.query(
+    "select email,fullname from user where email != ?",
+    [req.params.email],
+    (err, result) => {
+      if (err) throw err;
+      console.log(result);
+      for (let i = 0; i < result.length; i++) {
+        array.push(result[i]);
+      }
+      console.log(array);
+      res.status(200).json({ users: array });
+      //res.send(array);
+    }
+  );
+});
+
 app.post("/creategroup", function (req, res) {
   const groupName = req.body.groupName;
-  const form = req.body.form;
+  const form = req.body.value;
   const email = req.body.email;
   console.log("Hello");
   console.log(form);
-
+  let executeValue = true;
   const insertGroup =
     "insert into groupinfo(group_name, group_pic) values(?,?)";
   con.query(insertGroup, [groupName, "picture"], (err, result) => {
-    if (err) throw err;
-    console.log(result);
-  });
-  console.log("Group Creation Done");
-  const usergroupQueryCreator =
-    "insert into usergroup(email,group_name,inviteacceptance) values(?,?,?)";
-  con.query(usergroupQueryCreator, [email, groupName, 1], (err, result) => {
-    if (err) throw err;
-    console.log(result);
-  });
-  console.log("Usergroup info 1");
-  form.forEach((ele) => {
-    const emailOfUser = ele.Email;
-    console.log(emailOfUser);
-
-    const usergroupQuery =
-      "insert into usergroup(email,group_name,inviteacceptance) values(?,?,?)";
-    con.query(usergroupQuery, [emailOfUser, groupName, 0], (err, result) => {
-      if (err) throw err;
+    if (err) {
+      if (err.code === "ER_DUP_ENTRY") {
+        console.log("User already present!!");
+        res.status(409).json({ message: "Group already exists!" });
+      }
+    } else {
       console.log(result);
-    });
-
-    const updateTransactionTable =
-      "insert into transaction(user_1,user_2,final_amount,group_name) values(?,?,?,?)";
-    con.query(
-      updateTransactionTable,
-      [email, emailOfUser, 0, groupName],
-      (err, result) => {
+      const usergroupQueryCreator =
+        "insert into usergroup(email,group_name,inviteacceptance) values(?,?,?)";
+      con.query(usergroupQueryCreator, [email, groupName, 1], (err, result) => {
         if (err) throw err;
         console.log(result);
+      });
+      console.log("Usergroup info 1");
+      form.forEach((ele) => {
+        const emailOfUser = ele.label;
+        console.log(emailOfUser);
+
+        const usergroupQuery =
+          "insert into usergroup(email,group_name,inviteacceptance) values(?,?,?)";
+        con.query(
+          usergroupQuery,
+          [emailOfUser, groupName, 0],
+          (err, result) => {
+            if (err) throw err;
+            console.log(result);
+          }
+        );
+      });
+
+      form.push({ value: "hello", label: email });
+      for (let i = 0; i < form.length; i++) {
+        for (let j = i + 1; j < form.length; j++) {
+          const updateTransactionTable =
+            "insert into transaction(user_1,user_2,final_amount,group_name) values(?,?,?,?)";
+          con.query(
+            updateTransactionTable,
+            [form[i].label, form[j].label, 0, groupName],
+            (err, result) => {
+              if (err) throw err;
+              console.log(result);
+              res.status(200);
+              res.end("Successful");
+            }
+          );
+        }
       }
-    );
+    }
   });
+  console.log("Group Creation Done");
+  if (executeValue) {
+  }
+
+  /*form.forEach((user_1) => {
+    form.forEach((user_2) => {
+      if (user_1 != user_2) {
+        const updateTransactionTable =
+          "insert into transaction(user_1,user_2,final_amount,group_name) values(?,?,?,?)";
+        con.query(
+          updateTransactionTable,
+          [user_1.Email, user_2.Email, 0, groupName],
+          (err, result) => {
+            if (err) throw err;
+            console.log(result);
+          }
+        );
+      }
+    });
+  });*/
 
   console.log("Usergroup info 2");
-
-  res.status(200);
-  res.end("Successful");
 
   console.log("Successful");
 });
@@ -297,6 +353,20 @@ app.post("/addBill", function (req, res) {
   const email = req.body.email;
   const amount = req.body.amount;
   const description = req.body.description;
+
+  const insertBill =
+    "insert into bill(group_name, total_amount, descirption, email) values(?,?,?,?)";
+
+  console.log(insertBill);
+  con.query(
+    insertBill,
+    [groupName, amount, description, email],
+    (err, result) => {
+      if (err) throw err;
+      console.log(result);
+    }
+  );
+  console.log("Done with bill");
 
   const getMembersQuery =
     "select email from usergroup where group_name=? && inviteacceptance=1 && email!=?";
@@ -325,9 +395,9 @@ app.post("/addBill", function (req, res) {
           console.log(result);
           let amountDB = result[0].final_amount;
           if (result[0].user_1 === email) {
-            amountDB = amountDB - amount / (array.length + 1);
-          } else {
             amountDB = amountDB + amount / (array.length + 1);
+          } else {
+            amountDB = amountDB - amount / (array.length + 1);
           }
           const updateTransactionQuery =
             "update transaction set final_amount=? where group_name=? and user_1 in (?, ?) and user_2 in (?, ?)";
@@ -337,27 +407,14 @@ app.post("/addBill", function (req, res) {
             (err, result) => {
               if (err) throw err;
               console.log(result);
-              const insertBill =
-                "insert into bill(group_name, total_amount, descirption, email) values(?,?,?,?)";
-
-              console.log(insertBill);
-              con.query(
-                insertBill,
-                [groupName, amount, description, email],
-                (err, result) => {
-                  if (err) throw err;
-                  console.log(result);
-                  amountDB = 0;
-                  res.status(200);
-                  res.send("Hello World");
-                }
-              );
-              console.log("Done with bill");
+              amountDB = 0;
             }
           );
         }
       );
     });
+    res.status(200);
+    res.send("Hello World");
   });
 });
 
@@ -365,12 +422,32 @@ app.get("/totalAmount/:email", function (req, res) {
   const email = req.params.email;
   console.log(email);
   const getAmountQuery =
-    "select sum(final_amount) from transaction where user_1=? or user_2=?";
+    "select user_1,user_2,final_amount,group_name from transaction where user_1=? or user_2=?";
   con.query(getAmountQuery, [email, email], (err, result) => {
     if (err) throw err;
     console.log(result[0]);
     res.status(200);
+    res.send(result);
   });
+});
+
+app.post("/settleUp", function (req, res) {
+  console.log(req.body);
+  const email = req.body.email;
+  const friend = req.body.friendSelected;
+
+  const updateTransactionQuery =
+    "update transaction set final_amount=0 where user_1 in (?, ?) and user_2 in (?, ?)";
+  console.log(updateTransactionQuery);
+  con.query(
+    updateTransactionQuery,
+    [email, friend, friend, email],
+    (err, result) => {
+      if (err) throw err;
+      console.log(result);
+    }
+  );
+  res.status(200).json({ message: "Successful" });
 });
 
 app.get("/profile/:email", function (req, res) {
@@ -387,6 +464,17 @@ app.get("/profile/:email", function (req, res) {
       timezone: result[0].timezone,
       language: result[0].language,
     });
+  });
+});
+
+app.get("/recentActivity/:email", function (req, res) {
+  const email = req.params.email;
+  const recentActivityQuery =
+    "select grp.email as useremail, grp.group_name, bll.descirption, bll.total_amount, date_format(bll.date,'%d-%b-%Y') as date, bll.email as bill_added_by from splitwise.usergroup grp inner join splitwise.bill bll on grp.group_name = bll.group_name and grp.email != bll.email and grp.email=? order by date desc";
+  con.query(recentActivityQuery, [email], (err, result) => {
+    if (err) throw err;
+    res.status(200);
+    res.send(result);
   });
 });
 
