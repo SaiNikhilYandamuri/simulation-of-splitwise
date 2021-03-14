@@ -24,7 +24,11 @@ function InviteList() {
       })
       .then((response) => {
         console.log(response);
-
+        cookie.save('groupSelected', groupSelected, {
+          path: '/',
+          httpOnly: false,
+          maxAge: 90000,
+        });
         sessionStorage.setItem('groupSelected', groupSelected);
         history.push('/groupHomePage');
       });

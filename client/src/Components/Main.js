@@ -10,6 +10,8 @@ import GroupsPage from './GroupsPage/GroupsPage';
 import InviteList from './InviteList/InviteList';
 import CreateGroup from './CreateGroup/CreateGroup';
 import GroupHomePage from './GroupHomePage/GroupHomePage';
+import RecentActivity from './RecentActivity/RecentActivity';
+import CreateGroupNew from './CreateGroup/CreateGroupNew';
 
 const Main = function () {
   return (
@@ -25,6 +27,8 @@ const Main = function () {
       <Route path="/inviteList" component={InviteList} />
       <Route path="/createGroup" component={CreateGroup} />
       <Route path="/groupHomePage" component={GroupHomePage} />
+      <Route path="/recentActivity" component={RecentActivity} />
+      <Route path="/createGroupNew" component={CreateGroupNew} />
     </div>
   );
 };

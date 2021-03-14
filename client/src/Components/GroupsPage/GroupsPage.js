@@ -30,7 +30,7 @@ function GroupsPage() {
               <Nav className="mr-auto">
                 <Nav.Link href="#home" />
               </Nav>
-              <Button variant="danger" href="./createGroup">
+              <Button variant="danger" href="./createGroupNew">
                 Create a group
               </Button>
             </Navbar>

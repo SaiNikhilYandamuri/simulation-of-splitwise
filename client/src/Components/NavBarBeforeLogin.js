@@ -15,7 +15,7 @@ function NavBarBeforeLogin() {
       </Button>
       <Button variant="warning" href="./signup">
         Signup
-      </Button>{' '}
+      </Button>
     </Navbar>
   );
 }
