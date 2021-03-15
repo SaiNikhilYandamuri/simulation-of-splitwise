@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import cookie from 'react-cookies';
+import { Redirect } from 'react-router';
 import { Col, Row, Nav, ListGroup, Modal, Button, InputGroup, FormControl } from 'react-bootstrap';
-
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 import Navbar from 'react-bootstrap/Navbar';
 import NavBarAfterLogin from '../NavBarAfterLogin';
-// import AddBill from '../AddBill/AddBill';
 import LeftSideNavBar from '../LeftSideNavBar';
 
 function GroupHomePage() {
@@ -15,9 +15,14 @@ function GroupHomePage() {
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
-  const email = cookie.load('email'); // sessionStorage.getItem('email');
+  const isLogged = useSelector((state) => state.isLogged);
+  const { email } = isLogged; // sessionStorage.getItem('email');
   const group = cookie.load('groupSelected');
 
+  let redirectVar = null;
+  if (!cookie.load('cookie')) {
+    redirectVar = <Redirect to="/login" />;
+  }
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -59,86 +64,90 @@ function GroupHomePage() {
     const response = await axios.get(getURL);
     console.log(response.data);
     getBills(response.data);
+    console.log(typeof bills);
     getMembersList();
   }, []);
   return (
     <div>
-      <NavBarAfterLogin />
+      {redirectVar}
+      <div>
+        <NavBarAfterLogin />
 
-      <Row>
-        <Col xs={2}>
-          <LeftSideNavBar />
-        </Col>
-        <Col xs={8}>
-          <Navbar bg="light" expand="lg">
-            <Navbar.Brand href="./groupHomePage">{groupName}</Navbar.Brand>
-            <Nav className="mr-auto">
-              <Nav.Link href="#home" />
-            </Nav>
-            <Button variant="primary" onClick={handleShow}>
-              Add Bill
-            </Button>
+        <Row>
+          <Col xs={2}>
+            <LeftSideNavBar />
+          </Col>
+          <Col xs={8}>
+            <Navbar bg="light" expand="lg">
+              <Navbar.Brand href="./groupHomePage">{groupName}</Navbar.Brand>
+              <Nav className="mr-auto">
+                <Nav.Link href="#home" />
+              </Nav>
+              <Button variant="primary" onClick={handleShow}>
+                Add Bill
+              </Button>
 
-            <Modal show={show} onHide={handleClose} animation={false}>
-              <Modal.Header closeButton>
-                <Modal.Title>Add Bill</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <InputGroup className="mb-3">
-                  <FormControl
-                    placeholder="Bill Name"
-                    aria-label="Bill Name"
-                    aria-describedby="basic-addon1"
-                    onChange={(e) => {
-                      setDescription(e.target.value);
-                    }}
-                  />
-                </InputGroup>
-                <InputGroup className="mb-3">
-                  <FormControl
-                    placeholder="Amount"
-                    aria-label="Amount"
-                    aria-describedby="basic-addon1"
-                    onChange={(e) => {
-                      setAmount(e.target.value);
-                    }}
-                  />
-                </InputGroup>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="danger" onClick={handleClose}>
-                  Cancel
-                </Button>
-                <Button variant="primary" onClick={handleBill}>
-                  Add Bill
-                </Button>
-              </Modal.Footer>
-            </Modal>
-          </Navbar>
+              <Modal show={show} onHide={handleClose} animation={false}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Add Bill</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <InputGroup className="mb-3">
+                    <FormControl
+                      placeholder="Bill Name"
+                      aria-label="Bill Name"
+                      aria-describedby="basic-addon1"
+                      onChange={(e) => {
+                        setDescription(e.target.value);
+                      }}
+                    />
+                  </InputGroup>
+                  <InputGroup className="mb-3">
+                    <FormControl
+                      placeholder="Amount"
+                      aria-label="Amount"
+                      aria-describedby="basic-addon1"
+                      onChange={(e) => {
+                        setAmount(e.target.value);
+                      }}
+                    />
+                  </InputGroup>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="danger" onClick={handleClose}>
+                    Cancel
+                  </Button>
+                  <Button variant="primary" onClick={handleBill}>
+                    Add Bill
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+            </Navbar>
 
-          <Row>
-            <Col>
-              <ListGroup variant="flush">
-                {bills.map((item) => (
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Bill Name: {item.descirption}</Col>
-                      <Col>Bill Amount: ${item.total_amount}</Col>
-                    </Row>
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
-            </Col>
-            <Col>
-              <ListGroup variant="flush">
-                {members.map((item) => (
-                  <ListGroup.Item>{item.email}</ListGroup.Item>
-                ))}
-              </ListGroup>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+            <Row>
+              <Col>
+                <ListGroup variant="flush">
+                  {bills.map((item) => (
+                    <ListGroup.Item>
+                      <Row>
+                        <Col>Bill Name: {item.descirption}</Col>
+                        <Col>Bill Amount: ${item.total_amount}</Col>
+                      </Row>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              </Col>
+              <Col>
+                <ListGroup variant="flush">
+                  {members.map((item) => (
+                    <ListGroup.Item>{item.email}</ListGroup.Item>
+                  ))}
+                </ListGroup>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+      </div>
     </div>
   );
 }

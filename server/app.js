@@ -104,41 +104,46 @@ app.post("/login", function (req, res) {
   //console.log(req.body);
   const email = req.body.email;
   const password = req.body.password;
+  console.log(email);
+  console.log(password);
   const selectLoginQuery =
-    "Select fullname,password,email from user where email=?";
+    "Select fullname,password,email,currency from user where email=?";
 
   console.log(selectLoginQuery);
   con.query(selectLoginQuery, [email], (err, result) => {
-    if (err) throw err;
-    if (result) {
-      if (result.length) {
-        console.log(result[0] + "Hello");
+    if (err) {
+      throw err;
+    } else {
+      if (result.length > 0) {
+        bcrypt
+          .compare(password, result[0].password)
+          .then(function (response) {
+            console.log(password);
+            if (response) {
+              res.cookie("cookie", "admin", {
+                maxAge: 9000000,
+                httpOnly: false,
+                path: "/",
+              });
+              req.session.user = result;
+              console.log(req.session.user);
+              res.status(200).json({
+                fullname: result[0].fullname,
+                email: result[0].email,
+                currency: result[0].currency,
+              });
 
-        bcrypt.compare(password, result[0].password).then(function (response) {
-          res.cookie("cookie", "admin", {
-            maxAge: 9000000,
-            httpOnly: false,
-            path: "/",
+              res.end("Successful Login");
+            } else {
+              res.status(404).json({ message: "Invalid credentials!" });
+            }
+          })
+          .catch((response) => {
+            res.status(404).json({ message: "Invalid credentials!" });
           });
-          req.session.user = result;
-          console.log(req.session.user);
-          res
-            .status(200)
-            .json({ fullname: result[0].fullname, email: result[0].email });
-
-          res.end("Successful Login");
-        });
-        const user = { username: req.body.email, password: req.body.password };
-        console.log("Inside login if");
-        req.session.user = user;
-
-        //console.log(res);
-        //console.log(req.session);
-      } else if (result.length === 0) {
+      } else {
         res.status(404).json({ message: "Invalid credentials!" });
       }
-
-      console.log(result);
     }
   });
 });
@@ -325,23 +330,6 @@ app.post("/creategroup", function (req, res) {
   if (executeValue) {
   }
 
-  /*form.forEach((user_1) => {
-    form.forEach((user_2) => {
-      if (user_1 != user_2) {
-        const updateTransactionTable =
-          "insert into transaction(user_1,user_2,final_amount,group_name) values(?,?,?,?)";
-        con.query(
-          updateTransactionTable,
-          [user_1.Email, user_2.Email, 0, groupName],
-          (err, result) => {
-            if (err) throw err;
-            console.log(result);
-          }
-        );
-      }
-    });
-  });*/
-
   console.log("Usergroup info 2");
 
   console.log("Successful");
@@ -481,3 +469,5 @@ app.get("/recentActivity/:email", function (req, res) {
 app.listen(port, () => {
   console.log("Server connected to port 4000");
 });
+
+module.exports = app;

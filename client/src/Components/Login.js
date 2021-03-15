@@ -1,7 +1,5 @@
 import axios from 'axios';
 import { React, useState, useEffect } from 'react';
-// import cookie from 'react-cookies';
-// import alert from 'alert';
 import { Redirect } from 'react-router';
 import cookie from 'react-cookies';
 import Button from 'react-bootstrap/Button';
@@ -57,7 +55,7 @@ function Login() {
           sessionStorage.setItem('email', response.data.email);
           sessionStorage.setItem('fullname', response.data.fullname);
           loadSuccess();
-          dispatch(logged(response.data.fullname, response.data.email));
+          dispatch(logged(response.data.fullname, response.data.email, response.data.currency));
         })
         .catch((err) => {
           setAlert(err.response.data.message);

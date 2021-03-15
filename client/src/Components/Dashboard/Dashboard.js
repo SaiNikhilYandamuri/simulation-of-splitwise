@@ -1,27 +1,30 @@
 import { React, useEffect, useState } from 'react';
 import axios from 'axios';
 import './Dashboard.css';
-import { Col, Row, Nav, ListGroup, Modal } from 'react-bootstrap';
+import { Col, Row, Nav, ListGroup, Modal, Alert } from 'react-bootstrap';
 import { Redirect } from 'react-router';
 import cookie from 'react-cookies';
+import { useSelector } from 'react-redux';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import NavBarAfterLogin from '../NavBarAfterLogin';
 import LeftSideNavBar from '../LeftSideNavBar';
 
 const Dashboard = function () {
-  // const [totalAmount, settotalAmount] = useState('');
   const [transactionsOwing, getTransactionsOwing] = useState([]);
   const [transactionsOwed, getTransactionsOwed] = useState([]);
   const [friendsDetails, getFriendsDetails] = useState([]);
+  const [alertOwe, setAlertOwe] = useState('');
+  const [alertOwed, setAlertOwed] = useState('');
   const [totalBalance, getTotalBalance] = useState(0.0);
   const [oweBalance, getOweBalance] = useState(0.0);
   const [owedBalance, getOwedBalance] = useState(0.0);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
+  const isLogged = useSelector((state) => state.isLogged);
+  const { email } = isLogged;
   const handleShow = () => setShow(true);
 
-  const email = cookie.load('email');
   let redirectVar = null;
   if (!cookie.load('cookie')) {
     redirectVar = <Redirect to="/login" />;
@@ -70,6 +73,12 @@ const Dashboard = function () {
       } else if (value < 0) {
         owing.push({ user: key, final_amount: value });
       }
+    }
+    if (owing.length === 0) {
+      setAlertOwe('You owe no one money');
+    }
+    if (owed.length === 0) {
+      setAlertOwed('No one owes you money');
     }
     getTransactionsOwing(owing);
     getTransactionsOwed(owed);
@@ -145,6 +154,12 @@ const Dashboard = function () {
         owing.push({ user: key, final_amount: value });
       }
     }
+    if (owing.length === 0) {
+      setAlertOwe('You owe no one money');
+    }
+    if (owed.length === 0) {
+      setAlertOwed('No one owes you money');
+    }
     getTransactionsOwing(owing);
     getTransactionsOwed(owed);
     getFriendsDetails(arrayFriends);
@@ -158,7 +173,7 @@ const Dashboard = function () {
       oweValue += ele.final_amount;
     });
     getOweBalance(oweValue);
-    getTotalBalance(owedValue + oweValue);
+    getTotalBalance(oweValue - owedValue);
     // getMembersList();
   }, []);
   return (
@@ -207,13 +222,13 @@ const Dashboard = function () {
             </Navbar>
             <Row>
               <Col>
-                <p>Total Balance: {totalBalance}</p>
+                <p>Total Balance: ${totalBalance}</p>
               </Col>
               <Col>
-                <p>Amount you owe: {oweBalance}</p>
+                <p>Amount you owe: ${oweBalance}</p>
               </Col>
               <Col>
-                <p>Amount you are owed: {owedBalance}</p>
+                <p>Amount you are owed: ${owedBalance}</p>
               </Col>
             </Row>
             <Row>
@@ -224,16 +239,18 @@ const Dashboard = function () {
               <Col>
                 {transactionsOwing.map((transaction) => (
                   <ListGroup.Item>
-                    {transaction.user} : {transaction.final_amount}
+                    {transaction.user} : ${transaction.final_amount}
                   </ListGroup.Item>
                 ))}
+                {alertOwe.length > 0 && <Alert variant="light">{alertOwe}</Alert>}
               </Col>
               <Col>
                 {transactionsOwed.map((transaction) => (
                   <ListGroup.Item>
-                    {transaction.user} : {transaction.final_amount}
+                    {transaction.user} : ${transaction.final_amount}
                   </ListGroup.Item>
                 ))}
+                {alertOwed.length > 0 && <Alert variant="light">{alertOwed}</Alert>}
               </Col>
             </Row>
           </Col>

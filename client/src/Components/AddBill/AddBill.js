@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import cookie from 'react-cookies';
 import { Button, Modal, InputGroup, FormControl } from 'react-bootstrap';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 function AddBill() {
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
-  const email = cookie.load('name'); // sessionStorage.getItem('email');
+  const isLogged = useSelector((state) => state.isLogged);
+  const { email } = isLogged;
+  // const email = cookie.load('name'); // sessionStorage.getItem('email');
   const group = cookie.load('groupSelected'); // sessionStorage.getItem('groupSelected');
 
   const handleClose = () => setShow(false);
@@ -30,6 +33,7 @@ function AddBill() {
         if (!err) console.log(err.response);
       });
   };
+  console.log(isLogged);
 
   return (
     <>

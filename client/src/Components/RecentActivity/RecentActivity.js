@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Row, Nav, ListGroup } from 'react-bootstrap';
+import { Col, Row, Nav, ListGroup, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import { Redirect } from 'react-router';
 import cookie from 'react-cookies';
@@ -11,6 +11,7 @@ import LeftSideNavBar from '../LeftSideNavBar';
 
 function RecentActivity() {
   const [text, getText] = useState([]);
+  const [alert, setAlert] = useState('');
   const email = cookie.load('email');
   useEffect(async () => {
     const getURL = `http://localhost:4000/recentActivity/${email}`;
@@ -24,6 +25,9 @@ function RecentActivity() {
       array.push(value);
     }
     console.log(array);
+    if (array.length === 0) {
+      setAlert('No recent activity to show');
+    }
     getText(array);
   }, []);
   let redirectVar = null;
@@ -59,6 +63,7 @@ function RecentActivity() {
                     </ListGroup.Item>
                   ))}
                 </ListGroup>
+                {alert.length > 0 && <Alert variant="light">{alert}</Alert>}
               </Col>
             </Row>
           </Col>

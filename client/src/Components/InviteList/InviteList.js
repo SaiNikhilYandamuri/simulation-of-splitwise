@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import cookie from 'react-cookies';
+import { Redirect } from 'react-router';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
-
-// import { useSelector } from 'react-redux';
-
+import { useSelector } from 'react-redux';
 import { ListGroup, Button, Modal } from 'react-bootstrap';
 
 function InviteList() {
@@ -14,7 +13,12 @@ function InviteList() {
   // const isLogged = useSelector((state) => state.isLogged.email);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const emailId = cookie.load('email'); // sessionStorage.getItem('email');
+  const isLogged = useSelector((state) => state.isLogged);
+  const emailId = isLogged.email;
+  let redirectVar = null;
+  if (!cookie.load('cookie')) {
+    redirectVar = <Redirect to="/login" />;
+  }
   const accepetInvitation = (groupSelected) => {
     console.log(emailId);
     axios
@@ -44,33 +48,36 @@ function InviteList() {
 
   return (
     <div>
-      <ListGroup variant="flush">
-        {groups.map((item) => (
-          <div>
-            <Button variant="light" href="" onClick={handleShow} value={item} key={item}>
-              {item}
-            </Button>
-            <Modal show={show} onHide={handleClose} animation={false}>
-              <Modal.Header closeButton>
-                <Modal.Title>Accept Invitation</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>Do you wish to accpet invitation to {item} group?</Modal.Body>
-              <Modal.Footer>
-                <Button variant="danger" onClick={handleClose}>
-                  No
-                </Button>
-                <Button
-                  variant="primary"
-                  value={item}
-                  onClick={(e) => accepetInvitation(e.currentTarget.value)}
-                >
-                  Yes
-                </Button>
-              </Modal.Footer>
-            </Modal>
-          </div>
-        ))}
-      </ListGroup>
+      {redirectVar}
+      <div>
+        <ListGroup variant="flush">
+          {groups.map((item) => (
+            <div>
+              <Button variant="light" href="" onClick={handleShow} value={item} key={item}>
+                {item}
+              </Button>
+              <Modal show={show} onHide={handleClose} animation={false}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Accept Invitation</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Do you wish to accpet invitation to {item} group?</Modal.Body>
+                <Modal.Footer>
+                  <Button variant="danger" onClick={handleClose}>
+                    No
+                  </Button>
+                  <Button
+                    variant="primary"
+                    value={item}
+                    onClick={(e) => accepetInvitation(e.currentTarget.value)}
+                  >
+                    Yes
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+            </div>
+          ))}
+        </ListGroup>
+      </div>
     </div>
   );
 }
