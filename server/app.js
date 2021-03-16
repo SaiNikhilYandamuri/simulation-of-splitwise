@@ -236,7 +236,7 @@ app.get("/getMembersOfGroup/:groupName", function (req, res) {
 
 app.post("/acceptInvite", function (req, res) {
   const email = req.body.emailId;
-  const groupName = req.body.groupSelected;
+  const groupName = req.body.groupName;
   const acceptInviteQuery =
     "update usergroup SET inviteacceptance=1 where email=? && group_name=?";
   console.log(acceptInviteQuery + email + groupName);

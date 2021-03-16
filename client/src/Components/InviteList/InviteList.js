@@ -12,28 +12,36 @@ function InviteList() {
   const [show, setShow] = useState(false);
   // const isLogged = useSelector((state) => state.isLogged.email);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = (groupSelected) => {
+    cookie.save('groupSelectedInvite', groupSelected, {
+      path: '/',
+      httpOnly: false,
+      maxAge: 90000,
+    });
+    setShow(true);
+  };
   const isLogged = useSelector((state) => state.isLogged);
   const emailId = isLogged.email;
   let redirectVar = null;
   if (!cookie.load('cookie')) {
     redirectVar = <Redirect to="/login" />;
   }
-  const accepetInvitation = (groupSelected) => {
+  const accepetInvitation = () => {
     console.log(emailId);
+    const groupName = cookie.load('groupSelectedInvite');
     axios
       .post('http://localhost:4000/acceptInvite', {
         emailId,
-        groupSelected,
+        groupName,
       })
       .then((response) => {
         console.log(response);
-        cookie.save('groupSelected', groupSelected, {
+        cookie.save('groupSelected', groupName, {
           path: '/',
           httpOnly: false,
           maxAge: 90000,
         });
-        sessionStorage.setItem('groupSelected', groupSelected);
+        sessionStorage.setItem('groupSelected', groupName);
         history.push('/groupHomePage');
       });
   };
@@ -53,23 +61,25 @@ function InviteList() {
         <ListGroup variant="flush">
           {groups.map((item) => (
             <div>
-              <Button variant="light" href="" onClick={handleShow} value={item} key={item}>
+              <Button
+                variant="light"
+                href=""
+                onClick={(e) => handleShow(e.currentTarget.value)}
+                value={item}
+                key={item}
+              >
                 {item}
               </Button>
               <Modal show={show} onHide={handleClose} animation={false}>
                 <Modal.Header closeButton>
                   <Modal.Title>Accept Invitation</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>Do you wish to accpet invitation to {item} group?</Modal.Body>
+                <Modal.Body>Do you wish to accpet invitation to group?</Modal.Body>
                 <Modal.Footer>
                   <Button variant="danger" onClick={handleClose}>
                     No
                   </Button>
-                  <Button
-                    variant="primary"
-                    value={item}
-                    onClick={(e) => accepetInvitation(e.currentTarget.value)}
-                  >
+                  <Button variant="primary" onClick={accepetInvitation}>
                     Yes
                   </Button>
                 </Modal.Footer>

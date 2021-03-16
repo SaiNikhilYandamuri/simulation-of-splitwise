@@ -13,6 +13,7 @@ function GroupHomePage() {
   const [bills, getBills] = useState([]);
   const [members, getMembers] = useState([]);
   const [show, setShow] = useState(false);
+  const [showLG, setShowLG] = useState(false);
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
   const isLogged = useSelector((state) => state.isLogged);
@@ -25,6 +26,9 @@ function GroupHomePage() {
   }
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const handleCloseLG = () => setShowLG(false);
+  const handleShowLG = () => setShowLG(true);
 
   const getBillsList = async () => {
     const getURL = `http://localhost:4000/getBillsOfGroup/${groupName}`;
@@ -52,6 +56,7 @@ function GroupHomePage() {
       .then((response) => {
         console.log(response);
         handleClose();
+        handleCloseLG();
         getBillsList();
         getMembersList();
       })
@@ -86,8 +91,7 @@ function GroupHomePage() {
               <Button variant="primary" onClick={handleShow}>
                 Add Bill
               </Button>
-
-              <Modal show={show} onHide={handleClose} animation={false}>
+              <Modal className="addbill" show={show} onHide={handleClose} animation={false}>
                 <Modal.Header closeButton>
                   <Modal.Title>Add Bill</Modal.Title>
                 </Modal.Header>
@@ -145,6 +149,27 @@ function GroupHomePage() {
                 </ListGroup>
               </Col>
             </Row>
+          </Col>
+          <Col>
+            <div>
+              <Navbar bg="light" expand="lg">
+                <Button variant="warning" onClick={handleShowLG}>
+                  Leave Group
+                </Button>
+                <Modal show={showLG} onHide={handleCloseLG} animation={false}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Leave Group</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>Do you wish to leave the group?</Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="danger" onClick={handleCloseLG}>
+                      No
+                    </Button>
+                    <Button variant="primary">Yes</Button>
+                  </Modal.Footer>
+                </Modal>
+              </Navbar>
+            </div>
           </Col>
         </Row>
       </div>
