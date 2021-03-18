@@ -11,6 +11,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavBarAfterLogin from '../NavBarAfterLogin';
 import LeftSideNavBar from '../LeftSideNavBar';
 import 'numeral/locales/en-gb';
+import backendServer from '../../Config';
 
 function GroupHomePage() {
   const groupName = cookie.load('groupSelected'); // sessionStorage.getItem('groupSelected');
@@ -37,14 +38,14 @@ function GroupHomePage() {
   const handleShowLG = () => setShowLG(true);
 
   const getBillsList = async () => {
-    const getURL = `http://localhost:4000/getBillsOfGroup/${groupName}`;
+    const getURL = `${backendServer}/getBillsOfGroup/${groupName}`;
     const response = await axios.get(getURL);
     console.log(response.data);
     getBills(response.data);
   };
 
   const getMembersList = async () => {
-    const getURL = `http://localhost:4000/getMembersOfGroup/${groupName}&${email}`;
+    const getURL = `${backendServer}/getMembersOfGroup/${groupName}&${email}`;
     console.log(email);
     axios.get(getURL).then((response) => {
       console.log(response);
@@ -85,7 +86,7 @@ function GroupHomePage() {
       alert('Not possible to leave the group');
     } else {
       axios
-        .post('http://localhost:4000/leaveGroup', {
+        .post(`${backendServer}/leaveGroup`, {
           groupName,
           email,
         })
@@ -100,7 +101,7 @@ function GroupHomePage() {
 
     if (Number.parseFloat(amount)) {
       axios
-        .post('http://localhost:4000/addBill', {
+        .post(`${backendServer}/addBill`, {
           email,
           group,
           description,
@@ -122,7 +123,7 @@ function GroupHomePage() {
     }
   };
   useEffect(async () => {
-    const getURL = `http://localhost:4000/getBillsOfGroup/${groupName}`;
+    const getURL = `${backendServer}/getBillsOfGroup/${groupName}`;
     const response = await axios.get(getURL);
     numeral.defaultFormat('$0,0.00');
     console.log(currency);

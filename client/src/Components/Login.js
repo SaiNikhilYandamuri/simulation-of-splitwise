@@ -9,6 +9,7 @@ import Form from 'react-bootstrap/Form';
 import { Row, Col, Alert } from 'react-bootstrap';
 import logged from '../actions';
 import NavBarBeforeLogin from './NavBarBeforeLogin';
+import backendServer from '../Config';
 
 function Login() {
   const [email, emailChangeHandler] = useState('');
@@ -32,10 +33,11 @@ function Login() {
     e.preventDefault();
     console.log('inside function');
 
+    const url = `${backendServer}/login`;
     if (email.includes('@') && email.includes('.com')) {
       axios.defaults.withCredentials = true;
       axios
-        .post('http://localhost:4000/login', {
+        .post(url, {
           email,
           password,
         })
@@ -72,7 +74,7 @@ function Login() {
     // return <Alert variant="danger">Email Format Wrong</Alert>;
   };
   useEffect(() => {
-    axios.get('http://localhost:4000/login').then((response) => {
+    axios.get(`${backendServer}/login`).then((response) => {
       if (response.data.loggedIn === true) {
         console.log(response);
       }

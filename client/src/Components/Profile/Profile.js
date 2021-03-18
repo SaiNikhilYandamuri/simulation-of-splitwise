@@ -8,6 +8,7 @@ import numeral from 'numeral';
 import { useSelector, useDispatch } from 'react-redux';
 import logged from '../../actions';
 import NavBarAfterLogin from '../NavBarAfterLogin';
+import backendServer from '../../Config';
 
 function Profile() {
   const [email, getEmail] = useState('');
@@ -41,7 +42,7 @@ function Profile() {
   };
   const updateProfile = () => {
     axios
-      .post('http://localhost:4000/updateProfile', {
+      .post(`${backendServer}/updateProfile`, {
         emailId,
         emailUpdate,
         fullnameUpdate,
@@ -88,7 +89,7 @@ function Profile() {
   };
 
   useEffect(async () => {
-    const getURL = `http://localhost:4000/profile/${emailId}`;
+    const getURL = `${backendServer}/profile/${emailId}`;
     const response = await axios.get(getURL);
     console.log(response.data);
     const arrayCurrency = [];

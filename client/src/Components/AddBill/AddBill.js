@@ -3,6 +3,7 @@ import cookie from 'react-cookies';
 import { Button, Modal, InputGroup, FormControl } from 'react-bootstrap';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+import backendServer from '../../Config';
 
 function AddBill() {
   const [show, setShow] = useState(false);
@@ -19,7 +20,7 @@ function AddBill() {
     e.preventDefault();
     console.log('hello');
     axios
-      .post('http://localhost:4000/addBill', {
+      .post(`${backendServer}/addBill`, {
         email,
         group,
         description,

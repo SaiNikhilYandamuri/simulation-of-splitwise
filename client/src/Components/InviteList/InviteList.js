@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { ListGroup, Button, Modal } from 'react-bootstrap';
+import backendServer from '../../Config';
 
 function InviteList() {
   const [groups, getGroups] = useState([]);
@@ -30,7 +31,7 @@ function InviteList() {
     console.log(emailId);
     const groupName = cookie.load('groupSelectedInvite');
     axios
-      .post('http://localhost:4000/acceptInvite', {
+      .post(`${backendServer}/acceptInvite`, {
         emailId,
         groupName,
       })
@@ -48,7 +49,7 @@ function InviteList() {
   console.log('On load');
   console.log(groups);
   useEffect(async () => {
-    const getURL = `http://localhost:4000/invitegroups/${emailId}`;
+    const getURL = `${backendServer}/invitegroups/${emailId}`;
     const response = await axios.get(getURL);
     console.log(response.data);
     getGroups(response.data);

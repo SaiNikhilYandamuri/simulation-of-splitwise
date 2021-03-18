@@ -6,7 +6,7 @@ import cookie from 'react-cookies';
 import Navbar from 'react-bootstrap/Navbar';
 // import Button from 'react-bootstrap/Button';
 import NavBarAfterLogin from '../NavBarAfterLogin';
-
+import backendServer from '../../Config';
 import LeftSideNavBar from '../LeftSideNavBar';
 
 function RecentActivity() {
@@ -14,7 +14,7 @@ function RecentActivity() {
   const [alert, setAlert] = useState('');
   const email = cookie.load('email');
   useEffect(async () => {
-    const getURL = `http://localhost:4000/recentActivity/${email}`;
+    const getURL = `${backendServer}/recentActivity/${email}`;
     const response = await axios.get(getURL);
     console.log(typeof response.data);
     const array = [];

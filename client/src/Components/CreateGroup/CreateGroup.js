@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { Col, Row } from 'react-bootstrap';
 import NavBarAfterLogin from '../NavBarAfterLogin';
 import LeftSideNavBar from '../LeftSideNavBar';
+import backendServer from '../../Config';
 
 function CreateGroup() {
   const [form, setForm] = useState([]);
@@ -98,7 +99,7 @@ function CreateGroup() {
     };
     console.log(form.length);
 
-    axios.post('http://localhost:4000/creategroup', groupDetails).then((response) => {
+    axios.post(`${backendServer}/creategroup`, groupDetails).then((response) => {
       console.log(response);
       cookie.save('groupSelected', groupName, {
         path: '/',

@@ -11,6 +11,7 @@ import Form from 'react-bootstrap/Form';
 import { Row, Col, Alert } from 'react-bootstrap';
 import { signed } from '../actions';
 import NavBarBeforeLogin from './NavBarBeforeLogin';
+import backendServer from '../Config';
 
 function Signup() {
   const [email, emailChangeHandler] = useState('');
@@ -18,6 +19,8 @@ function Signup() {
   const [fullname, fullnameChangeHandler] = useState('');
   const [alert, setAlert] = useState('');
   const history = useHistory();
+
+  const url = `${backendServer}/signup`;
 
   const isLogged = useSelector((state) => state.isLogged);
   const dispatch = useDispatch();
@@ -37,7 +40,7 @@ function Signup() {
     axios.defaults.withCredentials = true;
     if (email.includes('@') && email.includes('.com')) {
       axios
-        .post('http://localhost:4000/signup', {
+        .post(url, {
           fullname,
           email,
           password,

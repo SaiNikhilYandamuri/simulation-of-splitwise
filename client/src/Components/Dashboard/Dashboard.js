@@ -10,7 +10,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import NavBarAfterLogin from '../NavBarAfterLogin';
 import LeftSideNavBar from '../LeftSideNavBar';
-
+import backendServer from '../../Config';
 import 'numeral/locales/en-gb';
 
 const Dashboard = function () {
@@ -40,7 +40,7 @@ const Dashboard = function () {
       numeral.locale('en-gb');
     }
     // console.log(isLogged);
-    const getURL = `http://localhost:4000/totalAmount/${emailId}`;
+    const getURL = `${backendServer}/totalAmount/${emailId}`;
     // const response = await axios.get(getURL);
     axios
       .get(getURL)
@@ -115,7 +115,7 @@ const Dashboard = function () {
   const settleUp = (friendSelected) => {
     console.log(friendSelected);
     axios
-      .post('http://localhost:4000/settleUp/', {
+      .post(`${backendServer}/settleUp/`, {
         email,
         friendSelected,
       })

@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import './MyGroups.css';
 import { ListGroup, Button } from 'react-bootstrap';
+import backendServer from '../../Config';
 
 function MyGroups() {
   const [groups, getGroups] = useState([]);
@@ -21,7 +22,7 @@ function MyGroups() {
   console.log('On load');
   console.log(groups);
   useEffect(async () => {
-    const getURL = `http://localhost:4000/mygroups/${emailId}`;
+    const getURL = `${backendServer}/mygroups/${emailId}`;
     const response = await axios.get(getURL);
     console.log(response.data);
     getGroups(response.data);

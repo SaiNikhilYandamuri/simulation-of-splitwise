@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 import NavBarAfterLogin from '../NavBarAfterLogin';
 import LeftSideNavBar from '../LeftSideNavBar';
+import backendServer from '../../Config';
 
 function CreateGroupNew() {
   const [selectOptions, setselectOptions] = useState(() => []);
@@ -33,7 +34,7 @@ function CreateGroupNew() {
     console.log(value.length);
 
     axios
-      .post('http://localhost:4000/creategroup', groupDetails)
+      .post(`${backendServer}/creategroup`, groupDetails)
       .then((response) => {
         console.log(response);
         cookie.save('groupSelected', groupName, {
@@ -50,7 +51,7 @@ function CreateGroupNew() {
       });
   };
   useEffect(() => {
-    const url = `http://localhost:4000/users/${email}`;
+    const url = `${backendServer}/users/${email}`;
     axios
       .get(url)
       .then((response) => {
