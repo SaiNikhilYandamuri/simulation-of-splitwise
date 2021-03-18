@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders 1`] = `
+<nav
+  className="navbar navbar-expand-lg navbar-light bg-success"
+>
+  <a
+    className="navbar-brand"
+    href="./landing"
+  >
+    Splitwise
+  </a>
+  <div
+    className="mr-auto navbar-nav"
+    onKeyDown={[Function]}
+  >
+    <a
+      className="nav-link"
+      data-rb-event-key="#home"
+      href="#home"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+    />
+  </div>
+  <a
+    className="btn btn-outline-light"
+    data-testid="Login"
+    href="./login"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+  >
+    Login
+  </a>
+  <a
+    className="btn btn-warning"
+    href="./signup"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+  >
+    Signup
+  </a>
+</nav>
+`;

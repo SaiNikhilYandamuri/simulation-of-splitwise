@@ -1,0 +1,117 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders 1`] = `
+<div>
+  <div>
+    <nav
+      className="navbar navbar-expand-lg navbar-light bg-success"
+    >
+      <a
+        className="navbar-brand"
+        href="./landing"
+      >
+        Splitwise
+      </a>
+      <div
+        className="mr-auto navbar-nav"
+        onKeyDown={[Function]}
+      >
+        <a
+          className="nav-link"
+          data-rb-event-key="#home"
+          href="#home"
+          onClick={[Function]}
+          onKeyDown={[Function]}
+        />
+      </div>
+      <a
+        className="btn btn-outline-light"
+        data-testid="Login"
+        href="./login"
+        onClick={[Function]}
+        onKeyDown={[Function]}
+      >
+        Login
+      </a>
+      <a
+        className="btn btn-warning"
+        href="./signup"
+        onClick={[Function]}
+        onKeyDown={[Function]}
+      >
+        Signup
+      </a>
+    </nav>
+    <div
+      className="row"
+    >
+      <div
+        className="col"
+      />
+      <div
+        className="col"
+      >
+        <center>
+          <form
+            className=""
+          >
+            <small
+              className="text-muted form-text"
+            >
+              <h4>
+                Welcome to Splitwise
+              </h4>
+            </small>
+            <div
+              className="form-group"
+            >
+              <label
+                className="form-label"
+                htmlFor="formBasicEmail"
+              >
+                Email address
+              </label>
+              <input
+                className="form-control form-control-sm"
+                id="formBasicEmail"
+                onChange={[Function]}
+                placeholder="Enter email"
+                type="email"
+              />
+            </div>
+            <div
+              className="form-group"
+            >
+              <label
+                className="form-label"
+                htmlFor="formBasicPassword"
+              >
+                Password
+              </label>
+              <input
+                className="form-control form-control-sm"
+                id="formBasicPassword"
+                onChange={[Function]}
+                placeholder="Password"
+                type="password"
+              />
+            </div>
+            <button
+              className="btn btn-warning"
+              data-testid="LoginButton"
+              disabled={false}
+              onClick={[Function]}
+              type="submit"
+            >
+              Log in
+            </button>
+          </form>
+        </center>
+      </div>
+      <div
+        className="col"
+      />
+    </div>
+  </div>
+</div>
+`;

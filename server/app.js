@@ -44,6 +44,15 @@ const con = mysql.createConnection({
   database: "splitwise",
 });
 
+// const con = mysql.createPool({
+//   connectionLimit: 10,
+//   host: "splitwise-instance.cxfc1pmp6ndg.us-east-2.rds.amazonaws.com",
+//   user: "admin",
+//   password: "chakri96",
+//   ssl: true,
+//   database: "splitwise",
+// });
+
 con.connect((err) => {
   if (err) {
     console.log(err);
@@ -212,26 +221,49 @@ app.get("/getBillsOfGroup/:groupName", function (req, res) {
   });
 });
 
-app.get("/getMembersOfGroup/:groupName", function (req, res) {
-  console.log(req.params.groupName);
-  const groupName = req.params.groupName;
-  const getMembersQuery =
-    "select email from usergroup where group_name=? && inviteacceptance=1";
-  console.log(getMembersQuery);
-  const array = [];
-  con.query(getMembersQuery, [groupName], (err, result) => {
-    console.log(result);
+app.post("/leaveGroup", function (req, res) {
+  console.log(req.body);
+  const groupName = req.body.groupName;
+  const email = req.body.email;
+  const leaveGroupQuery =
+    "update usergroup set inviteacceptance=-1 where email=? and group_name=?";
+  con.query(leaveGroupQuery, [email, groupName], (err, result) => {
     if (err) throw err;
-    Object.keys(result).forEach(function (key) {
-      const row = result[key];
-      //const rowName = { groups_name: row.group_name };
-      console.log(row);
-      array.push(row);
-    });
-    console.log(array);
-    res.status(200);
-    res.send(array);
+    console.log(result);
+    res.status(200).json({ message: "Left group" });
   });
+});
+
+app.get("/getMembersOfGroup/:groupName", function (req, res) {
+  //console.log(req.body);
+  const params = req.params.groupName.split("&");
+  //console.log(params);
+  const groupName = params[0];
+  const email = params[1];
+  const getMemberQueryFromTransaction =
+    "select user_1, user_2, final_amount from splitwise.transaction where group_name=? and (user_1 = ? or user_2 = ?)";
+  console.log(groupName + email);
+  //const getMembersQuery =
+  //"select email from usergroup where group_name=? && inviteacceptance=1";
+  //console.log(getMembersQuery);
+  const array = [];
+  con.query(
+    getMemberQueryFromTransaction,
+    [groupName, email, email],
+    (err, result) => {
+      console.log(result);
+      if (err) throw err;
+      Object.keys(result).forEach(function (key) {
+        const row = result[key];
+        //const rowName = { groups_name: row.group_name };
+        console.log(row);
+        array.push(row);
+      });
+      console.log(array);
+      res.status(200);
+      res.send(array);
+    }
+  );
 });
 
 app.post("/acceptInvite", function (req, res) {
@@ -453,6 +485,58 @@ app.get("/profile/:email", function (req, res) {
       language: result[0].language,
     });
   });
+});
+
+app.post("/updateProfile", function (req, res) {
+  console.log("In profile update");
+  const emailId = req.body.emailId;
+  const emailUpdate = req.body.emailUpdate;
+  const fullnameUpdate = req.body.fullnameUpdate;
+  const phonenumberUpdate = req.body.phonenumberUpdate;
+  const currencyUpdate = req.body.currencyUpdate;
+  const languageUpdate = req.body.languageUpdate;
+  if (emailUpdate !== "") {
+    if (emailUpdate !== emailId) {
+      const updateAlias = "update user set alias=? where email=?";
+      con.query(updateAlias, [emailUpdate, emailId], (err, result) => {
+        if (err) throw err;
+        console.log(result);
+      });
+    }
+  }
+
+  if (fullnameUpdate !== "") {
+    const updateAlias = "update user set fullname=? where email=?";
+    con.query(updateAlias, [fullnameUpdate, emailId], (err, result) => {
+      if (err) throw err;
+      console.log(result);
+    });
+  }
+
+  if (phonenumberUpdate !== "") {
+    const updateAlias = "update user set phonenumber=? where email=?";
+    con.query(updateAlias, [phonenumberUpdate, emailId], (err, result) => {
+      if (err) throw err;
+      console.log(result);
+    });
+  }
+
+  if (currencyUpdate !== "") {
+    const updateAlias = "update user set currency=? where email=?";
+    con.query(updateAlias, [currencyUpdate, emailId], (err, result) => {
+      if (err) throw err;
+      console.log(result);
+    });
+  }
+
+  if (languageUpdate !== "") {
+    const updateAlias = "update user set language=? where email=?";
+    con.query(updateAlias, [languageUpdate, emailId], (err, result) => {
+      if (err) throw err;
+      console.log(result);
+    });
+  }
+  res.status(200).json({ message: "Updation Successful" });
 });
 
 app.get("/recentActivity/:email", function (req, res) {

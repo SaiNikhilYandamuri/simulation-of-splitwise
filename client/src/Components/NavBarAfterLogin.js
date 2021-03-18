@@ -28,7 +28,9 @@ function NavBarAfterLogin() {
   return (
     <div>
       <Navbar bg="success" expand="lg">
-        <Navbar.Brand href="/dashboard">Splitwise</Navbar.Brand>
+        <Navbar.Brand href="/dashboard" data-testid="Splitwise">
+          Splitwise
+        </Navbar.Brand>
         <Nav className="mr-auto">
           <Nav.Link href="#home" />
         </Nav>

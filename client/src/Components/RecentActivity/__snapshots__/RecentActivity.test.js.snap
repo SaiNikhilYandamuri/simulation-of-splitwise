@@ -1,0 +1,138 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders 1`] = `
+Array [
+  <div>
+    <div
+      className="dashboard"
+    >
+      <div>
+        <nav
+          className="navbar navbar-expand-lg navbar-light bg-success"
+        >
+          <a
+            className="navbar-brand"
+            data-testid="Splitwise"
+            href="/dashboard"
+          >
+            Splitwise
+          </a>
+          <div
+            className="mr-auto navbar-nav"
+            onKeyDown={[Function]}
+          >
+            <a
+              className="nav-link"
+              data-rb-event-key="#home"
+              href="#home"
+              onClick={[Function]}
+              onKeyDown={[Function]}
+            />
+          </div>
+          <div
+            className="nav-item dropdown"
+          >
+            <a
+              aria-expanded={false}
+              aria-haspopup={true}
+              className="dropdown-toggle nav-link"
+              href="#"
+              id="basic-nav-dropdown"
+              onClick={[Function]}
+              onKeyDown={[Function]}
+              role="button"
+            >
+              
+            </a>
+          </div>
+        </nav>
+      </div>
+      <div
+        className="row"
+      >
+        <div
+          className="col-2"
+        >
+          <div>
+            <div
+              className="flex-column nav"
+              onKeyDown={[Function]}
+            >
+              <a
+                className="nav-link"
+                data-rb-event-key="/dashboard"
+                href="/dashboard"
+                onClick={[Function]}
+                onKeyDown={[Function]}
+              >
+                Dashboard
+              </a>
+              <a
+                className="nav-link"
+                data-rb-event-key="/recentActivity"
+                href="/recentActivity"
+                onClick={[Function]}
+                onKeyDown={[Function]}
+              >
+                Recent Activity
+              </a>
+              <a
+                className="nav-link"
+                data-rb-event-key="/groupPage"
+                href="/groupPage"
+                onClick={[Function]}
+                onKeyDown={[Function]}
+              >
+                Groups Dashboard
+              </a>
+            </div>
+          </div>
+        </div>
+        <div
+          className="col-8"
+        >
+          <nav
+            className="navbar navbar-expand-lg navbar-light bg-light"
+          >
+            <a
+              className="navbar-brand"
+              data-testid="RecentActivity"
+              href="./recentActivity"
+            >
+              Recent Activity
+            </a>
+            <div
+              className="mr-auto navbar-nav"
+              onKeyDown={[Function]}
+            >
+              <a
+                className="nav-link"
+                data-rb-event-key="#home"
+                href="#home"
+                onClick={[Function]}
+                onKeyDown={[Function]}
+              />
+            </div>
+          </nav>
+          <div
+            className="row"
+          >
+            <div
+              className="col"
+            >
+              <div
+                className="list-group"
+                onKeyDown={[Function]}
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="col"
+        />
+      </div>
+    </div>
+  </div>,
+  " ",
+]
+`;

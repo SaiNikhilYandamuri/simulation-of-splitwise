@@ -47,7 +47,9 @@ function RecentActivity() {
           </Col>
           <Col xs={8}>
             <Navbar bg="light" expand="lg">
-              <Navbar.Brand href="./recentActivity">Recent Activity</Navbar.Brand>
+              <Navbar.Brand href="./recentActivity" data-testid="RecentActivity">
+                Recent Activity
+              </Navbar.Brand>
               <Nav className="mr-auto">
                 <Nav.Link href="#home" />
               </Nav>

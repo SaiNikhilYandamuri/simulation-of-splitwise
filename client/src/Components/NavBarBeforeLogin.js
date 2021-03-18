@@ -1,7 +1,5 @@
 import React from 'react';
-import Navbar from 'react-bootstrap/Navbar';
-import Button from 'react-bootstrap/Button';
-import Nav from 'react-bootstrap/esm/Nav';
+import { Navbar, Button, Nav } from 'react-bootstrap';
 
 function NavBarBeforeLogin() {
   return (
@@ -10,7 +8,7 @@ function NavBarBeforeLogin() {
       <Nav className="mr-auto">
         <Nav.Link href="#home" />
       </Nav>
-      <Button variant="outline-light" href="./login">
+      <Button variant="outline-light" href="./login" data-testid="Login">
         Login
       </Button>
       <Button variant="warning" href="./signup">

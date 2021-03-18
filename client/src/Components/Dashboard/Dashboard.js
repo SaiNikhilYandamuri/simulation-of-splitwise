@@ -4,11 +4,14 @@ import './Dashboard.css';
 import { Col, Row, Nav, ListGroup, Modal, Alert } from 'react-bootstrap';
 import { Redirect } from 'react-router';
 import cookie from 'react-cookies';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
+import numeral from 'numeral';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
 import NavBarAfterLogin from '../NavBarAfterLogin';
 import LeftSideNavBar from '../LeftSideNavBar';
+
+import 'numeral/locales/en-gb';
 
 const Dashboard = function () {
   const [transactionsOwing, getTransactionsOwing] = useState([]);
@@ -21,7 +24,8 @@ const Dashboard = function () {
   const [owedBalance, getOwedBalance] = useState(0.0);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const isLogged = useSelector((state) => state.isLogged);
+  // const isLogged = useSelector((state) => state.isLogged);
+  const currency = cookie.load('currency');
   const email = cookie.load('email');
   const handleShow = () => setShow(true);
 
@@ -30,7 +34,12 @@ const Dashboard = function () {
     redirectVar = <Redirect to="/login" />;
   }
   const doEverything = async (emailId) => {
-    console.log(isLogged);
+    numeral.defaultFormat('$0,0.00');
+    console.log(currency);
+    if (currency === 'GBP') {
+      numeral.locale('en-gb');
+    }
+    // console.log(isLogged);
     const getURL = `http://localhost:4000/totalAmount/${emailId}`;
     // const response = await axios.get(getURL);
     axios
@@ -198,7 +207,9 @@ const Dashboard = function () {
           </Col>
           <Col xs={8}>
             <Navbar bg="light" expand="lg">
-              <Navbar.Brand href="./dashboard">Dashboard</Navbar.Brand>
+              <Navbar.Brand href="./dashboard" data-testid="Dashboard">
+                Dashboard
+              </Navbar.Brand>
               <Nav className="mr-auto">
                 <Nav.Link href="#home" />
               </Nav>
@@ -231,13 +242,13 @@ const Dashboard = function () {
             </Navbar>
             <Row>
               <Col>
-                <p>Total Balance: ${totalBalance}</p>
+                <p>Total Balance: {numeral(totalBalance).format()}</p>
               </Col>
               <Col>
-                <p>Amount you owe: ${oweBalance}</p>
+                <p>Amount you owe: {numeral(oweBalance).format()}</p>
               </Col>
               <Col>
-                <p>Amount you are owed: ${owedBalance}</p>
+                <p>Amount you are owed: {numeral(owedBalance).format()}</p>
               </Col>
             </Row>
             <Row>
@@ -248,7 +259,7 @@ const Dashboard = function () {
               <Col>
                 {transactionsOwing.map((transaction) => (
                   <ListGroup.Item>
-                    {transaction.user} : ${transaction.final_amount}
+                    {transaction.user} : {numeral(transaction.final_amount).format()}
                   </ListGroup.Item>
                 ))}
                 {alertOwe.length > 0 && <Alert variant="light">{alertOwe}</Alert>}
@@ -256,7 +267,7 @@ const Dashboard = function () {
               <Col>
                 {transactionsOwed.map((transaction) => (
                   <ListGroup.Item>
-                    {transaction.user} : ${transaction.final_amount}
+                    {transaction.user} : {numeral(transaction.final_amount).format()}
                   </ListGroup.Item>
                 ))}
                 {alertOwed.length > 0 && <Alert variant="light">{alertOwed}</Alert>}

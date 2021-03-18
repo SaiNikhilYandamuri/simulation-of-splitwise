@@ -52,6 +52,11 @@ function Login() {
             httpOnly: false,
             maxAge: 90000,
           });
+          cookie.save('currency', response.data.currency, {
+            path: '/',
+            httpOnly: false,
+            maxAge: 90000,
+          });
           sessionStorage.setItem('email', response.data.email);
           sessionStorage.setItem('fullname', response.data.fullname);
           loadSuccess();
@@ -112,7 +117,12 @@ function Login() {
                   />
                 </Form.Group>
 
-                <Button variant="warning" type="submit" onClick={submitLogin}>
+                <Button
+                  variant="warning"
+                  type="submit"
+                  onClick={submitLogin}
+                  data-testid="LoginButton"
+                >
                   Log in
                 </Button>
                 {alert.length > 0 && <Alert variant="danger">{alert}</Alert>}

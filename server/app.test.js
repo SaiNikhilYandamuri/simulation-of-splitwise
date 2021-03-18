@@ -37,7 +37,7 @@ describe("Splitwise", function () {
         .send({ email: "sainikhil@splitwise.com", password: "sainikhil" })
         .then(function (res) {
           expect(res.text).to.equal(
-            '{"fullname":"Sai Nikhil","email":"sainikhil@splitwise.com","currency":"USD"}'
+            '{"fullname":"Yandamuri Sai Nikhil","email":"sainikhil@splitwise.com","currency":"GBP"}'
           );
         })
         .catch((error) => {
@@ -66,13 +66,13 @@ describe("Splitwise", function () {
         agent
           .post("/signup")
           .send({
-            email: "newuser@splitwise.com",
+            email: "newuser1@splitwise.com",
             password: "password",
             fullname: "new user",
           })
           .then(function (res) {
             expect(res.text).to.equal(
-              '{"fullname":"new user","email":"newuser@splitwise.com"}'
+              '{"fullname":"new user","email":"newuser1@splitwise.com"}'
             );
           })
           .catch((error) => {
@@ -88,6 +88,38 @@ describe("Splitwise", function () {
               console.log(res.text);
               expect(res.text).to.equal(
                 '{"email":"madhavi@splitwise.com","fullname":"Madhavi","phonenumber":1234567890,"currency":"USD","timezone":"(GMT-08:00) Pacific Time","language":"English"}'
+              );
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        });
+      });
+
+      describe("Bills Test", function () {
+        it("Get Bills of a Group", () => {
+          agent
+            .get("/getBillsOfGroup/lol")
+            .then(function (res) {
+              console.log(res.text);
+              expect(res.text).to.equal(
+                '[{"descirption":"Hello Worl","total_amount":500,"email":"nithya@splitwise.com"},{"descirption":"Rice","total_amount":500,"email":"sainikhil@splitwise.com"}]'
+              );
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        });
+      });
+
+      describe("Groups Test", function () {
+        it("Get Groups of a User", () => {
+          agent
+            .get("/mygroups/sainikhil@splitwise.com")
+            .then(function (res) {
+              console.log(res.text);
+              expect(res.text).to.equal(
+                '["Bros","Family","Killer","Lasning","lol","Popular"]'
               );
             })
             .catch((error) => {

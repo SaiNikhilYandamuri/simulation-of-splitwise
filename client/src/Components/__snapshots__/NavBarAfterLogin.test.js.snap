@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders 1`] = `
+<div>
+  <nav
+    className="navbar navbar-expand-lg navbar-light bg-success"
+  >
+    <a
+      className="navbar-brand"
+      data-testid="Splitwise"
+      href="/dashboard"
+    >
+      Splitwise
+    </a>
+    <div
+      className="mr-auto navbar-nav"
+      onKeyDown={[Function]}
+    >
+      <a
+        className="nav-link"
+        data-rb-event-key="#home"
+        href="#home"
+        onClick={[Function]}
+        onKeyDown={[Function]}
+      />
+    </div>
+    <div
+      className="nav-item dropdown"
+    >
+      <a
+        aria-expanded={false}
+        aria-haspopup={true}
+        className="dropdown-toggle nav-link"
+        href="#"
+        id="basic-nav-dropdown"
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        role="button"
+      >
+        
+      </a>
+    </div>
+  </nav>
+</div>
+`;

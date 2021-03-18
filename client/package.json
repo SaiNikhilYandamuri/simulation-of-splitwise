@@ -10,6 +10,8 @@
     "axios": "^0.21.1",
     "baseui": "^9.111.2",
     "bootstrap": "^4.6.0",
+    "jest-dom": "^4.0.0",
+    "numeral": "^2.0.6",
     "react": "^17.0.1",
     "react-bootstrap": "^1.5.1",
     "react-bootstrap-timezone-picker": "^2.0.1",
@@ -20,7 +22,9 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.2",
     "react-select": "^4.2.1",
+    "react-test-renderer": "^17.0.1",
     "redux": "^4.0.5",
+    "redux-mock-store": "^1.5.4",
     "redux-persist": "^6.0.0",
     "web-vitals": "^1.1.0"
   },
