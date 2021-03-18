@@ -7,8 +7,17 @@ const mysql = require("mysql");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const bcrypt = require("bcrypt");
+const fs = require("fs");
+const { promisify } = require("util");
+const pipeline = promisify(require("stream").pipeline);
+const multer = require("multer");
+// const { pipeline } = require("stream");
+
+const upload = multer();
 
 const saltRounds = 10;
+
+app.use(express.static(__dirname + "/public"));
 
 app.use(
   cors({
@@ -473,7 +482,7 @@ app.post("/settleUp", function (req, res) {
 app.get("/profile/:email", function (req, res) {
   const email = req.params.email;
   const profileQuery =
-    "select email, fullname, phonenumber, currency, timezone, language from user where email=?";
+    "select email, fullname, phonenumber, currency, timezone, language, photopath from user where email=?";
   con.query(profileQuery, [email], (err, result) => {
     if (err) throw err;
     res.status(200).json({
@@ -483,9 +492,43 @@ app.get("/profile/:email", function (req, res) {
       currency: result[0].currency,
       timezone: result[0].timezone,
       language: result[0].language,
+      image: result[0].photopath,
     });
   });
 });
+
+app.post(
+  "/uploadPicture/:email",
+  upload.single("file"),
+  async function (req, res) {
+    console.log(req.params.email);
+    const {
+      file,
+      body: { name },
+    } = req;
+    console.log(file.detectedFileExtension);
+    Math.floor(Math.random * 1000);
+    const fileName = Math.floor(Math.random(100000) * 100000) + ".jpg";
+    await pipeline(
+      file.stream,
+      fs.createWriteStream(`${__dirname}/public/${fileName}`)
+    );
+
+    console.log(fileName);
+
+    con.query(
+      "update user set photopath=? where email=?",
+      [fileName, req.params.email],
+      (err, result) => {
+        if (err != null || err != undefined) {
+          res.status(400).json({ error: "failed to upload image" });
+        } else {
+          res.status(200).json({ message: "success", imagepath: fileName });
+        }
+      }
+    );
+  }
+);
 
 app.post("/updateProfile", function (req, res) {
   console.log("In profile update");

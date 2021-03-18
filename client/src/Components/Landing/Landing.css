@@ -6,6 +6,11 @@ span.align-right {
   text-align: right;
 }
 
+.myImage {
+  width: 300vw;
+  height: 400vw;
+}
+
 a.signup {
   font-size: 16px;
   color: white;
@@ -27,5 +32,5 @@ a.login {
   text-align: center;
   font: mont;
   padding: 8px;
-  font-family: "semibold";
+  font-family: 'semibold';
 }

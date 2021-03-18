@@ -4,16 +4,20 @@ import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import { Image } from 'react-bootstrap/esm';
 import numeral from 'numeral';
 import { useSelector, useDispatch } from 'react-redux';
 import logged from '../../actions';
 import NavBarAfterLogin from '../NavBarAfterLogin';
 import backendServer from '../../Config';
+import './Profile.css';
+// import image1 from '../assets/login_logo.png';
 
 function Profile() {
   const [email, getEmail] = useState('');
   const [fullname, getFullname] = useState('');
   const [phonenumber, getPhonenumber] = useState('');
+  const [file, setFile] = useState();
   const [currency, getCurrency] = useState('');
   const [timezone, getTimeZone] = useState('');
   const [language, getLanguage] = useState('');
@@ -23,6 +27,7 @@ function Profile() {
   const [currencyUpdate, setCurrency] = useState('');
   const [languageUpdate, setLanguage] = useState('');
   const [array, getArray] = useState([]);
+  const [image, setImage] = useState('');
   const isLogged = useSelector((state) => state.isLogged);
   const emailId = isLogged.email;
 
@@ -40,7 +45,18 @@ function Profile() {
       numeral.locale('en-us');
     }
   };
+
   const updateProfile = () => {
+    // send();
+
+    // eslint-disable-next-line no-undef
+    const data = new FormData();
+    data.append('name', 'file_name.jpg');
+    data.append('file', file);
+    axios.post(`${backendServer}/uploadPicture/${email}`, data).then((res) => {
+      console.log(res);
+      setImage(`${backendServer}/${res.data.imagepath}`);
+    });
     axios
       .post(`${backendServer}/updateProfile`, {
         emailId,
@@ -100,6 +116,7 @@ function Profile() {
       arrayCurrency.push('USD');
       arrayCurrency.push('GBP');
     }
+    setImage(`${backendServer}/${response.data.image}`);
     getEmail(response.data.email);
     getFullname(response.data.fullname);
     getPhonenumber(response.data.phonenumber);
@@ -117,6 +134,15 @@ function Profile() {
 
         <Col>
           <Form>
+            <Image className="main myImage" src={image} />
+            <input
+              type="file"
+              id="file"
+              accept=".jpg"
+              onChange={(event) => {
+                setFile(event.target.files[0]);
+              }}
+            />
             <Row>
               <Col>
                 <Form.Group>

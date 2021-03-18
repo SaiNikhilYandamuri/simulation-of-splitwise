@@ -24,7 +24,7 @@ const Landing = function () {
           <Col>
             <center>
               <h3>Welcome to Splitwise</h3>
-              <Image className="main" src={image1} />
+              <Image className="main myImage" src={image1} />
             </center>
           </Col>
           <Col />
