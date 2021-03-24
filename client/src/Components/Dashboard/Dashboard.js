@@ -35,7 +35,7 @@ const Dashboard = function () {
   }
   const doEverything = async (emailId) => {
     numeral.defaultFormat('$0,0.00');
-    console.log(currency);
+    // console.log(currency);
     if (currency === 'GBP') {
       numeral.locale('en-gb');
     }
@@ -127,7 +127,7 @@ const Dashboard = function () {
   };
 
   useEffect(() => {
-    console.log("Hello World If it's awesome");
+    // console.log("Hello World If it's awesome");
     // const getURL = `http://localhost:4000/totalAmount/${email}`;
     // const response = await axios.get(getURL);
     // console.log(response.data);

@@ -19,7 +19,7 @@ function Login() {
 
   const isLogged = useSelector((state) => state.isLogged);
   const dispatch = useDispatch();
-  console.log(cookie.load('cookie'));
+  // console.log(cookie.load('cookie'));
   let redirectVar = null;
   if (cookie.load('cookie')) {
     redirectVar = <Redirect to="/dashboard" />;
