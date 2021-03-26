@@ -11,6 +11,7 @@
     "baseui": "^9.111.2",
     "bootstrap": "^4.6.0",
     "jest-dom": "^4.0.0",
+    "jwt-decode": "^3.1.2",
     "numeral": "^2.0.6",
     "react": "^17.0.1",
     "react-bootstrap": "^1.5.1",

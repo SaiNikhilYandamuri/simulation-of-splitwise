@@ -30,7 +30,7 @@ const Dashboard = function () {
   const handleShow = () => setShow(true);
 
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  if (!localStorage.getItem('token')) {
     redirectVar = <Redirect to="/login" />;
   }
   const doEverything = async (emailId) => {
