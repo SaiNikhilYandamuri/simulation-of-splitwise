@@ -35,39 +35,43 @@ function Login() {
 
     const url = `${backendServer}/login`;
     if (email.includes('@') && email.includes('.com')) {
-      axios.defaults.withCredentials = true;
-      axios
-        .post(url, {
-          email,
-          password,
-        })
-        .then((response) => {
-          console.log(response.status);
-          console.log(isLogged);
-          cookie.save('name', response.data.fullname, {
-            path: '/',
-            httpOnly: false,
-            maxAge: 90000,
+      if (password === '') {
+        setAlert('Password is empty!');
+      } else {
+        axios.defaults.withCredentials = true;
+        axios
+          .post(url, {
+            email,
+            password,
+          })
+          .then((response) => {
+            console.log(response.status);
+            console.log(isLogged);
+            cookie.save('name', response.data.fullname, {
+              path: '/',
+              httpOnly: false,
+              maxAge: 90000,
+            });
+            cookie.save('email', response.data.email, {
+              path: '/',
+              httpOnly: false,
+              maxAge: 90000,
+            });
+            cookie.save('currency', response.data.currency, {
+              path: '/',
+              httpOnly: false,
+              maxAge: 90000,
+            });
+            sessionStorage.setItem('email', response.data.email);
+            sessionStorage.setItem('fullname', response.data.fullname);
+            loadSuccess();
+            dispatch(logged(response.data.fullname, response.data.email, response.data.currency));
+          })
+          .catch((err) => {
+            setAlert(err.response.data.message);
+            // if (!err) alert(err.response.data.message);
           });
-          cookie.save('email', response.data.email, {
-            path: '/',
-            httpOnly: false,
-            maxAge: 90000,
-          });
-          cookie.save('currency', response.data.currency, {
-            path: '/',
-            httpOnly: false,
-            maxAge: 90000,
-          });
-          sessionStorage.setItem('email', response.data.email);
-          sessionStorage.setItem('fullname', response.data.fullname);
-          loadSuccess();
-          dispatch(logged(response.data.fullname, response.data.email, response.data.currency));
-        })
-        .catch((err) => {
-          setAlert(err.response.data.message);
-          // if (!err) alert(err.response.data.message);
-        });
+      }
     } else {
       setAlert('Email Format Wrong');
     }

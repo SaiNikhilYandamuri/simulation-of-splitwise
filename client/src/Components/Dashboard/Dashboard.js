@@ -4,7 +4,7 @@ import './Dashboard.css';
 import { Col, Row, Nav, ListGroup, Modal, Alert } from 'react-bootstrap';
 import { Redirect } from 'react-router';
 import cookie from 'react-cookies';
-// import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import numeral from 'numeral';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
@@ -24,7 +24,7 @@ const Dashboard = function () {
   const [owedBalance, getOwedBalance] = useState(0.0);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  // const isLogged = useSelector((state) => state.isLogged);
+  const isLogged = useSelector((state) => state.isLogged);
   const currency = cookie.load('currency');
   const email = cookie.load('email');
   const handleShow = () => setShow(true);
@@ -34,6 +34,7 @@ const Dashboard = function () {
     redirectVar = <Redirect to="/login" />;
   }
   const doEverything = async (emailId) => {
+    console.log(isLogged);
     numeral.defaultFormat('$0,0.00');
     // console.log(currency);
     if (currency === 'GBP') {
