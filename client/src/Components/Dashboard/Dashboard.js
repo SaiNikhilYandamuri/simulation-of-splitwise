@@ -4,7 +4,7 @@ import './Dashboard.css';
 import { Col, Row, Nav, ListGroup, Modal, Alert } from 'react-bootstrap';
 import { Redirect } from 'react-router';
 import cookie from 'react-cookies';
-// import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import numeral from 'numeral';
 import Navbar from 'react-bootstrap/Navbar';
 import Button from 'react-bootstrap/Button';
@@ -24,7 +24,7 @@ const Dashboard = function () {
   const [owedBalance, getOwedBalance] = useState(0.0);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  // const isLogged = useSelector((state) => state.isLogged);
+  const isLogged = useSelector((state) => state.isLogged);
   const currency = cookie.load('currency');
   const email = cookie.load('email');
   const handleShow = () => setShow(true);
@@ -34,8 +34,9 @@ const Dashboard = function () {
     redirectVar = <Redirect to="/login" />;
   }
   const doEverything = async (emailId) => {
+    console.log(isLogged);
     numeral.defaultFormat('$0,0.00');
-    console.log(currency);
+    // console.log(currency);
     if (currency === 'GBP') {
       numeral.locale('en-gb');
     }
@@ -127,7 +128,7 @@ const Dashboard = function () {
   };
 
   useEffect(() => {
-    console.log("Hello World If it's awesome");
+    // console.log("Hello World If it's awesome");
     // const getURL = `http://localhost:4000/totalAmount/${email}`;
     // const response = await axios.get(getURL);
     // console.log(response.data);

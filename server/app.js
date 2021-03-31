@@ -45,16 +45,7 @@ app.use(
   })
 );
 
-const con = mysql.createConnection({
-  host: "splitwise-instance.cxfc1pmp6ndg.us-east-2.rds.amazonaws.com",
-  user: "admin",
-  password: "chakri96",
-  ssl: true,
-  database: "splitwise",
-});
-
-// const con = mysql.createPool({
-//   connectionLimit: 10,
+// const con = mysql.createConnection({
 //   host: "splitwise-instance.cxfc1pmp6ndg.us-east-2.rds.amazonaws.com",
 //   user: "admin",
 //   password: "chakri96",
@@ -62,13 +53,22 @@ const con = mysql.createConnection({
 //   database: "splitwise",
 // });
 
-con.connect((err) => {
-  if (err) {
-    console.log(err);
-  }
-  console.log("Connected!");
-  //con.end();
+const con = mysql.createPool({
+  connectionLimit: 10,
+  host: "splitwise-instance.cxfc1pmp6ndg.us-east-2.rds.amazonaws.com",
+  user: "admin",
+  password: "chakri96",
+  ssl: true,
+  database: "splitwise",
 });
+
+// con.connect((err) => {
+//   if (err) {
+//     console.log(err);
+//   }
+//   console.log("Connected!");
+//   //con.end();
+// });
 
 //Allow Access Control
 
@@ -77,31 +77,31 @@ app.get("/", (req, res) => {
 });
 
 app.post("/signup", function (req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   const fullname = req.body.fullname;
   const email = req.body.email;
   const password = req.body.password;
   const insertUserQuery =
     "INSERT INTO user (email, fullname, password) VALUES (?,?,?)";
 
-  console.log(insertUserQuery);
+  // console.l(insertUserQuery);
   bcrypt.hash(password, saltRounds).then(function (hash) {
     con.query(insertUserQuery, [email, fullname, hash], (err, result) => {
       //console.log(err.code);
       if (err) {
         if (err.code === "ER_DUP_ENTRY") {
-          console.log("User already present!!");
+          // console.l("User already present!!");
           res.status(409).json({ message: "User already exists!" });
         }
       } else {
-        console.log("Inserted");
+        // console.l("Inserted");
         res.cookie("cookie", "admin", {
           maxAge: 9000000,
           httpOnly: false,
           path: "/",
         });
         req.session.user = result;
-        console.log(req.session.user);
+        // console.l(req.session.user);
         res
           .status(200)
           .json({ fullname: req.body.fullname, email: req.body.email });
@@ -122,12 +122,12 @@ app.post("/login", function (req, res) {
   //console.log(req.body);
   const email = req.body.email;
   const password = req.body.password;
-  console.log(email);
-  console.log(password);
+  // console.l(email);
+  // console.l(password);
   const selectLoginQuery =
     "Select fullname,password,email,currency from user where email=?";
 
-  console.log(selectLoginQuery);
+  // console.l(selectLoginQuery);
   con.query(selectLoginQuery, [email], (err, result) => {
     if (err) {
       throw err;
@@ -136,7 +136,7 @@ app.post("/login", function (req, res) {
         bcrypt
           .compare(password, result[0].password)
           .then(function (response) {
-            console.log(password);
+            // console.l(password);
             if (response) {
               res.cookie("cookie", "admin", {
                 maxAge: 9000000,
@@ -144,7 +144,7 @@ app.post("/login", function (req, res) {
                 path: "/",
               });
               req.session.user = result;
-              console.log(req.session.user);
+              // console.l(req.session.user);
               res.status(200).json({
                 fullname: result[0].fullname,
                 email: result[0].email,
@@ -167,7 +167,7 @@ app.post("/login", function (req, res) {
 });
 
 app.get("/mygroups/:email", function (req, res) {
-  console.log(req.params.email);
+  // console.l(req.params.email);
   const useremail = req.params.email;
   const getGroupQuery =
     "select * from usergroup where email='" +
@@ -179,7 +179,7 @@ app.get("/mygroups/:email", function (req, res) {
     Object.keys(result).forEach(function (key) {
       const row = result[key];
       //const rowName = { groups_name: row.group_name };
-      console.log(row.group_name);
+      // console.l(row.group_name);
       array.push(row.group_name);
     });
     res.status(200);
@@ -188,20 +188,20 @@ app.get("/mygroups/:email", function (req, res) {
 });
 
 app.get("/invitegroups/:email", function (req, res) {
-  console.log(req.params.email);
+  // console.l(req.params.email);
   const useremail = req.params.email;
   const getGroupQuery =
     "select * from usergroup where email='" +
     useremail +
     "' and inviteacceptance=0";
-  console.log(getGroupQuery);
+  // console.l(getGroupQuery);
   const array = [];
   con.query(getGroupQuery, (err, result) => {
     if (err) throw err;
     Object.keys(result).forEach(function (key) {
       const row = result[key];
       //const rowName = { groups_name: row.group_name };
-      console.log(row.group_name);
+      // console.l(row.group_name);
       array.push(row.group_name);
     });
     res.status(200);
@@ -210,19 +210,19 @@ app.get("/invitegroups/:email", function (req, res) {
 });
 
 app.get("/getBillsOfGroup/:groupName", function (req, res) {
-  console.log(req.params.groupName);
+  // console.l(req.params.groupName);
   const groupName = req.params.groupName;
   const getBillsQuery =
     "select descirption,total_amount,email from bill where group_name=? order by date desc";
-  console.log(getBillsQuery);
+  // console.l(getBillsQuery);
   const array = [];
   con.query(getBillsQuery, [groupName], (err, result) => {
-    console.log(result);
+    // console.l(result);
     if (err) throw err;
     Object.keys(result).forEach(function (key) {
       const row = result[key];
       //const rowName = { groups_name: row.group_name };
-      console.log(row);
+      // console.l(row);
       array.push(row);
     });
     res.status(200);
@@ -231,44 +231,44 @@ app.get("/getBillsOfGroup/:groupName", function (req, res) {
 });
 
 app.post("/leaveGroup", function (req, res) {
-  console.log(req.body);
+  // console.l(req.body);
   const groupName = req.body.groupName;
   const email = req.body.email;
   const leaveGroupQuery =
     "update usergroup set inviteacceptance=-1 where email=? and group_name=?";
   con.query(leaveGroupQuery, [email, groupName], (err, result) => {
     if (err) throw err;
-    console.log(result);
+    // console.l(result);
     res.status(200).json({ message: "Left group" });
   });
 });
 
 app.get("/getMembersOfGroup/:groupName", function (req, res) {
-  //console.log(req.body);
+  //// console.l(req.body);
   const params = req.params.groupName.split("&");
-  //console.log(params);
+  //// console.l(params);
   const groupName = params[0];
   const email = params[1];
   const getMemberQueryFromTransaction =
     "select user_1, user_2, final_amount from splitwise.transaction where group_name=? and (user_1 = ? or user_2 = ?)";
-  console.log(groupName + email);
+  // console.l(groupName + email);
   //const getMembersQuery =
   //"select email from usergroup where group_name=? && inviteacceptance=1";
-  //console.log(getMembersQuery);
+  //// console.l(getMembersQuery);
   const array = [];
   con.query(
     getMemberQueryFromTransaction,
     [groupName, email, email],
     (err, result) => {
-      console.log(result);
+      // console.l(result);
       if (err) throw err;
       Object.keys(result).forEach(function (key) {
         const row = result[key];
         //const rowName = { groups_name: row.group_name };
-        console.log(row);
+        // console.l(row);
         array.push(row);
       });
-      console.log(array);
+      // console.l(array);
       res.status(200);
       res.send(array);
     }
@@ -280,28 +280,28 @@ app.post("/acceptInvite", function (req, res) {
   const groupName = req.body.groupName;
   const acceptInviteQuery =
     "update usergroup SET inviteacceptance=1 where email=? && group_name=?";
-  console.log(acceptInviteQuery + email + groupName);
+  // console.l(acceptInviteQuery + email + groupName);
   con.query(acceptInviteQuery, [email, groupName], (err, result) => {
-    console.log(result);
+    // console.l(result);
     if (err) throw err;
-    console.log(result);
+    // console.l(result);
     res.status(200).json({ message: "Successfully Updated" });
   });
 });
 
 app.get("/users/:email", function (req, res) {
   const array = [];
-  console.log(req.params.email);
+  // console.l(req.params.email);
   con.query(
     "select email,fullname from user where email != ?",
     [req.params.email],
     (err, result) => {
       if (err) throw err;
-      console.log(result);
+      // console.l(result);
       for (let i = 0; i < result.length; i++) {
         array.push(result[i]);
       }
-      console.log(array);
+      // console.l(array);
       res.status(200).json({ users: array });
       //res.send(array);
     }
@@ -312,29 +312,29 @@ app.post("/creategroup", function (req, res) {
   const groupName = req.body.groupName;
   const form = req.body.value;
   const email = req.body.email;
-  console.log("Hello");
-  console.log(form);
+  // console.l("Hello");
+  // console.l(form);
   let executeValue = true;
   const insertGroup =
     "insert into groupinfo(group_name, group_pic) values(?,?)";
   con.query(insertGroup, [groupName, "picture"], (err, result) => {
     if (err) {
       if (err.code === "ER_DUP_ENTRY") {
-        console.log("User already present!!");
+        // console.l("User already present!!");
         res.status(409).json({ message: "Group already exists!" });
       }
     } else {
-      console.log(result);
+      // console.l(result);
       const usergroupQueryCreator =
         "insert into usergroup(email,group_name,inviteacceptance) values(?,?,?)";
       con.query(usergroupQueryCreator, [email, groupName, 1], (err, result) => {
         if (err) throw err;
-        console.log(result);
+        // console.l(result);
       });
-      console.log("Usergroup info 1");
+      // console.l("Usergroup info 1");
       form.forEach((ele) => {
         const emailOfUser = ele.label;
-        console.log(emailOfUser);
+        // console.l(emailOfUser);
 
         const usergroupQuery =
           "insert into usergroup(email,group_name,inviteacceptance) values(?,?,?)";
@@ -343,7 +343,7 @@ app.post("/creategroup", function (req, res) {
           [emailOfUser, groupName, 0],
           (err, result) => {
             if (err) throw err;
-            console.log(result);
+            // console.l(result);
           }
         );
       });
@@ -358,7 +358,7 @@ app.post("/creategroup", function (req, res) {
             [form[i].label, form[j].label, 0, groupName],
             (err, result) => {
               if (err) throw err;
-              console.log(result);
+              // console.l(result);
               res.status(200);
               res.end("Successful");
             }
@@ -367,17 +367,17 @@ app.post("/creategroup", function (req, res) {
       }
     }
   });
-  console.log("Group Creation Done");
+  // console.l("Group Creation Done");
   if (executeValue) {
   }
 
-  console.log("Usergroup info 2");
+  // console.l("Usergroup info 2");
 
-  console.log("Successful");
+  // console.l("Successful");
 });
 
 app.post("/addBill", function (req, res) {
-  console.log(req.body.group);
+  // console.l(req.body.group);
   const groupName = req.body.group;
   const email = req.body.email;
   const amount = req.body.amount;
@@ -386,33 +386,33 @@ app.post("/addBill", function (req, res) {
   const insertBill =
     "insert into bill(group_name, total_amount, descirption, email) values(?,?,?,?)";
 
-  console.log(insertBill);
+  // console.l(insertBill);
   con.query(
     insertBill,
     [groupName, amount, description, email],
     (err, result) => {
       if (err) throw err;
-      console.log(result);
+      // console.l(result);
     }
   );
-  console.log("Done with bill");
+  // console.l("Done with bill");
 
   const getMembersQuery =
     "select email from usergroup where group_name=? && inviteacceptance=1 && email!=?";
-  console.log(getMembersQuery);
+  // console.l(getMembersQuery);
   const array = [];
   con.query(getMembersQuery, [groupName, email], (err, result) => {
-    console.log(result);
+    // console.l(result);
     if (err) throw err;
     Object.keys(result).forEach(function (key) {
       const row = result[key];
       //const rowName = { groups_name: row.group_name };
-      console.log(row);
+      // console.l(row);
       array.push(row);
     });
-    console.log("Hello" + array);
+    // console.l("Hello" + array);
     array.forEach((ele) => {
-      console.log("Hellosadhasdhsah" + ele);
+      // console.l("Hellosadhasdhsah" + ele);
 
       const getAmount =
         "select final_amount, user_1, user_2 from transaction where group_name=? and user_1 in (?, ?) and user_2 in (?, ?)";
@@ -421,7 +421,7 @@ app.post("/addBill", function (req, res) {
         [groupName, email, ele.email, ele.email, email],
         (err, result) => {
           if (err) throw err;
-          console.log(result);
+          // console.l(result);
           let amountDB = result[0].final_amount;
           if (result[0].user_1 === email) {
             amountDB = amountDB + amount / (array.length + 1);
@@ -435,7 +435,7 @@ app.post("/addBill", function (req, res) {
             [amountDB, groupName, email, ele.email, ele.email, email],
             (err, result) => {
               if (err) throw err;
-              console.log(result);
+              // console.l(result);
               amountDB = 0;
             }
           );
@@ -449,31 +449,31 @@ app.post("/addBill", function (req, res) {
 
 app.get("/totalAmount/:email", function (req, res) {
   const email = req.params.email;
-  console.log(email);
+  // console.l(email);
   const getAmountQuery =
     "select user_1,user_2,final_amount,group_name from transaction where user_1=? or user_2=?";
   con.query(getAmountQuery, [email, email], (err, result) => {
     if (err) throw err;
-    console.log(result[0]);
+    // console.l(result[0]);
     res.status(200);
     res.send(result);
   });
 });
 
 app.post("/settleUp", function (req, res) {
-  console.log(req.body);
+  // console.l(req.body);
   const email = req.body.email;
   const friend = req.body.friendSelected;
 
   const updateTransactionQuery =
     "update transaction set final_amount=0 where user_1 in (?, ?) and user_2 in (?, ?)";
-  console.log(updateTransactionQuery);
+  // console.l(updateTransactionQuery);
   con.query(
     updateTransactionQuery,
     [email, friend, friend, email],
     (err, result) => {
       if (err) throw err;
-      console.log(result);
+      // console.l(result);
     }
   );
   res.status(200).json({ message: "Successful" });
@@ -501,12 +501,12 @@ app.post(
   "/uploadPicture/:email",
   upload.single("file"),
   async function (req, res) {
-    console.log(req.params.email);
+    // console.l(req.params.email);
     const {
       file,
       body: { name },
     } = req;
-    console.log(file.detectedFileExtension);
+    // console.l(file.detectedFileExtension);
     Math.floor(Math.random * 1000);
     const fileName = Math.floor(Math.random(100000) * 100000) + ".jpg";
     await pipeline(
@@ -514,7 +514,7 @@ app.post(
       fs.createWriteStream(`${__dirname}/public/${fileName}`)
     );
 
-    console.log(fileName);
+    // console.l(fileName);
 
     con.query(
       "update user set photopath=? where email=?",
@@ -531,7 +531,7 @@ app.post(
 );
 
 app.post("/updateProfile", function (req, res) {
-  console.log("In profile update");
+  // console.l("In profile update");
   const emailId = req.body.emailId;
   const emailUpdate = req.body.emailUpdate;
   const fullnameUpdate = req.body.fullnameUpdate;
@@ -543,7 +543,7 @@ app.post("/updateProfile", function (req, res) {
       const updateAlias = "update user set alias=? where email=?";
       con.query(updateAlias, [emailUpdate, emailId], (err, result) => {
         if (err) throw err;
-        console.log(result);
+        // console.l(result);
       });
     }
   }
@@ -552,7 +552,7 @@ app.post("/updateProfile", function (req, res) {
     const updateAlias = "update user set fullname=? where email=?";
     con.query(updateAlias, [fullnameUpdate, emailId], (err, result) => {
       if (err) throw err;
-      console.log(result);
+      // console.l(result);
     });
   }
 
@@ -560,7 +560,7 @@ app.post("/updateProfile", function (req, res) {
     const updateAlias = "update user set phonenumber=? where email=?";
     con.query(updateAlias, [phonenumberUpdate, emailId], (err, result) => {
       if (err) throw err;
-      console.log(result);
+      // console.l(result);
     });
   }
 
@@ -568,7 +568,7 @@ app.post("/updateProfile", function (req, res) {
     const updateAlias = "update user set currency=? where email=?";
     con.query(updateAlias, [currencyUpdate, emailId], (err, result) => {
       if (err) throw err;
-      console.log(result);
+      // console.l(result);
     });
   }
 
@@ -576,7 +576,7 @@ app.post("/updateProfile", function (req, res) {
     const updateAlias = "update user set language=? where email=?";
     con.query(updateAlias, [languageUpdate, emailId], (err, result) => {
       if (err) throw err;
-      console.log(result);
+      // console.l(result);
     });
   }
   res.status(200).json({ message: "Updation Successful" });
@@ -594,7 +594,7 @@ app.get("/recentActivity/:email", function (req, res) {
 });
 
 app.listen(port, () => {
-  console.log("Server connected to port 4000");
+  // console.l("Server connected to port 4000");
 });
 
 module.exports = app;

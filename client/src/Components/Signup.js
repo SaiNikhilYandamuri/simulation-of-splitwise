@@ -38,34 +38,40 @@ function Signup() {
     e.preventDefault();
 
     axios.defaults.withCredentials = true;
-    if (email.includes('@') && email.includes('.com')) {
-      axios
-        .post(url, {
-          fullname,
-          email,
-          password,
-        })
-        .then((response) => {
-          console.log(response);
-          console.log(isLogged);
-          cookie.save('name', response.data.fullname, {
-            path: '/',
-            httpOnly: false,
-            maxAge: 90000,
+    if (fullname === '') {
+      setAlert('Full name empty');
+    } else if (email.includes('@') && email.includes('.com')) {
+      if (password === '') {
+        setAlert('Password Empty');
+      } else {
+        axios
+          .post(url, {
+            fullname,
+            email,
+            password,
+          })
+          .then((response) => {
+            console.log(response);
+            console.log(isLogged);
+            cookie.save('name', response.data.fullname, {
+              path: '/',
+              httpOnly: false,
+              maxAge: 90000,
+            });
+            cookie.save('email', response.data.email, {
+              path: '/',
+              httpOnly: false,
+              maxAge: 90000,
+            });
+            sessionStorage.setItem('email', response.data.email);
+            sessionStorage.setItem('fullname', response.data.fullname);
+            loadSuccess();
+            dispatch(signed(response.data.fullname, response.data.email));
+          })
+          .catch((err) => {
+            setAlert(err.response.data.message);
           });
-          cookie.save('email', response.data.email, {
-            path: '/',
-            httpOnly: false,
-            maxAge: 90000,
-          });
-          sessionStorage.setItem('email', response.data.email);
-          sessionStorage.setItem('fullname', response.data.fullname);
-          loadSuccess();
-          dispatch(signed(response.data.fullname, response.data.email));
-        })
-        .catch((err) => {
-          setAlert(err.response.data.message);
-        });
+      }
     } else {
       setAlert('Email Format Wrong');
     }
