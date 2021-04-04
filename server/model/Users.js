@@ -49,6 +49,14 @@ const usersSchema = new mongoose.Schema({
     type: String,
     default: "default.jpg",
   },
+  group: {
+    type: Array,
+    default: [],
+  },
+  groupInvitedTo: {
+    type: Array,
+    default: [],
+  },
 });
 
 module.exports = mongoose.model("User", usersSchema);

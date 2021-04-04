@@ -20,7 +20,8 @@ function CreateGroupNew() {
   const name = cookie.load('name'); // sessionStorage.getItem('fullname');
   const history = useHistory();
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  // let redirectVar = null;
+  if (!localStorage.getItem('token')) {
     redirectVar = <Redirect to="/login" />;
   }
   // const email = cookie.load('email');
@@ -32,7 +33,8 @@ function CreateGroupNew() {
       value,
     };
     console.log(value.length);
-
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
+    console.log(axios.defaults.headers.common.authorization);
     axios
       .post(`${backendServer}/creategroup`, groupDetails)
       .then((response) => {

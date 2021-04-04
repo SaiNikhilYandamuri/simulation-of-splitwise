@@ -6,6 +6,8 @@ const cors = require("cors");
 const Users = require("./model/Users");
 const signupRoute = require("./routes/Signup");
 const loginRoute = require("./routes/Login");
+const createGroupRoute = require("./routes/GroupCreation");
+const groupsDashboard = require("./routes/GroupsDashboard");
 app.use(
   cors({
     origin: ["http://localhost:3000"],
@@ -34,6 +36,8 @@ app.use(express.json());
 
 app.use("/api/user", signupRoute);
 app.use("/api/user", loginRoute);
+app.use("/api/user", createGroupRoute);
+app.use("/api/user", groupsDashboard);
 
 /*
 app.post("/signup", async (req, res) => {

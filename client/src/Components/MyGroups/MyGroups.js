@@ -16,16 +16,18 @@ function MyGroups() {
   const isLogged = useSelector((state) => state.isLogged);
   const emailId = isLogged.email; // sessionStorage.getItem('email');
   const history = useHistory();
+  const userid = localStorage.getItem('user_id');
 
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  if (!localStorage.getItem('token')) {
     redirectVar = <Redirect to="/login" />;
   }
 
   console.log('On load');
   console.log(groups);
   useEffect(async () => {
-    const getURL = `${backendServer}/mygroups/${emailId}`;
+    console.log(emailId);
+    const getURL = `${backendServer}/mygroups/${userid}`;
     const response = await axios.get(getURL);
     console.log(response.data);
     getGroups(response.data);

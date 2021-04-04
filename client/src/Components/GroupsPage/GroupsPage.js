@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Row, Nav, Button } from 'react-bootstrap';
 import { Redirect } from 'react-router';
-import cookie from 'react-cookies';
+// import cookie from 'react-cookies';
 import { useSelector } from 'react-redux';
 import Navbar from 'react-bootstrap/Navbar';
 import NavBarAfterLogin from '../NavBarAfterLogin';
@@ -14,7 +14,8 @@ function GroupsPage() {
   const { email } = isLogged;
   console.log(email);
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  console.log(localStorage.getItem('token'));
+  if (!localStorage.getItem('token')) {
     redirectVar = <Redirect to="/login" />;
   }
   return (

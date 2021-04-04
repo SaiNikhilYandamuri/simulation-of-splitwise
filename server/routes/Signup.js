@@ -27,7 +27,7 @@ router.post("/signup", async (req, res) => {
     if (savedUser) {
       const payload = {
         _id: user._id,
-        username: user.fullname,
+        fullname: user.fullname,
         email: user.email,
       };
       console.log(payload);

@@ -39,12 +39,12 @@ function Login() {
     const url = `${backendServer}/login`;
     if (email.includes('@') && email.includes('.com')) {
       axios.defaults.withCredentials = true;
-      axios
+      await axios
         .post(url, {
           email,
           password,
         })
-        .then(async (response) => {
+        .then((response) => {
           console.log(response.status);
           console.log(isLogged);
           setToken(response.data);
@@ -52,7 +52,7 @@ function Login() {
           localStorage.setItem('token', response.data);
           console.log(token.split(' ')[0]);
           // eslint-disable-next-line prefer-const
-          let decodedToken = await jwt_decode(token.split(' ')[0]);
+          let decodedToken = jwt_decode(token.split(' ')[0]);
           console.log(decodedToken);
           // eslint-disable-next-line no-underscore-dangle
           localStorage.setItem('user_id', decodedToken._id);
@@ -60,8 +60,8 @@ function Login() {
           localStorage.setItem('email', decodedToken.email);
           localStorage.setItem('fullname', decodedToken.fullname);
           localStorage.setItem('currency', decodedToken.currency);
-          loadSuccess();
           dispatch(logged(decodedToken.fullname, decodedToken.email, decodedToken.currency));
+          loadSuccess();
         })
         .catch((err) => {
           setAlert(err);
