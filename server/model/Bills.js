@@ -14,7 +14,7 @@ const billSchema = new mongoose.Schema({
     defualt: Date.now,
   },
   createdBy: {
-    type: mongoose.Types.ObjectId,
+    type: String,
     required: true,
   },
   billDesc: {

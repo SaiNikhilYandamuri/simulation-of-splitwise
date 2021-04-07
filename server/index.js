@@ -8,6 +8,9 @@ const signupRoute = require("./routes/Signup");
 const loginRoute = require("./routes/Login");
 const createGroupRoute = require("./routes/GroupCreation");
 const groupsDashboard = require("./routes/GroupsDashboard");
+const groupHomePage = require("./routes/GroupHomePage");
+const profilePage = require("./routes/UserProfile");
+
 app.use(
   cors({
     origin: ["http://localhost:3000"],
@@ -38,6 +41,8 @@ app.use("/api/user", signupRoute);
 app.use("/api/user", loginRoute);
 app.use("/api/user", createGroupRoute);
 app.use("/api/user", groupsDashboard);
+app.use("/api/user", groupHomePage);
+app.use("/api/user", profilePage);
 
 /*
 app.post("/signup", async (req, res) => {
