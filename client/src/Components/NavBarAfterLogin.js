@@ -22,6 +22,7 @@ function NavBarAfterLogin() {
     cookie.remove('userid');
     cookie.remove('cookie');
     cookie.remove('groupSelected');
+    localStorage.removeItem('token');
     // history.push('/landing');
   };
 

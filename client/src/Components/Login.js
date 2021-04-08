@@ -24,7 +24,7 @@ function Login() {
   const dispatch = useDispatch();
   console.log(cookie.load('cookie'));
   let redirectVar = null;
-  if (cookie.load('cookie')) {
+  if (localStorage.getItem('token')) {
     redirectVar = <Redirect to="/dashboard" />;
   }
 

@@ -31,7 +31,7 @@ function RecentActivity() {
     getText(array);
   }, []);
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  if (!localStorage.getItem('token')) {
     redirectVar = <Redirect to="/login" />;
   }
   return (

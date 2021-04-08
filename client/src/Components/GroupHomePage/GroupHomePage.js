@@ -26,9 +26,10 @@ function GroupHomePage() {
   const group = cookie.load('groupSelected');
   const { currency } = isLogged;
   const history = useHistory();
+  const userId = localStorage.getItem('user_id');
 
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  if (!localStorage.getItem('token')) {
     redirectVar = <Redirect to="/login" />;
   }
   const handleClose = () => setShow(false);
@@ -49,9 +50,10 @@ function GroupHomePage() {
     console.log(email);
     axios.get(getURL).then((response) => {
       console.log(response);
-      const friends = [];
+      const friends = response.data;
+      console.log(friends);
       // eslint-disable-next-line no-restricted-syntax
-      for (const [key, value] of Object.entries(response.data)) {
+      /* for (const [key, value] of Object.entries(response.data)) {
         console.log(key);
         if (value.user_1 === email) {
           if (value.final_amount < 0) {
@@ -66,7 +68,7 @@ function GroupHomePage() {
         } else {
           friends.push({ name: value.user_1, amount: value.final_amount });
         }
-      }
+      } */
       getMembers(friends);
       // getMembers(response.data);
     });
@@ -106,6 +108,7 @@ function GroupHomePage() {
           group,
           description,
           amount,
+          userId,
         })
         .then((response) => {
           console.log(response);
@@ -224,12 +227,19 @@ function GroupHomePage() {
               </Col>
               <Col>
                 <ListGroup variant="flush">
-                  {members.map((item) => (
+                  {
+                    members.map((item) => (
+                      <ListGroup.Item>
+                        <Col>Member: {item}</Col>
+                      </ListGroup.Item>
+                    ))
+                    /* members.map((item) => (
                     <ListGroup.Item>
                       <Col>Member: {item.name}</Col>
                       <Col>Amount: {item.amount}</Col>
                     </ListGroup.Item>
-                  ))}
+                  )) */
+                  }
                   <ListGroup.Item>
                     <Col>And You:</Col>
                     <Col>{email}</Col>

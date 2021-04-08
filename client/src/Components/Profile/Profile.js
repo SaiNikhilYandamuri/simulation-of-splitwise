@@ -35,7 +35,7 @@ function Profile() {
   const history = useHistory();
 
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  if (!localStorage.getItem('token')) {
     redirectVar = <Redirect to="/login" />;
   }
   const changeNumberLocale = (locale) => {

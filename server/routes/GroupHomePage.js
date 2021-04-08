@@ -35,9 +35,11 @@ router.get("/getBillsOfGroup/:groupName", async function (req, res) {
 Tested Using Postman
 */
 router.get("/getMembersOfGroup/:groupName", async function (req, res) {
+  const params = req.params.groupName.split("&");
   const groupDetails = await Groups.findOne({
-    groupName: req.params.groupName,
+    groupName: params[0],
   });
+  console.log(groupDetails);
   const members = groupDetails.members;
   const output = [];
   for (let i = 0; i < members.length; i++) {
@@ -86,7 +88,8 @@ router.post("/leaveGroup", async function (req, res) {
 
 /* Tested Using Postman */
 router.post("/addBill", async function (req, res) {
-  const userDetails = await Users.findById(req.body.user_id);
+  const userDetails = await Users.findById(req.body.userId);
+  console.log(userDetails);
   const bill = new Bills({
     billAmount: req.body.amount,
     createdBy: userDetails.fullname,
@@ -97,7 +100,7 @@ router.post("/addBill", async function (req, res) {
   console.log(saveBill);
   if (saveBill) {
     const groupDetails = await Groups.findOne({
-      groupName: req.body.groupName,
+      groupName: req.body.group,
     });
     const arrayOfBills = groupDetails.bills;
     arrayOfBills.push(saveBill._id);
