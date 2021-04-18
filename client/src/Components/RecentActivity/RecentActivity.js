@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Col, Row, Nav, ListGroup, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import { Redirect } from 'react-router';
-import cookie from 'react-cookies';
+// import cookie from 'react-cookies';
 import Navbar from 'react-bootstrap/Navbar';
 // import Button from 'react-bootstrap/Button';
 import NavBarAfterLogin from '../NavBarAfterLogin';
@@ -12,12 +12,13 @@ import LeftSideNavBar from '../LeftSideNavBar';
 function RecentActivity() {
   const [text, getText] = useState([]);
   const [alert, setAlert] = useState('');
-  const email = cookie.load('email');
+  // const email = cookie.load('email');
+  const userId = localStorage.getItem('user_id');
   useEffect(async () => {
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
-    const getURL = `${backendServer}/recentActivity/${email}`;
+    const getURL = `${backendServer}/recentActivity/${userId}`;
     const response = await axios.get(getURL);
-    console.log(typeof response.data);
+    console.log(response.data);
     const array = [];
     // eslint-disable-next-line no-restricted-syntax
     for (const [key, value] of Object.entries(response.data)) {
@@ -25,7 +26,7 @@ function RecentActivity() {
       console.log(value);
       array.push(value);
     }
-    console.log(array);
+    console.log(response.data);
     if (array.length === 0) {
       setAlert('No recent activity to show');
     }
@@ -59,11 +60,7 @@ function RecentActivity() {
               <Col>
                 <ListGroup>
                   {text.map((item) => (
-                    <ListGroup.Item>
-                      {' '}
-                      {item.bill_added_by} added bill {item.descirption} in group {item.group_name}{' '}
-                      of amount {item.total_amount} on {item.date}
-                    </ListGroup.Item>
+                    <ListGroup.Item> {item}</ListGroup.Item>
                   ))}
                 </ListGroup>
                 {alert.length > 0 && <Alert variant="light">{alert}</Alert>}

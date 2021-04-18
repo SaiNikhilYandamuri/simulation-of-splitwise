@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Group = require("../model/Groups");
 const Users = require("../model/Users");
 const jwt = require("jsonwebtoken");
+const Activty = require("../model/Activity");
 const { checkAuth } = require("../Utils/passport");
 const mongoose = require("mongoose");
 const secret = "hello";
@@ -64,6 +65,15 @@ router.post("/creategroup", checkAuth, async (req, res) => {
                 const user = await Users.findById(form[i].value);
                 console.log(user);
                 // console.log(user.groupInivtedTo);
+                const activity = new Activty({
+                  user_id: mongoose.Types.ObjectId(form[i].value),
+                  message:
+                    userone.fullname +
+                    " has invited you to join the group " +
+                    groupName,
+                });
+                const saveActivity = await activity.save();
+                console.log(saveActivity);
                 Users.findOneAndUpdate(
                   { _id: user._id },
                   {

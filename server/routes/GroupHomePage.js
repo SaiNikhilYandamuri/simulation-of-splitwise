@@ -4,6 +4,7 @@ const Groups = require("../model/Groups");
 const Bills = require("../model/Bills");
 const Users = require("../model/Users");
 const Transaction = require("../model/Transaction");
+const Activty = require("../model/Activity");
 const { checkAuth } = require("../Utils/passport");
 
 /* Tested using Postman*/
@@ -176,7 +177,17 @@ router.post("/leaveGroup", checkAuth, async function (req, res) {
               group: groupDetails._id,
             },
           },
-          function (err, doc) {
+          async function (err, doc) {
+            const membersOfGroup = groupDetails.members;
+            const userInfo = await Users.findById(req.body.userId);
+            for (let i = 0; i < membersOfGroup; i++) {
+              const activity = new Activty({
+                user_id: mongoose.Types.ObjectId(membersOfGroup[i]),
+                message: userInfo.fullname + " has left the group " + groupName,
+              });
+              const saveActivity = await activity.save();
+              console.log(saveActivity);
+            }
             if (err) return res.send(500, { error: err });
             return res.status(200).send("Succesfully saved.");
           }
@@ -220,6 +231,9 @@ router.post("/addBill", checkAuth, async function (req, res) {
           const user2 = JSON.stringify(req.body.userId);
           const cmp = user1.localeCompare(user2);
           console.log(cmp);
+          // const user = await Users.findById({ _id: req.body.userId });
+          const userName = userDetails.fullname;
+
           if (cmp !== 0) {
             console.log(user1);
             console.log(user2);
@@ -231,6 +245,20 @@ router.post("/addBill", checkAuth, async function (req, res) {
             });
             const saveTransaction = await transaction.save();
             console.log(saveTransaction);
+            console.log("Transaction Added");
+            const activity = new Activty({
+              user_id: mongoose.Types.ObjectId(ele),
+              message:
+                userName +
+                " has created the Bill " +
+                bill.billDesc +
+                " of amount " +
+                bill.billAmount +
+                " in the group " +
+                req.body.group,
+            });
+            const saveActivity = await activity.save();
+            console.log(saveActivity);
           }
         });
         return res.status(200).send("Succesfully saved.");

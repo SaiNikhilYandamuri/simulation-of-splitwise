@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const { checkAuth } = require("../Utils/passport");
 const Transaction = require("../model/Transaction");
 const Users = require("../model/Users");
+const Activity = require("../model/Activity");
 
 router.get("/dashboard/:userId", checkAuth, async (req, res) => {
   const userId = req.params.userId;
@@ -55,6 +56,13 @@ router.post("/settleUp", checkAuth, async (req, res) => {
   });
   const saveTransaction = await transaction.save();
   console.log(saveTransaction);
+  const userInfo = await Users.findById(userId);
+  const activity = new Activty({
+    user_id: mongoose.Types.ObjectId(friendDetails._id),
+    message: userInfo.fullname + " has settleup with you.",
+  });
+  const saveActivity = await activity.save();
+  console.log(saveActivity);
   return res.status(200).send("Succesfully saved.");
 });
 

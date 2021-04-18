@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Users = require("../model/Users");
 const Groups = require("../model/Groups");
+const Activity = require("../model/Activity");
 const { checkAuth } = require("../Utils/passport");
 var kafka = require("../kafka/client");
 const mongoose = require("mongoose");
@@ -78,8 +79,22 @@ router.post("/acceptInvite", checkAuth, async function (req, res) {
                 members: mongoose.Types.ObjectId(req.body.userid),
               },
             },
-            function (err, doc) {
+            async function (err, doc) {
               if (err) return res.send(500, { error: err });
+              const membersOfGroup = groupDetails.members;
+              const userone = await Users.findById(req.body.userid);
+              for (let i = 0; i < membersOfGroup.length; i++) {
+                const activity = new Activity({
+                  user_id: mongoose.Types.ObjectId(membersOfGroup[i]),
+                  message:
+                    userone.fullname +
+                    " has accepted invite to the group " +
+                    req.body.groupName,
+                });
+                const saveActivity = await activity.save();
+                console.log(saveActivity);
+              }
+
               return res.status(200).send("Succesfully saved.");
             }
           );

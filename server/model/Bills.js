@@ -11,7 +11,7 @@ const billSchema = new mongoose.Schema({
   },
   billTimestamp: {
     type: Date,
-    defualt: Date.now,
+    default: Date.now,
   },
   createdBy: {
     type: String,
