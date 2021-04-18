@@ -1,7 +1,8 @@
 const router = require("express").Router();
 const Users = require("../model/Users");
+const { checkAuth } = require("../Utils/passport");
 
-router.get("/profile/:user_id", async function (req, res) {
+router.get("/profile/:user_id", checkAuth, async function (req, res) {
   const user = await Users.findOne({ _id: req.params.user_id });
   if (!user) {
     return res.status(400).send("Enter Valid Credentials!");
@@ -17,15 +18,18 @@ router.get("/profile/:user_id", async function (req, res) {
   });
 });
 
-router.post("/updateProfile", async function (req, res) {
-  const user_id = req.body.user_id;
+router.post("/updateProfile", checkAuth, async function (req, res) {
+  console.log("Inside Update Profile");
+  console.log(req.body.userid);
+  const user_id = req.body.userid;
   const emailUpdate = req.body.emailUpdate;
   const fullnameUpdate = req.body.fullnameUpdate;
   const phonenumberUpdate = req.body.phonenumberUpdate;
   const currencyUpdate = req.body.currencyUpdate;
   const languageUpdate = req.body.languageUpdate;
-  const user = await Users.findOne({ _id: req.body.user_id });
+  const user = await Users.findOne({ _id: req.body.userid });
   if (!user) {
+    console.log("Helo World");
     return res.status(400).send("Enter Valid Credentials!");
   }
   if (emailUpdate !== "") {

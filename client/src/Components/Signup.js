@@ -2,7 +2,8 @@ import { React, useState } from 'react';
 import axios from 'axios';
 // import alert from 'alert';
 import { Redirect } from 'react-router';
-import cookie from 'react-cookies';
+// eslint-disable-next-line camelcase
+import jwt_decode from 'jwt-decode';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
@@ -17,6 +18,7 @@ function Signup() {
   const [email, emailChangeHandler] = useState('');
   const [password, passwordChangeHandler] = useState('');
   const [fullname, fullnameChangeHandler] = useState('');
+  const [token, setToken] = useState('');
   const [alert, setAlert] = useState('');
   const history = useHistory();
 
@@ -46,24 +48,27 @@ function Signup() {
           password,
         })
         .then((response) => {
-          console.log(response);
+          console.log(response.status);
           console.log(isLogged);
-          cookie.save('name', response.data.fullname, {
-            path: '/',
-            httpOnly: false,
-            maxAge: 90000,
-          });
-          cookie.save('email', response.data.email, {
-            path: '/',
-            httpOnly: false,
-            maxAge: 90000,
-          });
-          sessionStorage.setItem('email', response.data.email);
-          sessionStorage.setItem('fullname', response.data.fullname);
+          setToken(response.data.token);
+          console.log(token);
+          const tokenArray = response.data.token.split(' ');
+          localStorage.setItem('token', response.data.token);
+          console.log(tokenArray[0]);
+          // eslint-disable-next-line prefer-const
+          let decodedToken = jwt_decode(tokenArray[1]);
+          console.log(decodedToken);
+          // eslint-disable-next-line no-underscore-dangle
+          localStorage.setItem('user_id', decodedToken._id);
+
+          localStorage.setItem('email', decodedToken.email);
+          localStorage.setItem('fullname', decodedToken.fullname);
+          localStorage.setItem('currency', decodedToken.currency);
+          dispatch(signed(decodedToken.fullname, decodedToken.email, decodedToken.currency));
           loadSuccess();
-          dispatch(signed(response.data.fullname, response.data.email));
         })
         .catch((err) => {
+          console.log(err);
           setAlert(err.response.data.message);
         });
     } else {

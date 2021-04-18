@@ -31,8 +31,10 @@ function InviteList() {
   const accepetInvitation = () => {
     console.log(emailId);
     const groupName = cookie.load('groupSelectedInvite');
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
     axios
       .post(`${backendServer}/acceptInvite`, {
+        userid,
         emailId,
         groupName,
       })
@@ -50,6 +52,7 @@ function InviteList() {
   console.log('On load');
   console.log(groups);
   useEffect(async () => {
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
     const getURL = `${backendServer}/invitegroups/${userid}`;
     const response = await axios.get(getURL);
     console.log(response.data);

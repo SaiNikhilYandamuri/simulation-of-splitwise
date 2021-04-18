@@ -10,6 +10,7 @@ import { logout } from '../actions';
 function NavBarAfterLogin() {
   // const isLogged = useSelector((state) => state.isLogged.username);
   const isLogged = useSelector((state) => state.isLogged);
+  console.log(isLogged);
   const fullanme = isLogged.username; // cookie.load('name'); // sessionStorage.getItem('fullname');
 
   // const history = useHistory();

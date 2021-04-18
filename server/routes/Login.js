@@ -14,23 +14,28 @@ router.post("/login", async (req, res) => {
     if (!user) {
       return res.status(400).send("Enter Valid Credentials!");
     }
-    const encryptedPassword = bcrypt.compare(req.body.password, user.password);
+    const encryptedPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
     if (!encryptedPassword) {
-      return res.status(400).send("Enter Valid Credentials!");
+      console.log("Hello World");
+      res.status(400).send("Enter Valid Credentials!");
+    } else {
+      const payload = {
+        _id: user._id,
+        fullname: user.fullname,
+        email: user.email,
+        currency: user.currency,
+      };
+      console.log(payload);
+      const token = await jwt.sign(payload, secret, {
+        expiresIn: 1000000,
+      });
+      console.log(token);
+      //res.status(200).send(token);
+      res.status(200).json({ token: "jwt " + token });
     }
-    const payload = {
-      _id: user._id,
-      fullname: user.fullname,
-      email: user.email,
-      currency: user.currency,
-    };
-    console.log(payload);
-    const token = await jwt.sign(payload, secret, {
-      expiresIn: 1000000,
-    });
-    console.log(token);
-    res.status(200).send(token);
-    //res.status(200).send("JWT " + token);
   } catch (err) {
     return res.status(400).json({ message: "Enter Valid credentials" });
   }

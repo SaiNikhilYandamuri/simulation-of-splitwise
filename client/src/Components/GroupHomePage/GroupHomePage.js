@@ -46,8 +46,9 @@ function GroupHomePage() {
   };
 
   const getMembersList = async () => {
-    const getURL = `${backendServer}/getMembersOfGroup/${groupName}&${email}`;
+    const getURL = `${backendServer}/getMembersOfGroup/${groupName}&${userId}`;
     console.log(email);
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
     axios.get(getURL).then((response) => {
       console.log(response);
       const friends = response.data;
@@ -78,25 +79,20 @@ function GroupHomePage() {
     // console.log(response.data);
   };
   const leaveGroup = () => {
-    let sum = 0;
-    members.forEach((ele) => {
-      console.log(ele);
-      sum += ele.amount;
-    });
-    console.log(sum);
-    if (sum !== 0) {
-      alert('Not possible to leave the group');
-    } else {
-      axios
-        .post(`${backendServer}/leaveGroup`, {
-          groupName,
-          email,
-        })
-        .then((response1) => {
-          console.log(response1.data);
-          history.push('/groupPage');
-        });
-    }
+    axios
+      .post(`${backendServer}/leaveGroup`, {
+        groupName,
+        email,
+        userId,
+      })
+      .then((response1) => {
+        console.log(response1.data);
+        history.push('/groupPage');
+      })
+      .catch((err) => {
+        console.log(err);
+        alert('Not possible to leave the group');
+      });
   };
   const handleBill = (e) => {
     e.preventDefault();

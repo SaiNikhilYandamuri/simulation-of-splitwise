@@ -35,8 +35,8 @@ router.post("/signup", async (req, res) => {
         expiresIn: 1000000,
       });
       console.log(token);
-      res.status(200).end(token);
-      //res.status(200).send("JWT " + token);
+      // res.status(200).end(token);
+      res.status(200).json({ token: "jwt " + token });
     }
   } catch (err) {
     res.status(400).send(err);

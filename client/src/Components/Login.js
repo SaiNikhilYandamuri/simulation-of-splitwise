@@ -47,12 +47,13 @@ function Login() {
         .then((response) => {
           console.log(response.status);
           console.log(isLogged);
-          setToken(response.data);
+          setToken(response.data.token);
           console.log(token);
-          localStorage.setItem('token', response.data);
-          console.log(token.split(' ')[0]);
+          const tokenArray = response.data.token.split(' ');
+          localStorage.setItem('token', response.data.token);
+          console.log(tokenArray[0]);
           // eslint-disable-next-line prefer-const
-          let decodedToken = jwt_decode(token.split(' ')[0]);
+          let decodedToken = jwt_decode(tokenArray[1]);
           console.log(decodedToken);
           // eslint-disable-next-line no-underscore-dangle
           localStorage.setItem('user_id', decodedToken._id);
@@ -64,6 +65,7 @@ function Login() {
           loadSuccess();
         })
         .catch((err) => {
+          console.log('Error');
           setAlert(err);
           // if (!err) alert(err.response.data.message);
         });

@@ -28,6 +28,7 @@ function MyGroups() {
   useEffect(async () => {
     console.log(emailId);
     const getURL = `${backendServer}/mygroups/${userid}`;
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
     const response = await axios.get(getURL);
     console.log(response.data);
     getGroups(response.data);

@@ -14,6 +14,7 @@ function RecentActivity() {
   const [alert, setAlert] = useState('');
   const email = cookie.load('email');
   useEffect(async () => {
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
     const getURL = `${backendServer}/recentActivity/${email}`;
     const response = await axios.get(getURL);
     console.log(typeof response.data);
