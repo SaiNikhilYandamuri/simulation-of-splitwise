@@ -14,6 +14,7 @@ router.get("/getBillsOfGroup/:groupName", checkAuth, async function (req, res) {
   const groupDetails = await Groups.findOne({
     groupName: req.params.groupName,
   });
+  console.log(groupDetails);
   const arrayOfBills = groupDetails.bills;
   const output = [];
   console.log(groupDetails);
@@ -25,6 +26,7 @@ router.get("/getBillsOfGroup/:groupName", checkAuth, async function (req, res) {
       total_amount: billDetails.billAmount,
       email: billDetails.createdBy,
       timestamp: billDetails.billTimestamp,
+      id: billDetails._id,
     };
     console.log(bill);
     console.log(i);
@@ -46,34 +48,6 @@ router.get(
     const groupDetails = await Groups.findOne({
       groupName: params[0],
     });
-    /*
-    const transactionOfGroup1 = await Transaction.find({
-      group_id: groupDetails._id,
-      sender: params[1],
-    });
-    const transactionOfGroup2 = await Transaction.find({
-      group_id: groupDetails._id,
-      receiver: params[1],
-    });
-    const transactionOfGroup = transactionOfGroup1.concat(transactionOfGroup2);
-    const result = [];
-    for (let i = 0; i < transactionOfGroup.length; i++) {
-      const user_1 = await Users.findOne({ _id: transactionOfGroup[i].sender });
-      const user_2 = await Users.findOne({
-        _id: transactionOfGroup[i].receiver,
-      });
-      const eachTrans = {
-        user_1: user_1.fullname,
-        user_2: user_2.fullname,
-        final_amount: transactionOfGroup[i].amount,
-      };
-      console.log(eachTrans);
-      result.push(eachTrans);
-      if (i == transactionOfGroup.length - 1) {
-        res.status(200);
-        res.send(result);
-      }
-    }*/
 
     console.log(groupDetails);
     const members = groupDetails.members;
@@ -268,6 +242,79 @@ router.post("/addBill", checkAuth, async function (req, res) {
   } else {
     res.status(500).end("Bill not added");
   }
+});
+
+router.post("/addComment", checkAuth, async function (req, res) {
+  const billId = req.body.billId;
+  const userId = req.body.userId;
+  const id = mongoose.Types.ObjectId();
+  const comment = {
+    comment_id: id,
+    comment: req.body.comment,
+    user_id: userId,
+  };
+  Bills.findOneAndUpdate(
+    { _id: billId },
+    {
+      $push: {
+        comments: comment,
+      },
+    },
+    function (err, doc) {
+      if (err) return res.send(500, { error: err });
+      return res.status(200).send("Succesfully saved.");
+    }
+  );
+});
+
+router.get("/getComments/:billId", checkAuth, async function (req, res) {
+  console.log(req.params.billId);
+  const billDetails = await Bills.findById(req.params.billId);
+  const commentsArray = billDetails.comments;
+  const commentsFinal = [];
+  if (commentsArray.length > 0) {
+    for (let i = 0; i < commentsArray.length; i++) {
+      const userDetails = await Users.findById(commentsArray[i].user_id);
+      const comment = {
+        comment: commentsArray[i].comment,
+        user: userDetails.fullname,
+        id: userDetails._id,
+        commentId: commentsArray[i].comment_id,
+      };
+      commentsFinal.push(comment);
+      if (i === commentsArray.length - 1) {
+        res.status(200).send({ comments: commentsFinal });
+      }
+    }
+  } else {
+    res.status(200).send({ comments: commentsFinal });
+  }
+});
+
+router.post("/deleteComment", checkAuth, async function (req, res) {
+  const billId = req.body.billId;
+  const commentId = req.body.commentId;
+
+  const billDetails = await Bills.findById(billId);
+  const comments = billDetails.comments;
+
+  for (let i = 0; i < comments.length; i++) {
+    const str1 = comments[i].comment_id + "";
+    // const str2 = groupDetails._id;
+    const val = str1.localeCompare(commentId);
+    console.log(val);
+    if (val === 0) {
+      comments.splice(i, 1);
+      // res.status(200).send("Succesfully saved.");
+    }
+  }
+  billDetails.comments = comments;
+
+  Bills.findOneAndUpdate({ _id: billId }, billDetails, function (err, doc) {
+    if (err) return res.send(500, { error: err });
+    console.log(doc);
+    return res.status(200).send("Succesfully saved.");
+  });
 });
 
 module.exports = router;

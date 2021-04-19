@@ -12,6 +12,7 @@ const groupHomePage = require("./routes/GroupHomePage");
 const profilePage = require("./routes/UserProfile");
 const dashboardPage = require("./routes/Dashboard");
 const activityPage = require("./routes/RecentActivity");
+const imageupload = require("./routes/imageupload");
 
 app.use(
   cors({
@@ -47,6 +48,7 @@ app.use("/api/user", groupHomePage);
 app.use("/api/user", profilePage);
 app.use("/api/user", dashboardPage);
 app.use("/api/user", activityPage);
+app.use("/api/user", imageupload);
 
 /*
 app.post("/signup", async (req, res) => {

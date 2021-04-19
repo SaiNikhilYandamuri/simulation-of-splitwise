@@ -57,7 +57,7 @@ router.post("/settleUp", checkAuth, async (req, res) => {
   const saveTransaction = await transaction.save();
   console.log(saveTransaction);
   const userInfo = await Users.findById(userId);
-  const activity = new Activty({
+  const activity = new Activity({
     user_id: mongoose.Types.ObjectId(friendDetails._id),
     message: userInfo.fullname + " has settleup with you.",
   });

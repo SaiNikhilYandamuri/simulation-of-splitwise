@@ -25,6 +25,10 @@ const billSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  comments: {
+    type: Array,
+    default: [],
+  },
 });
 
 module.exports = mongoose.model("Bill", billSchema);

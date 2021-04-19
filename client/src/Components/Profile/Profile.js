@@ -55,9 +55,9 @@ function Profile() {
     data.append('name', 'file_name.jpg');
     data.append('file', file);
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
-    axios.post(`${backendServer}/uploadPicture/${email}`, data).then((res) => {
-      console.log(res);
-      setImage(`${backendServer}/${res.data.imagepath}`);
+    axios.post(`${backendServer}/imageupload/${userid}`, data).then((res) => {
+      console.log(res.data);
+      setImage(`${res.data.imagepath}`);
     });
     axios
       .post(`${backendServer}/updateProfile`, {
@@ -120,7 +120,7 @@ function Profile() {
       arrayCurrency.push('USD');
       arrayCurrency.push('GBP');
     }
-    // setImage(`${backendServer}/${response.data.image}`);
+    setImage(`${response.data.image}`);
     getEmail(response.data.email);
     getFullname(response.data.fullname);
     getPhonenumber(response.data.phonenumber);

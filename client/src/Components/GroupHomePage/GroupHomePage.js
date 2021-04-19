@@ -2,7 +2,18 @@ import React, { useEffect, useState } from 'react';
 import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import { useHistory } from 'react-router-dom';
-import { Col, Row, Nav, ListGroup, Modal, Button, InputGroup, FormControl } from 'react-bootstrap';
+import {
+  Col,
+  Row,
+  Nav,
+  ListGroup,
+  Modal,
+  Button,
+  InputGroup,
+  FormControl,
+  Accordion,
+  Card,
+} from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
 import alert from 'alert';
@@ -16,6 +27,9 @@ import backendServer from '../../Config';
 function GroupHomePage() {
   const groupName = cookie.load('groupSelected'); // sessionStorage.getItem('groupSelected');
   const [bills, getBills] = useState([]);
+  const [comments, getCommentsFromAPI] = useState([]);
+  const [comment, setComment] = useState('');
+  const [billId, setBillId] = useState('');
   const [members, getMembers] = useState([]);
   const [show, setShow] = useState(false);
   const [showLG, setShowLG] = useState(false);
@@ -79,6 +93,7 @@ function GroupHomePage() {
     // console.log(response.data);
   };
   const leaveGroup = () => {
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
     axios
       .post(`${backendServer}/leaveGroup`, {
         groupName,
@@ -94,9 +109,48 @@ function GroupHomePage() {
         alert('Not possible to leave the group');
       });
   };
+  const getComments = async (billId1) => {
+    console.log(billId1);
+    setBillId(billId1);
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
+    const getURL = `${backendServer}/getComments/${billId1}`;
+    const response = await axios.get(getURL);
+    console.log(response.data);
+    getCommentsFromAPI(response.data.comments);
+  };
+
+  const addComment = (e) => {
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
+    e.preventDefault();
+    axios
+      .post(`${backendServer}/addComment`, {
+        billId,
+        userId,
+        comment,
+      })
+      .then((response) => {
+        console.log(response.data);
+        getComments(billId);
+      });
+  };
+
+  const deleteComment = (commentId) => {
+    console.log(commentId);
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
+    axios
+      .post(`${backendServer}/deleteComment`, {
+        billId,
+        commentId,
+      })
+      .then((response) => {
+        console.log(response.data);
+        getComments(billId);
+      });
+  };
+
   const handleBill = (e) => {
     e.preventDefault();
-
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
     if (Number.parseFloat(amount)) {
       axios
         .post(`${backendServer}/addBill`, {
@@ -121,6 +175,7 @@ function GroupHomePage() {
       alert('The aount entered is not in proper format');
     }
   };
+
   useEffect(async () => {
     const getURL = `${backendServer}/getBillsOfGroup/${groupName}`;
     const response = await axios.get(getURL);
@@ -209,17 +264,64 @@ function GroupHomePage() {
 
             <Row>
               <Col xs={8}>
-                <ListGroup variant="flush">
+                <Accordion>
                   {bills.map((item) => (
-                    <ListGroup.Item>
-                      <Row>
-                        <Col>Bill Name: {item.descirption}</Col>
-                        <Col>Bill Amount: {numeral(item.total_amount).format()}</Col>
-                        <Col>Added by: {item.email}</Col>
-                      </Row>
-                    </ListGroup.Item>
+                    <Card>
+                      <Card.Header>
+                        <Accordion.Toggle
+                          as={Button}
+                          variant="link"
+                          eventKey={item.id}
+                          value={item.id}
+                          onClick={(e) => getComments(e.currentTarget.value)}
+                        >
+                          <Row>
+                            <Col>Bill Name: {item.descirption}</Col>
+                            <Col>Bill Amount: {numeral(item.total_amount).format()}</Col>
+                            <Col>Added by: {item.email}</Col>
+                          </Row>
+                        </Accordion.Toggle>
+                      </Card.Header>
+                      <Accordion.Collapse eventKey={item.id}>
+                        <Card.Body>
+                          {comments.map((comment1) => (
+                            <ListGroup.Item>
+                              <Row>
+                                <Col>Comment: {comment1.comment}</Col>
+                                <Col>Added By: {comment1.user}</Col>
+                                {userId === comment1.id && (
+                                  <Col>
+                                    <Button
+                                      value={comment1.commentId}
+                                      onClick={(e) => deleteComment(e.currentTarget.value)}
+                                    >
+                                      X
+                                    </Button>
+                                  </Col>
+                                )}
+                              </Row>
+                            </ListGroup.Item>
+                          ))}
+                          <InputGroup>
+                            <FormControl
+                              placeholder="Add Comment"
+                              aria-label="Add Comment"
+                              aria-describedby="basic-addon2"
+                              onChange={(e) => {
+                                setComment(e.target.value);
+                              }}
+                            />
+                            <InputGroup.Append>
+                              <Button variant="outline-secondary" onClick={addComment}>
+                                Add
+                              </Button>
+                            </InputGroup.Append>
+                          </InputGroup>
+                        </Card.Body>
+                      </Accordion.Collapse>
+                    </Card>
                   ))}
-                </ListGroup>
+                </Accordion>
               </Col>
               <Col>
                 <ListGroup variant="flush">
@@ -236,10 +338,6 @@ function GroupHomePage() {
                     </ListGroup.Item>
                   )) */
                   }
-                  <ListGroup.Item>
-                    <Col>And You:</Col>
-                    <Col>{email}</Col>
-                  </ListGroup.Item>
                 </ListGroup>
               </Col>
             </Row>
