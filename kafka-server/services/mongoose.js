@@ -105,3 +105,81 @@ module.exports.Groups = mongoose.model("Group", {
     default: [],
   },
 });
+
+module.exports.Bills = mongoose.model("Bill", {
+  _id: {
+    type: mongoose.Types.ObjectId,
+    auto: true,
+  },
+  billAmount: {
+    type: Number,
+    required: true,
+  },
+  billTimestamp: {
+    type: Date,
+    default: Date.now,
+  },
+  createdBy: {
+    type: String,
+    required: true,
+  },
+  billDesc: {
+    type: String,
+    required: true,
+  },
+  transactionId: {
+    type: Array,
+    default: [],
+  },
+  comments: {
+    type: Array,
+    default: [],
+  },
+});
+
+module.exports.Transaction = mongoose.model("Transaction", {
+  _id: {
+    type: mongoose.Types.ObjectId,
+    auto: true,
+  },
+  amount: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+  sender: {
+    type: mongoose.Types.ObjectId,
+    required: true,
+  },
+  receiver: {
+    type: mongoose.Types.ObjectId,
+    required: true,
+  },
+  group_id: {
+    type: mongoose.Types.ObjectId,
+    required: true,
+  },
+});
+
+module.exports.Activity = mongoose.model("Activity", {
+  _id: {
+    type: mongoose.Types.ObjectId,
+    auto: true,
+  },
+  user_id: {
+    type: mongoose.Types.ObjectId,
+    required: true,
+  },
+  message: {
+    type: String,
+    required: true,
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
+  group_id: {
+    type: String,
+    required: true,
+  },
+});

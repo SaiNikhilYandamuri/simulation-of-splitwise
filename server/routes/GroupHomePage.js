@@ -6,6 +6,7 @@ const Users = require("../model/Users");
 const Transaction = require("../model/Transaction");
 const Activty = require("../model/Activity");
 const { checkAuth } = require("../Utils/passport");
+var kafka = require("../kafka/client");
 
 /* Tested using Postman*/
 router.get("/getBillsOfGroup/:groupName", checkAuth, async function (req, res) {
@@ -176,7 +177,7 @@ router.post("/leaveGroup", checkAuth, async function (req, res) {
 
 /* Tested Using Postman */
 router.post("/addBill", checkAuth, async function (req, res) {
-  const userDetails = await Users.findById(req.body.userId);
+  /* const userDetails = await Users.findById(req.body.userId);
   console.log(userDetails);
   const bill = new Bills({
     billAmount: req.body.amount,
@@ -243,11 +244,41 @@ router.post("/addBill", checkAuth, async function (req, res) {
     // res.status(200).end(saveBill);
   } else {
     res.status(500).end("Bill not added");
-  }
+  } */
+  kafka.make_request("addbill", req.body, function (err, results) {
+    console.log("in result");
+    console.log("results in messagepost ", results);
+    if (err) {
+      console.log("Inside err");
+      res.json({
+        status: "error",
+        msg: "Error",
+      });
+      res.status(400).end();
+    } else {
+      console.log("Inside else", results);
+      res.status(200).send("Succesfully saved.");
+    }
+  });
 });
 
 router.post("/addComment", checkAuth, async function (req, res) {
-  const billId = req.body.billId;
+  kafka.make_request("addcomment", req.body, function (err, results) {
+    console.log("in result");
+    console.log("results in messagepost ", results);
+    if (err) {
+      console.log("Inside err");
+      res.json({
+        status: "error",
+        msg: "Error",
+      });
+      res.status(400).end();
+    } else {
+      console.log("Inside else", results);
+      res.status(200).send("Succesfully saved.");
+    }
+  });
+  /* const billId = req.body.billId;
   const userId = req.body.userId;
   const id = mongoose.Types.ObjectId();
   const comment = {
@@ -266,7 +297,7 @@ router.post("/addComment", checkAuth, async function (req, res) {
       if (err) return res.send(500, { error: err });
       return res.status(200).send("Succesfully saved.");
     }
-  );
+  );*/
 });
 
 router.get("/getComments/:billId", checkAuth, async function (req, res) {
