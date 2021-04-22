@@ -17,6 +17,10 @@ const activitySchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  group_id: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Activity", activitySchema);

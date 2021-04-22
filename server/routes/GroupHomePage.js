@@ -18,7 +18,7 @@ router.get("/getBillsOfGroup/:groupName", checkAuth, async function (req, res) {
   const arrayOfBills = groupDetails.bills;
   const output = [];
   console.log(groupDetails);
-  for (let i = 0; i < arrayOfBills.length; i++) {
+  for (let i = arrayOfBills.length - 1; i > -1; i--) {
     const billDetails = await Bills.findById(arrayOfBills[i]);
     // const createdBy = await Users.findById(billDetails.createdBy);
     const bill = {
@@ -31,7 +31,7 @@ router.get("/getBillsOfGroup/:groupName", checkAuth, async function (req, res) {
     console.log(bill);
     console.log(i);
     output.push(bill);
-    if (i === arrayOfBills.length - 1) {
+    if (i === 0) {
       res.status(200).send(output);
     }
   }
@@ -158,6 +158,7 @@ router.post("/leaveGroup", checkAuth, async function (req, res) {
               const activity = new Activty({
                 user_id: mongoose.Types.ObjectId(membersOfGroup[i]),
                 message: userInfo.fullname + " has left the group " + groupName,
+                group_id: groupDetails._id,
               });
               const saveActivity = await activity.save();
               console.log(saveActivity);
@@ -230,6 +231,7 @@ router.post("/addBill", checkAuth, async function (req, res) {
                 bill.billAmount +
                 " in the group " +
                 req.body.group,
+              group_id: groupDetails.groupName,
             });
             const saveActivity = await activity.save();
             console.log(saveActivity);

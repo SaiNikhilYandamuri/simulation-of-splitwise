@@ -90,6 +90,7 @@ router.post("/acceptInvite", checkAuth, async function (req, res) {
                     userone.fullname +
                     " has accepted invite to the group " +
                     req.body.groupName,
+                  group_id: req.body.groupName,
                 });
                 const saveActivity = await activity.save();
                 console.log(saveActivity);

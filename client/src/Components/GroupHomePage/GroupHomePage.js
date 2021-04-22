@@ -30,9 +30,11 @@ function GroupHomePage() {
   const [comments, getCommentsFromAPI] = useState([]);
   const [comment, setComment] = useState('');
   const [billId, setBillId] = useState('');
+  const [deleteCommentID, setDeleteCommentID] = useState('');
   const [members, getMembers] = useState([]);
   const [show, setShow] = useState(false);
   const [showLG, setShowLG] = useState(false);
+  const [showDC, setShowDC] = useState(false);
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState(0);
   const isLogged = useSelector((state) => state.isLogged);
@@ -51,6 +53,12 @@ function GroupHomePage() {
 
   const handleCloseLG = () => setShowLG(false);
   const handleShowLG = () => setShowLG(true);
+
+  const handleCloseDC = () => setShowDC(false);
+  const handleShowDC = (commentId) => {
+    setDeleteCommentID(commentId);
+    setShowDC(true);
+  };
 
   const getBillsList = async () => {
     const getURL = `${backendServer}/getBillsOfGroup/${groupName}`;
@@ -131,11 +139,13 @@ function GroupHomePage() {
       .then((response) => {
         console.log(response.data);
         getComments(billId);
+        handleCloseDC();
       });
   };
 
-  const deleteComment = (commentId) => {
-    console.log(commentId);
+  const deleteComment = () => {
+    console.log(deleteCommentID);
+    const commentId = deleteCommentID;
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
     axios
       .post(`${backendServer}/deleteComment`, {
@@ -293,10 +303,24 @@ function GroupHomePage() {
                                   <Col>
                                     <Button
                                       value={comment1.commentId}
-                                      onClick={(e) => deleteComment(e.currentTarget.value)}
+                                      onClick={(e) => handleShowDC(e.currentTarget.value)}
                                     >
                                       X
                                     </Button>
+                                    <Modal show={showDC} onHide={handleCloseDC} animation={false}>
+                                      <Modal.Header closeButton>
+                                        <Modal.Title>Delete Comment</Modal.Title>
+                                      </Modal.Header>
+                                      <Modal.Body>Do you wish to delete this comment?</Modal.Body>
+                                      <Modal.Footer>
+                                        <Button variant="danger" onClick={handleCloseDC}>
+                                          No
+                                        </Button>
+                                        <Button variant="primary" onClick={deleteComment}>
+                                          Yes
+                                        </Button>
+                                      </Modal.Footer>
+                                    </Modal>
                                   </Col>
                                 )}
                               </Row>

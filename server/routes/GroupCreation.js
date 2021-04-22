@@ -71,6 +71,7 @@ router.post("/creategroup", checkAuth, async (req, res) => {
                     userone.fullname +
                     " has invited you to join the group " +
                     groupName,
+                  group_id: data.groupName,
                 });
                 const saveActivity = await activity.save();
                 console.log(saveActivity);

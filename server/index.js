@@ -29,6 +29,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 mongoose
   .connect(
     "mongodb+srv://admin:admin@cluster0.u3tzy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    {
+      poolSize: 10,
+    },
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then((result) => {

@@ -52,7 +52,7 @@ router.post("/settleUp", checkAuth, async (req, res) => {
     amount: settleUpval,
     sender: mongoose.Types.ObjectId(userId),
     receiver: mongoose.Types.ObjectId(friendId),
-    group_id: mongoose.Types.ObjectId("00000000e332f843a87180a0"),
+    group_id: "SettleUp",
   });
   const saveTransaction = await transaction.save();
   console.log(saveTransaction);
@@ -60,6 +60,7 @@ router.post("/settleUp", checkAuth, async (req, res) => {
   const activity = new Activity({
     user_id: mongoose.Types.ObjectId(friendDetails._id),
     message: userInfo.fullname + " has settleup with you.",
+    group_id: mongoose.Types.ObjectId("00000000e332f843a87180a0"),
   });
   const saveActivity = await activity.save();
   console.log(saveActivity);
