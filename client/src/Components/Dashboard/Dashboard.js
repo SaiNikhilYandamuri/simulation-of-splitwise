@@ -29,7 +29,6 @@ const Dashboard = function () {
   // const email = cookie.load('email');
   const handleShow = () => setShow(true);
   const userId = localStorage.getItem('user_id');
-  const isLogged = useSelector((state) => state.isLogged);
   const fullname = isLogged.username;
 
   let redirectVar = null;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { React, useState, useEffect } from 'react';
 import { Redirect } from 'react-router';
-import cookie from 'react-cookies';
+// import cookie from 'react-cookies';
 import Button from 'react-bootstrap/Button';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -38,7 +38,6 @@ function Login() {
 
     const url = `${backendServer}/login`;
     if (email.includes('@') && email.includes('.com')) {
-
       axios.defaults.withCredentials = true;
       await axios
         .post(url, {
@@ -70,7 +69,6 @@ function Login() {
           setAlert(err);
           // if (!err) alert(err.response.data.message);
         });
-
     } else {
       setAlert('Email Format Wrong');
     }

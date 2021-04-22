@@ -72,7 +72,6 @@ function Signup() {
           console.log(err);
           setAlert(err.response.data.message);
         });
-
     } else {
       setAlert('Email Format Wrong');
     }
