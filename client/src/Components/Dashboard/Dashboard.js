@@ -26,60 +26,64 @@ const Dashboard = function () {
   const handleClose = () => setShow(false);
   const isLogged = useSelector((state) => state.isLogged);
   const currency = cookie.load('currency');
-  const email = cookie.load('email');
+  // const email = cookie.load('email');
   const handleShow = () => setShow(true);
+  const userId = localStorage.getItem('user_id');
+  const isLogged = useSelector((state) => state.isLogged);
+  const fullname = isLogged.username;
 
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  if (!localStorage.getItem('token')) {
     redirectVar = <Redirect to="/login" />;
   }
-  const doEverything = async (emailId) => {
-    console.log(isLogged);
+
+  const doEverything = async () => {
     numeral.defaultFormat('$0,0.00');
     // console.log(currency);
     if (currency === 'GBP') {
       numeral.locale('en-gb');
     }
     // console.log(isLogged);
-    const getURL = `${backendServer}/totalAmount/${emailId}`;
+    const getURL = `${backendServer}/dashboard/${userId}`;
     // const response = await axios.get(getURL);
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
     axios
       .get(getURL)
       .then((response) => {
-        console.log(response.data);
         const { data } = response;
+        // console.log(data);
+        // eslint-disable-next-line no-plusplus
+        /* for (let i = 0; i < data.length; i++) {
+          console.log(data[i]);
+        } */
         const owed = [];
         const owing = [];
         const friends = new Map();
         const arrayFriends = [];
-        // eslint-disable-next-line no-restricted-syntax
-        for (const [key, value] of Object.entries(data)) {
-          console.log(key);
-          if (value.user_1 === email) {
-            friends.set(value.user_2, 0);
-            // arrayFriends.push(value.user_2);
+        data.forEach((ele) => {
+          // console.log(ele.user_1);
+          // console.log(ele.user_2);
+          if (ele.user_1 === fullname) {
+            // console.log('inside 1');
+            friends.set(ele.user_2, 0);
           } else {
-            friends.set(value.user_1, 0);
-            // arrayFriends.push(value.user_1);
+            // console.log('inside 2');
+            friends.set(ele.user_1, 0);
           }
-        }
-        console.log(friends);
-        // eslint-disable-next-line no-restricted-syntax
-        for (const [key, value] of Object.entries(data)) {
-          // Object.keys(data).forEach((transaction) => {
-          console.log(key);
-          if (value.user_1 === email) {
-            const amount = friends.get(value.user_2) + value.final_amount;
-            friends.set(value.user_2, amount);
+        });
+        data.forEach((ele) => {
+          if (ele.user_1 === fullname) {
+            const amount = friends.get(ele.user_2) + ele.final_amount;
+            friends.set(ele.user_2, amount);
           } else {
-            const amount = friends.get(value.user_1) - value.final_amount;
-            friends.set(value.user_1, amount);
+            const amount = friends.get(ele.user_1) - ele.final_amount;
+            friends.set(ele.user_1, amount);
           }
-        }
+        });
         // eslint-disable-next-line no-restricted-syntax
         for (const [key, value] of friends.entries()) {
           if (value !== 0) {
-            arrayFriends.push(key);
+            arrayFriends.push({ user: key, amount: value });
           }
 
           if (value > 0) {
@@ -112,18 +116,28 @@ const Dashboard = function () {
       .catch((err) => {
         console.log(err.response);
       });
+    // eslint-disable-next-line no-plusplus
   };
   const settleUp = (friendSelected) => {
     console.log(friendSelected);
+    let settleUpValue = 0;
+    friendsDetails.forEach((ele) => {
+      if (ele.user === friendSelected) {
+        settleUpValue = ele.amount;
+      }
+    });
+    console.log(settleUpValue);
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
     axios
       .post(`${backendServer}/settleUp/`, {
-        email,
+        userId,
         friendSelected,
+        settleUpValue,
       })
       .then((response) => {
         console.log(response);
         handleClose();
-        doEverything(email);
+        doEverything();
       });
   };
 
@@ -166,7 +180,7 @@ const Dashboard = function () {
     //   if (value !== 0) {
     //     arrayFriends.push(key);
     //   }
-    doEverything(email);
+    doEverything();
     //   if (value > 0) {
     //     owed.push({ user: key, final_amount: value });
     //   } else if (value < 0) {
@@ -230,11 +244,11 @@ const Dashboard = function () {
                       <Button
                         variant="light"
                         href=""
-                        value={ele}
+                        value={ele.user}
                         onClick={(e) => settleUp(e.currentTarget.value)}
                         key={ele}
                       >
-                        {ele}
+                        {ele.user}
                       </Button>
                     ))}
                   </ListGroup>

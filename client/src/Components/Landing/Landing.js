@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router';
-import cookie from 'react-cookies';
+// import cookie from 'react-cookies';
 import { Image } from 'react-bootstrap/esm';
 import { Row, Col } from 'react-bootstrap';
 import './Landing.css';
@@ -9,7 +9,7 @@ import image1 from '../assets/login_logo.png';
 
 const Landing = function () {
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  if (!localStorage.getItem('token')) {
     redirectVar = <Redirect to="/landing" />;
   } else {
     redirectVar = <Redirect to="/dashboard" />;

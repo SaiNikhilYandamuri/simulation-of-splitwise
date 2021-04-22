@@ -23,15 +23,18 @@ function InviteList() {
   };
   const isLogged = useSelector((state) => state.isLogged);
   const emailId = isLogged.email;
+  const userid = localStorage.getItem('user_id');
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  if (!localStorage.getItem('token')) {
     redirectVar = <Redirect to="/login" />;
   }
   const accepetInvitation = () => {
     console.log(emailId);
     const groupName = cookie.load('groupSelectedInvite');
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
     axios
       .post(`${backendServer}/acceptInvite`, {
+        userid,
         emailId,
         groupName,
       })
@@ -49,7 +52,8 @@ function InviteList() {
   console.log('On load');
   console.log(groups);
   useEffect(async () => {
-    const getURL = `${backendServer}/invitegroups/${emailId}`;
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
+    const getURL = `${backendServer}/invitegroups/${userid}`;
     const response = await axios.get(getURL);
     console.log(response.data);
     getGroups(response.data);

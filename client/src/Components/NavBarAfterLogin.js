@@ -10,6 +10,7 @@ import { logout } from '../actions';
 function NavBarAfterLogin() {
   // const isLogged = useSelector((state) => state.isLogged.username);
   const isLogged = useSelector((state) => state.isLogged);
+  console.log(isLogged);
   const fullanme = isLogged.username; // cookie.load('name'); // sessionStorage.getItem('fullname');
 
   // const history = useHistory();
@@ -22,6 +23,7 @@ function NavBarAfterLogin() {
     cookie.remove('userid');
     cookie.remove('cookie');
     cookie.remove('groupSelected');
+    localStorage.removeItem('token');
     // history.push('/landing');
   };
 

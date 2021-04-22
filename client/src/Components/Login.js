@@ -7,6 +7,8 @@ import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Form from 'react-bootstrap/Form';
 import { Row, Col, Alert } from 'react-bootstrap';
+// eslint-disable-next-line camelcase
+import jwt_decode from 'jwt-decode';
 import logged from '../actions';
 import NavBarBeforeLogin from './NavBarBeforeLogin';
 import backendServer from '../Config';
@@ -14,6 +16,7 @@ import backendServer from '../Config';
 function Login() {
   const [email, emailChangeHandler] = useState('');
   const [password, passwordChangeHandler] = useState('');
+  const [token, setToken] = useState('');
   const [alert, setAlert] = useState('');
   const history = useHistory();
 
@@ -21,7 +24,7 @@ function Login() {
   const dispatch = useDispatch();
   // console.log(cookie.load('cookie'));
   let redirectVar = null;
-  if (cookie.load('cookie')) {
+  if (localStorage.getItem('token')) {
     redirectVar = <Redirect to="/dashboard" />;
   }
 
@@ -29,49 +32,45 @@ function Login() {
     history.push('/dashboard');
   };
 
-  const submitLogin = (e) => {
+  const submitLogin = async (e) => {
     e.preventDefault();
     console.log('inside function');
 
     const url = `${backendServer}/login`;
     if (email.includes('@') && email.includes('.com')) {
-      if (password === '') {
-        setAlert('Password is empty!');
-      } else {
-        axios.defaults.withCredentials = true;
-        axios
-          .post(url, {
-            email,
-            password,
-          })
-          .then((response) => {
-            console.log(response.status);
-            console.log(isLogged);
-            cookie.save('name', response.data.fullname, {
-              path: '/',
-              httpOnly: false,
-              maxAge: 90000,
-            });
-            cookie.save('email', response.data.email, {
-              path: '/',
-              httpOnly: false,
-              maxAge: 90000,
-            });
-            cookie.save('currency', response.data.currency, {
-              path: '/',
-              httpOnly: false,
-              maxAge: 90000,
-            });
-            sessionStorage.setItem('email', response.data.email);
-            sessionStorage.setItem('fullname', response.data.fullname);
-            loadSuccess();
-            dispatch(logged(response.data.fullname, response.data.email, response.data.currency));
-          })
-          .catch((err) => {
-            setAlert(err.response.data.message);
-            // if (!err) alert(err.response.data.message);
-          });
-      }
+
+      axios.defaults.withCredentials = true;
+      await axios
+        .post(url, {
+          email,
+          password,
+        })
+        .then((response) => {
+          console.log(response.status);
+          console.log(isLogged);
+          setToken(response.data.token);
+          console.log(token);
+          const tokenArray = response.data.token.split(' ');
+          localStorage.setItem('token', response.data.token);
+          console.log(tokenArray[0]);
+          // eslint-disable-next-line prefer-const
+          let decodedToken = jwt_decode(tokenArray[1]);
+          console.log(decodedToken);
+          // eslint-disable-next-line no-underscore-dangle
+          localStorage.setItem('user_id', decodedToken._id);
+
+          localStorage.setItem('email', decodedToken.email);
+          localStorage.setItem('fullname', decodedToken.fullname);
+          localStorage.setItem('currency', decodedToken.currency);
+          dispatch(logged(decodedToken.fullname, decodedToken.email, decodedToken.currency));
+          loadSuccess();
+        })
+        .catch((err) => {
+          console.log('Error');
+          setAlert(err);
+          // if (!err) alert(err.response.data.message);
+        });
+
     } else {
       setAlert('Email Format Wrong');
     }

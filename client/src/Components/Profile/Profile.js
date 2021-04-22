@@ -30,12 +30,13 @@ function Profile() {
   const [image, setImage] = useState('');
   const isLogged = useSelector((state) => state.isLogged);
   const emailId = isLogged.email;
+  const userid = localStorage.getItem('user_id');
 
   const dispatch = useDispatch();
   const history = useHistory();
 
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  if (!localStorage.getItem('token')) {
     redirectVar = <Redirect to="/login" />;
   }
   const changeNumberLocale = (locale) => {
@@ -53,12 +54,14 @@ function Profile() {
     const data = new FormData();
     data.append('name', 'file_name.jpg');
     data.append('file', file);
-    axios.post(`${backendServer}/uploadPicture/${email}`, data).then((res) => {
-      console.log(res);
-      setImage(`${backendServer}/${res.data.imagepath}`);
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
+    axios.post(`${backendServer}/imageupload/${userid}`, data).then((res) => {
+      console.log(res.data);
+      setImage(`${res.data.imagepath}`);
     });
     axios
       .post(`${backendServer}/updateProfile`, {
+        userid,
         emailId,
         emailUpdate,
         fullnameUpdate,
@@ -105,7 +108,8 @@ function Profile() {
   };
 
   useEffect(async () => {
-    const getURL = `${backendServer}/profile/${emailId}`;
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
+    const getURL = `${backendServer}/profile/${userid}`;
     const response = await axios.get(getURL);
     console.log(response.data);
     const arrayCurrency = [];
@@ -116,7 +120,7 @@ function Profile() {
       arrayCurrency.push('USD');
       arrayCurrency.push('GBP');
     }
-    setImage(`${backendServer}/${response.data.image}`);
+    setImage(`${response.data.image}`);
     getEmail(response.data.email);
     getFullname(response.data.fullname);
     getPhonenumber(response.data.phonenumber);

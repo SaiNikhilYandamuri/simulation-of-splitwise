@@ -19,8 +19,10 @@ function CreateGroupNew() {
   const { email } = isLogged;
   const name = cookie.load('name'); // sessionStorage.getItem('fullname');
   const history = useHistory();
+  const userId = localStorage.getItem('user_id');
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  // let redirectVar = null;
+  if (!localStorage.getItem('token')) {
     redirectVar = <Redirect to="/login" />;
   }
   // const email = cookie.load('email');
@@ -32,7 +34,8 @@ function CreateGroupNew() {
       value,
     };
     console.log(value.length);
-
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
+    console.log(axios.defaults.headers.common.authorization);
     axios
       .post(`${backendServer}/creategroup`, groupDetails)
       .then((response) => {
@@ -51,7 +54,8 @@ function CreateGroupNew() {
       });
   };
   useEffect(() => {
-    const url = `${backendServer}/users/${email}`;
+    const url = `${backendServer}/users/${userId}`;
+    axios.defaults.headers.common.authorization = localStorage.getItem('token');
     axios
       .get(url)
       .then((response) => {
@@ -60,8 +64,8 @@ function CreateGroupNew() {
         console.log(data);
 
         const options = data.users.map((d) => ({
-          value: d.fullname,
-          label: d.email,
+          value: d.userId,
+          label: d.fullname,
         }));
         console.log(options);
         setselectOptions(options);
