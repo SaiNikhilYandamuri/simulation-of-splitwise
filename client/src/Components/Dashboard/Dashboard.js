@@ -24,7 +24,7 @@ const Dashboard = function () {
   const [owedBalance, getOwedBalance] = useState(0.0);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  // const isLogged = useSelector((state) => state.isLogged);
+  const isLogged = useSelector((state) => state.isLogged);
   const currency = cookie.load('currency');
   // const email = cookie.load('email');
   const handleShow = () => setShow(true);
@@ -36,9 +36,10 @@ const Dashboard = function () {
   if (!localStorage.getItem('token')) {
     redirectVar = <Redirect to="/login" />;
   }
+
   const doEverything = async () => {
     numeral.defaultFormat('$0,0.00');
-    console.log(currency);
+    // console.log(currency);
     if (currency === 'GBP') {
       numeral.locale('en-gb');
     }
@@ -141,7 +142,7 @@ const Dashboard = function () {
   };
 
   useEffect(() => {
-    console.log("Hello World If it's awesome");
+    // console.log("Hello World If it's awesome");
     // const getURL = `http://localhost:4000/totalAmount/${email}`;
     // const response = await axios.get(getURL);
     // console.log(response.data);

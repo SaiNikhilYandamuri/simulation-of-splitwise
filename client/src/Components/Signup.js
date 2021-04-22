@@ -40,6 +40,7 @@ function Signup() {
     e.preventDefault();
 
     axios.defaults.withCredentials = true;
+
     if (email.includes('@') && email.includes('.com')) {
       axios
         .post(url, {
@@ -71,6 +72,7 @@ function Signup() {
           console.log(err);
           setAlert(err.response.data.message);
         });
+
     } else {
       setAlert('Email Format Wrong');
     }

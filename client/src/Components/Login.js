@@ -22,7 +22,7 @@ function Login() {
 
   const isLogged = useSelector((state) => state.isLogged);
   const dispatch = useDispatch();
-  console.log(cookie.load('cookie'));
+  // console.log(cookie.load('cookie'));
   let redirectVar = null;
   if (localStorage.getItem('token')) {
     redirectVar = <Redirect to="/dashboard" />;
@@ -38,6 +38,7 @@ function Login() {
 
     const url = `${backendServer}/login`;
     if (email.includes('@') && email.includes('.com')) {
+
       axios.defaults.withCredentials = true;
       await axios
         .post(url, {
@@ -69,6 +70,7 @@ function Login() {
           setAlert(err);
           // if (!err) alert(err.response.data.message);
         });
+
     } else {
       setAlert('Email Format Wrong');
     }
