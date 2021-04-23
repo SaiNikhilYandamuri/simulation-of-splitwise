@@ -66,7 +66,7 @@ router.post("/leaveGroup", checkAuth, async function (req, res) {
     groupName: req.body.groupName,
   });
 
-  const transactionOfGroup1 = await Transaction.find({
+  /* const transactionOfGroup1 = await Transaction.find({
     group_id: groupDetails._id,
     sender: req.body.userId,
   });
@@ -130,49 +130,49 @@ router.post("/leaveGroup", checkAuth, async function (req, res) {
     if (value !== 0) {
       flag = false;
     }
-  }
+  }*/
 
-  if (flag) {
-    Groups.findOneAndUpdate(
-      {
-        _id: groupDetails._id,
+  // if (flag) {
+  Groups.findOneAndUpdate(
+    {
+      _id: groupDetails._id,
+    },
+    {
+      $pull: {
+        members: req.body.userId,
       },
-      {
-        $pull: {
-          members: req.body.userId,
+    },
+    function (err, doc) {
+      Users.findOneAndUpdate(
+        {
+          _id: req.body.userId,
         },
-      },
-      function (err, doc) {
-        Users.findOneAndUpdate(
-          {
-            _id: req.body.userId,
+        {
+          $pull: {
+            group: groupDetails._id,
           },
-          {
-            $pull: {
-              group: groupDetails._id,
-            },
-          },
-          async function (err, doc) {
-            const membersOfGroup = groupDetails.members;
-            const userInfo = await Users.findById(req.body.userId);
-            for (let i = 0; i < membersOfGroup; i++) {
-              const activity = new Activty({
-                user_id: mongoose.Types.ObjectId(membersOfGroup[i]),
-                message: userInfo.fullname + " has left the group " + groupName,
-                group_id: groupDetails._id,
-              });
-              const saveActivity = await activity.save();
-              console.log(saveActivity);
-            }
-            if (err) return res.send(500, { error: err });
-            return res.status(200).send("Succesfully saved.");
+        },
+        async function (err, doc) {
+          const membersOfGroup = groupDetails.members;
+          const userInfo = await Users.findById(req.body.userId);
+          for (let i = 0; i < membersOfGroup; i++) {
+            const activity = new Activty({
+              user_id: mongoose.Types.ObjectId(membersOfGroup[i]),
+              message: userInfo.fullname + " has left the group " + groupName,
+              group_id: groupDetails._id,
+            });
+            const saveActivity = await activity.save();
+            console.log(saveActivity);
           }
-        );
-      }
-    );
-  } else {
-    res.status(500).send("Unable to leave group");
-  }
+          if (err) return res.send(500, { error: err });
+          return res.status(200).send("Succesfully saved.");
+        }
+      );
+    }
+  );
+  //} else {
+  res.status(500).send("Unable to leave group");
+  //}
 });
 
 /* Tested Using Postman */

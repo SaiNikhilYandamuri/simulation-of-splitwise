@@ -52,7 +52,7 @@ router.post("/settleUp", checkAuth, async (req, res) => {
     amount: settleUpval,
     sender: mongoose.Types.ObjectId(userId),
     receiver: mongoose.Types.ObjectId(friendId),
-    group_id: "SettleUp",
+    group_id: mongoose.Types.ObjectId(0),
   });
   const saveTransaction = await transaction.save();
   console.log(saveTransaction);

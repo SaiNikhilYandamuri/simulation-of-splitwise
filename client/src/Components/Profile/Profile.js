@@ -58,6 +58,7 @@ function Profile() {
     axios.post(`${backendServer}/imageupload/${userid}`, data).then((res) => {
       console.log(res.data);
       setImage(`${res.data.imagepath}`);
+      // history.push('/profile');
     });
     axios
       .post(`${backendServer}/updateProfile`, {
