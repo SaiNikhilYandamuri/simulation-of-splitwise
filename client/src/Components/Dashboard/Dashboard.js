@@ -118,14 +118,14 @@ const Dashboard = function () {
     // eslint-disable-next-line no-plusplus
   };
   const settleUp = (friendSelected) => {
-    console.log(friendSelected);
+    // console.log(friendSelected);
     let settleUpValue = 0;
     friendsDetails.forEach((ele) => {
       if (ele.user === friendSelected) {
         settleUpValue = ele.amount;
       }
     });
-    console.log(settleUpValue);
+    // console.log(settleUpValue);
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
     axios
       .post(`${backendServer}/settleUp/`, {

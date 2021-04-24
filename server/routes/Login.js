@@ -8,7 +8,7 @@ auth();
 // Validation
 
 router.post("/login", async (req, res) => {
-  console.log("inside login");
+  //console.log("inside login");
   try {
     const user = await Users.findOne({ email: req.body.email });
     if (!user) {
@@ -19,7 +19,7 @@ router.post("/login", async (req, res) => {
       user.password
     );
     if (!encryptedPassword) {
-      console.log("Hello World");
+      // console.log("Hello World");
       res.status(400).send("Enter Valid Credentials!");
     } else {
       const payload = {
@@ -28,11 +28,11 @@ router.post("/login", async (req, res) => {
         email: user.email,
         currency: user.currency,
       };
-      console.log(payload);
+      // console.log(payload);
       const token = await jwt.sign(payload, secret, {
         expiresIn: 1000000,
       });
-      console.log(token);
+      // console.log(token);
       //res.status(200).send(token);
       res.status(200).json({ token: "jwt " + token });
     }

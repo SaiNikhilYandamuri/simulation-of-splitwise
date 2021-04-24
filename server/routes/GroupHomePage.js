@@ -15,10 +15,10 @@ router.get("/getBillsOfGroup/:groupName", checkAuth, async function (req, res) {
   const groupDetails = await Groups.findOne({
     groupName: req.params.groupName,
   });
-  console.log(groupDetails);
+  // console.log(groupDetails);
   const arrayOfBills = groupDetails.bills;
   const output = [];
-  console.log(groupDetails);
+  // console.log(groupDetails);
   for (let i = arrayOfBills.length - 1; i > -1; i--) {
     const billDetails = await Bills.findById(arrayOfBills[i]);
     // const createdBy = await Users.findById(billDetails.createdBy);
@@ -29,8 +29,8 @@ router.get("/getBillsOfGroup/:groupName", checkAuth, async function (req, res) {
       timestamp: billDetails.billTimestamp,
       id: billDetails._id,
     };
-    console.log(bill);
-    console.log(i);
+    // console.log(bill);
+    // console.log(i);
     output.push(bill);
     if (i === 0) {
       res.status(200).send(output);
@@ -65,6 +65,8 @@ router.post("/leaveGroup", checkAuth, async function (req, res) {
   const groupDetails = await Groups.findOne({
     groupName: req.body.groupName,
   });
+
+  console.log("Inside Leave Group");
 
   /* const transactionOfGroup1 = await Transaction.find({
     group_id: groupDetails._id,

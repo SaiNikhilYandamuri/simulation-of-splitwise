@@ -30,11 +30,11 @@ router.post("/signup", async (req, res) => {
         fullname: user.fullname,
         email: user.email,
       };
-      console.log(payload);
+      // console.log(payload);
       const token = await jwt.sign(payload, secret, {
         expiresIn: 1000000,
       });
-      console.log(token);
+      // console.log(token);
       // res.status(200).end(token);
       res.status(200).json({ token: "jwt " + token });
     }

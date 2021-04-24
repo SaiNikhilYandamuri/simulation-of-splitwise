@@ -8,6 +8,7 @@ const mongoose = require("mongoose");
 
 // Tested using postman
 router.get("/mygroups/:user_id", checkAuth, async function (req, res) {
+  console.log("Inside My groups");
   kafka.make_request("mygroups", req.params, function (err, results) {
     console.log("in result");
     console.log("results in messagepost ", results);
