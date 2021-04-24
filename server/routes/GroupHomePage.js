@@ -68,7 +68,7 @@ router.post("/leaveGroup", checkAuth, async function (req, res) {
 
   console.log("Inside Leave Group");
 
-  /* const transactionOfGroup1 = await Transaction.find({
+  const transactionOfGroup1 = await Transaction.find({
     group_id: groupDetails._id,
     sender: req.body.userId,
   });
@@ -132,7 +132,7 @@ router.post("/leaveGroup", checkAuth, async function (req, res) {
     if (value !== 0) {
       flag = false;
     }
-  }*/
+  }
 
   // if (flag) {
   Groups.findOneAndUpdate(
