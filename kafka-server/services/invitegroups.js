@@ -12,18 +12,18 @@ async function handle_request(msg, callback) {
     }
     console.log(user.group);
 
-    const arrayOfGroup = user.group;
+    const arrayOfGroup = user.groupInvitedTo;
     const output = [];
     for (let i = 0; i < arrayOfGroup.length; i++) {
-      const groupDetails = await mongo.Groups.findById(arrayOfGroup[i]);
+      const groupDetails = await mongo.Groups.findOne({ _id: arrayOfGroup[i] });
       //Groups.findOne({_id: ele}, )
-      //if (groupDetails.groupName === null) {
       console.log(groupDetails.groupName);
       output.push(groupDetails.groupName);
       console.log(output);
-      //}
     }
     console.log(output);
+
+    // res.status(200).send(output);
 
     //res.status(200).send(output);
     callback(null, output);

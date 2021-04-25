@@ -63,42 +63,17 @@ function GroupHomePage() {
   const getBillsList = async () => {
     const getURL = `${backendServer}/getBillsOfGroup/${groupName}`;
     const response = await axios.get(getURL);
-    console.log(response.data);
     getBills(response.data);
   };
 
   const getMembersList = async () => {
     const getURL = `${backendServer}/getMembersOfGroup/${groupName}&${userId}`;
-    console.log(email);
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
     axios.get(getURL).then((response) => {
-      console.log(response);
       const friends = response.data;
-      console.log(friends);
-      // eslint-disable-next-line no-restricted-syntax
-      /* for (const [key, value] of Object.entries(response.data)) {
-        console.log(key);
-        if (value.user_1 === email) {
-          if (value.final_amount < 0) {
-            const neagtive = value.final_amount * -1;
-            friends.push({ name: value.user_2, amount: neagtive });
-          } else {
-            friends.push({ name: value.user_2, amount: value.final_amount });
-          }
-        } else if (value.final_amount < 0) {
-          const neagtive = value.final_amount * -1;
-          friends.push({ name: value.user_1, amount: neagtive });
-        } else {
-          friends.push({ name: value.user_1, amount: value.final_amount });
-        }
-      } */
+
       getMembers(friends);
-      // getMembers(response.data);
     });
-    /* const response = await axios.get(getURL, {
-      email,
-    }); */
-    // console.log(response.data);
   };
   const leaveGroup = () => {
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
@@ -118,12 +93,10 @@ function GroupHomePage() {
       });
   };
   const getComments = async (billId1) => {
-    console.log(billId1);
     setBillId(billId1);
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
     const getURL = `${backendServer}/getComments/${billId1}`;
     const response = await axios.get(getURL);
-    console.log(response.data);
     getCommentsFromAPI(response.data.comments);
   };
 
@@ -144,7 +117,6 @@ function GroupHomePage() {
   };
 
   const deleteComment = () => {
-    console.log(deleteCommentID);
     const commentId = deleteCommentID;
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
     axios
@@ -190,13 +162,10 @@ function GroupHomePage() {
     const getURL = `${backendServer}/getBillsOfGroup/${groupName}`;
     const response = await axios.get(getURL);
     numeral.defaultFormat('$0,0.00');
-    console.log(currency);
     if (currency === 'GBP') {
       numeral.locale('en-gb');
     }
-    console.log(response.data);
     getBills(response.data);
-    console.log(typeof bills);
     getMembersList();
   }, []);
   return (

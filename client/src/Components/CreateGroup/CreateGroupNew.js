@@ -33,9 +33,7 @@ function CreateGroupNew() {
       email,
       value,
     };
-    console.log(value.length);
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
-    console.log(axios.defaults.headers.common.authorization);
     axios
       .post(`${backendServer}/creategroup`, groupDetails)
       .then((response) => {
@@ -49,7 +47,6 @@ function CreateGroupNew() {
         history.push('/groupHomePage');
       })
       .catch((err) => {
-        console.log(err);
         setAlert(err.response.data.message);
       });
   };
@@ -59,22 +56,18 @@ function CreateGroupNew() {
     axios
       .get(url)
       .then((response) => {
-        console.log(response.data);
         const { data } = response;
-        console.log(data);
 
         const options = data.users.map((d) => ({
           value: d.userId,
           label: d.fullname,
         }));
-        console.log(options);
         setselectOptions(options);
       })
       .catch((err) => {
         console.log(err);
       });
     // getOptions();
-    console.log(groupName);
   }, []);
   return (
     <div>

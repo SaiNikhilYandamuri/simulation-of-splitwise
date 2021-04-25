@@ -56,7 +56,6 @@ function Profile() {
     data.append('file', file);
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
     axios.post(`${backendServer}/imageupload/${userid}`, data).then((res) => {
-      console.log(res.data);
       setImage(`${res.data.imagepath}`);
       // history.push('/profile');
     });
@@ -85,7 +84,6 @@ function Profile() {
         } else {
           emailCookie = emailUpdate;
         }
-        console.log(currencyUpdate);
         let currencyCookie = '';
         if (currencyUpdate === '') {
           currencyCookie = currency;
@@ -102,7 +100,7 @@ function Profile() {
           httpOnly: false,
           maxAge: 90000,
         });
-        console.log(currencyCookie);
+
         dispatch(logged(fullnameCookie, emailCookie, currencyCookie));
         history.push('/profile');
       });
@@ -112,7 +110,6 @@ function Profile() {
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
     const getURL = `${backendServer}/profile/${userid}`;
     const response = await axios.get(getURL);
-    console.log(response.data);
     const arrayCurrency = [];
     if (response.data.currency === 'GBP') {
       arrayCurrency.push('GBP');

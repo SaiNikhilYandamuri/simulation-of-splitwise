@@ -14,7 +14,6 @@ function GroupsPage() {
   const { email } = isLogged;
   console.log(email);
   let redirectVar = null;
-  console.log(localStorage.getItem('token'));
   if (!localStorage.getItem('token')) {
     redirectVar = <Redirect to="/login" />;
   }

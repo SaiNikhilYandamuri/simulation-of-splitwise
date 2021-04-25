@@ -5,7 +5,7 @@ import { Redirect } from 'react-router';
 // eslint-disable-next-line camelcase
 import jwt_decode from 'jwt-decode';
 import { useHistory } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 // import Jumbotron from 'react-bootstrap/Jumbotron';
@@ -24,7 +24,6 @@ function Signup() {
 
   const url = `${backendServer}/signup`;
 
-  const isLogged = useSelector((state) => state.isLogged);
   const dispatch = useDispatch();
 
   let redirectVar = null;
@@ -49,19 +48,14 @@ function Signup() {
           password,
         })
         .then((response) => {
-          console.log(response.status);
-          console.log(isLogged);
           setToken(response.data.token);
-          console.log(token);
           const tokenArray = response.data.token.split(' ');
           localStorage.setItem('token', response.data.token);
-          console.log(tokenArray[0]);
           // eslint-disable-next-line prefer-const
           let decodedToken = jwt_decode(tokenArray[1]);
-          console.log(decodedToken);
           // eslint-disable-next-line no-underscore-dangle
           localStorage.setItem('user_id', decodedToken._id);
-
+          console.log(token);
           localStorage.setItem('email', decodedToken.email);
           localStorage.setItem('fullname', decodedToken.fullname);
           localStorage.setItem('currency', decodedToken.currency);
@@ -69,7 +63,6 @@ function Signup() {
           loadSuccess();
         })
         .catch((err) => {
-          console.log(err);
           setAlert(err.response.data.message);
         });
     } else {

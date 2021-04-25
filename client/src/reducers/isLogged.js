@@ -11,7 +11,6 @@ const loggedReducer = (state = { username: '', email: '', currency: '' }, action
     case 'LOG_OUT':
       // eslint-disable-next-line no-param-reassign
       state = { username: '', email: '', currency: '' };
-      console.log(state);
       return state;
     default:
       return state;

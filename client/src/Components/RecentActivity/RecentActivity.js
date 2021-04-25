@@ -45,10 +45,8 @@ function RecentActivity() {
     const getURL = `${backendServer}/mygroups/${userId}`;
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
     const response1 = await axios.get(getURL);
-    console.log(response1.data);
     const getURL1 = `${backendServer}/invitegroups/${userId}`;
     const response2 = await axios.get(getURL1);
-    console.log(response2.data);
     const arrayOfGroups = response1.data;
     getGroups(arrayOfGroups.concat(response2.data));
     // getGroups(response2.data);
@@ -61,7 +59,6 @@ function RecentActivity() {
     // eslint-disable-next-line no-restricted-syntax
     for (const [key, value] of Object.entries(backendData)) {
       console.log(key);
-      console.log(value);
       array.push(value.message);
     }
     getText(array);
@@ -69,11 +66,9 @@ function RecentActivity() {
   const descendData = () => {
     backendData.sort((a, b) => (b.time > a.time ? 1 : -1));
     const array = [];
-    // getBackendData(response.data);
     // eslint-disable-next-line no-restricted-syntax
     for (const [key, value] of Object.entries(backendData)) {
       console.log(key);
-      console.log(value);
       array.push(value.message);
     }
     getText(array);
@@ -82,12 +77,9 @@ function RecentActivity() {
     const data1 = backendData;
     data1.filter((data) => data.groupname === group);
     const array = [];
-    console.log(data1);
-    // getBackendData(response.data);
     // eslint-disable-next-line no-restricted-syntax
     for (const [key, value] of Object.entries(data1)) {
       console.log(key);
-      console.log(value);
       array.push(value.message);
     }
     getText(array);
@@ -96,16 +88,13 @@ function RecentActivity() {
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
     const getURL = `${backendServer}/recentActivity/${userId}`;
     const response = await axios.get(getURL);
-    console.log(response.data);
     const array = [];
     getBackendData(response.data);
     // eslint-disable-next-line no-restricted-syntax
     for (const [key, value] of Object.entries(response.data)) {
       console.log(key);
-      console.log(value);
       array.push(value.message);
     }
-    console.log(response.data);
     if (array.length === 0) {
       setAlert('No recent activity to show');
     }

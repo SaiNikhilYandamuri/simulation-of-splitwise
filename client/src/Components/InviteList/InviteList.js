@@ -49,13 +49,10 @@ function InviteList() {
         history.push('/groupHomePage');
       });
   };
-  console.log('On load');
-  console.log(groups);
   useEffect(async () => {
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
     const getURL = `${backendServer}/invitegroups/${userid}`;
     const response = await axios.get(getURL);
-    console.log(response.data);
     getGroups(response.data);
   }, []);
 

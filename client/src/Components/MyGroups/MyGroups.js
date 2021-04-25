@@ -23,14 +23,11 @@ function MyGroups() {
     redirectVar = <Redirect to="/login" />;
   }
 
-  console.log('On load');
-  console.log(groups);
   useEffect(async () => {
     console.log(emailId);
     const getURL = `${backendServer}/mygroups/${userid}`;
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
     const response = await axios.get(getURL);
-    console.log(response.data);
     getGroups(response.data);
     const { data } = response;
     const array = [];
@@ -56,7 +53,6 @@ function MyGroups() {
   };
 
   const openGroupDetailsSearch = () => {
-    console.log(value.label);
     cookie.save('groupSelected', value.label, {
       path: '/',
       httpOnly: false,
@@ -76,8 +72,6 @@ function MyGroups() {
               options={selectGroups}
               onChange={(event) => {
                 handleValueChange(event);
-                console.log(event);
-                console.log(value);
               }}
             />
           </Col>

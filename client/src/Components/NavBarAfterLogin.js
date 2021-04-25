@@ -8,15 +8,11 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { logout } from '../actions';
 
 function NavBarAfterLogin() {
-  // const isLogged = useSelector((state) => state.isLogged.username);
   const isLogged = useSelector((state) => state.isLogged);
-  // console.log(isLogged);
   const fullanme = isLogged.username; // cookie.load('name'); // sessionStorage.getItem('fullname');
 
-  // const history = useHistory();
   const dispatch = useDispatch();
   const deleteStore = () => {
-    // console.log('Inside login');
     dispatch(logout('', '', ''));
     cookie.remove('email');
     cookie.remove('name');
@@ -24,7 +20,6 @@ function NavBarAfterLogin() {
     cookie.remove('cookie');
     cookie.remove('groupSelected');
     localStorage.removeItem('token');
-    // history.push('/landing');
   };
 
   return (

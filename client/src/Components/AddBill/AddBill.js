@@ -18,7 +18,6 @@ function AddBill() {
   const handleShow = () => setShow(true);
   const handleBill = (e) => {
     e.preventDefault();
-    console.log('hello');
     axios.defaults.headers.common.authorization = localStorage.getItem('token');
     axios
       .post(`${backendServer}/addBill`, {

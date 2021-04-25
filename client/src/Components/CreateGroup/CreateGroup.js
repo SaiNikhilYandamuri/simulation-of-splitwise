@@ -58,14 +58,10 @@ function CreateGroup() {
   const onChange = (index, event) => {
     event.preventDefault();
     event.persist();
-    console.log(event.target.value);
-
-    console.log(members);
 
     setForm((prev) =>
       prev.map((item, i) => {
         members.push(event.target.value);
-        console.log(members);
         if (i !== index) {
           return item;
         }
@@ -97,7 +93,6 @@ function CreateGroup() {
       email,
       form,
     };
-    console.log(form.length);
 
     axios.post(`${backendServer}/creategroup`, groupDetails).then((response) => {
       console.log(response);

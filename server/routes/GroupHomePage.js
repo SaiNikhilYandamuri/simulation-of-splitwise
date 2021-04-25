@@ -12,30 +12,21 @@ var kafka = require("../kafka/client");
 router.get("/getBillsOfGroup/:groupName", checkAuth, async function (req, res) {
   console.log(req.params.groupName);
   // const groupName = req.params.groupName;
-  const groupDetails = await Groups.findOne({
-    groupName: req.params.groupName,
-  });
-  // console.log(groupDetails);
-  const arrayOfBills = groupDetails.bills;
-  const output = [];
-  // console.log(groupDetails);
-  for (let i = arrayOfBills.length - 1; i > -1; i--) {
-    const billDetails = await Bills.findById(arrayOfBills[i]);
-    // const createdBy = await Users.findById(billDetails.createdBy);
-    const bill = {
-      descirption: billDetails.billDesc,
-      total_amount: billDetails.billAmount,
-      email: billDetails.createdBy,
-      timestamp: billDetails.billTimestamp,
-      id: billDetails._id,
-    };
-    // console.log(bill);
-    // console.log(i);
-    output.push(bill);
-    if (i === 0) {
-      res.status(200).send(output);
+  kafka.make_request("getbillsofgroup", req.params, function (err, results) {
+    console.log("in result");
+    console.log("results in messagepost ", results);
+    if (err) {
+      console.log("Inside err");
+      res.json({
+        status: "error",
+        msg: "Error",
+      });
+      res.status(400).end();
+    } else {
+      console.log("Inside else", results);
+      res.status(200).send(results);
     }
-  }
+  });
 });
 
 /*
@@ -46,18 +37,22 @@ router.get(
   checkAuth,
   async function (req, res) {
     const params = req.params.groupName.split("&");
-    const groupDetails = await Groups.findOne({
-      groupName: params[0],
+    kafka.make_request("getmembersofgroup", params[0], function (err, results) {
+      console.log("in result");
+      console.log("results in messagepost ", results);
+      if (err) {
+        console.log("Inside err");
+        res.json({
+          status: "error",
+          msg: "Error",
+        });
+        res.status(400).end();
+      } else {
+        console.log("Inside else", results);
+        const output = results;
+        res.status(200).send(output);
+      }
     });
-
-    console.log(groupDetails);
-    const members = groupDetails.members;
-    const output = [];
-    for (let i = 0; i < members.length; i++) {
-      const memberName = await Users.findById(members[i]);
-      output.push(memberName.fullname);
-    }
-    res.status(200).send(output);
   }
 );
 
@@ -179,74 +174,6 @@ router.post("/leaveGroup", checkAuth, async function (req, res) {
 
 /* Tested Using Postman */
 router.post("/addBill", checkAuth, async function (req, res) {
-  /* const userDetails = await Users.findById(req.body.userId);
-  console.log(userDetails);
-  const bill = new Bills({
-    billAmount: req.body.amount,
-    createdBy: userDetails.fullname,
-    billDesc: req.body.description,
-  });
-
-  const saveBill = await bill.save();
-  console.log(saveBill);
-  if (saveBill) {
-    const groupDetails = await Groups.findOne({
-      groupName: req.body.group,
-    });
-    const arrayOfBills = groupDetails.bills;
-    arrayOfBills.push(saveBill._id);
-    groupDetails.bills = arrayOfBills;
-    Groups.findOneAndUpdate(
-      { _id: groupDetails._id },
-      groupDetails,
-      async function (err, doc) {
-        if (err) return res.send(500, { error: err });
-        const membersArray = groupDetails.members;
-        membersArray.forEach(async (ele) => {
-          // console.log(typeof ele);
-          // console.log(typeof req.body.userId);
-          const user1 = JSON.stringify(ele);
-          const user2 = JSON.stringify(req.body.userId);
-          const cmp = user1.localeCompare(user2);
-          console.log(cmp);
-          // const user = await Users.findById({ _id: req.body.userId });
-          const userName = userDetails.fullname;
-
-          if (cmp !== 0) {
-            console.log(user1);
-            console.log(user2);
-            const transaction = new Transaction({
-              amount: req.body.amount / membersArray.length,
-              sender: mongoose.Types.ObjectId(req.body.userId),
-              receiver: mongoose.Types.ObjectId(ele),
-              group_id: groupDetails._id,
-            });
-            const saveTransaction = await transaction.save();
-            console.log(saveTransaction);
-            console.log("Transaction Added");
-            const activity = new Activty({
-              user_id: mongoose.Types.ObjectId(ele),
-              message:
-                userName +
-                " has created the Bill " +
-                bill.billDesc +
-                " of amount " +
-                bill.billAmount +
-                " in the group " +
-                req.body.group,
-              group_id: groupDetails.groupName,
-            });
-            const saveActivity = await activity.save();
-            console.log(saveActivity);
-          }
-        });
-        return res.status(200).send("Succesfully saved.");
-      }
-    );
-    // res.status(200).end(saveBill);
-  } else {
-    res.status(500).end("Bill not added");
-  } */
   kafka.make_request("addbill", req.body, function (err, results) {
     console.log("in result");
     console.log("results in messagepost ", results);
@@ -280,50 +207,25 @@ router.post("/addComment", checkAuth, async function (req, res) {
       res.status(200).send("Succesfully saved.");
     }
   });
-  /* const billId = req.body.billId;
-  const userId = req.body.userId;
-  const id = mongoose.Types.ObjectId();
-  const comment = {
-    comment_id: id,
-    comment: req.body.comment,
-    user_id: userId,
-  };
-  Bills.findOneAndUpdate(
-    { _id: billId },
-    {
-      $push: {
-        comments: comment,
-      },
-    },
-    function (err, doc) {
-      if (err) return res.send(500, { error: err });
-      return res.status(200).send("Succesfully saved.");
-    }
-  );*/
 });
 
 router.get("/getComments/:billId", checkAuth, async function (req, res) {
   console.log(req.params.billId);
-  const billDetails = await Bills.findById(req.params.billId);
-  const commentsArray = billDetails.comments;
-  const commentsFinal = [];
-  if (commentsArray.length > 0) {
-    for (let i = 0; i < commentsArray.length; i++) {
-      const userDetails = await Users.findById(commentsArray[i].user_id);
-      const comment = {
-        comment: commentsArray[i].comment,
-        user: userDetails.fullname,
-        id: userDetails._id,
-        commentId: commentsArray[i].comment_id,
-      };
-      commentsFinal.push(comment);
-      if (i === commentsArray.length - 1) {
-        res.status(200).send({ comments: commentsFinal });
-      }
+  kafka.make_request("getcommentsofbill", req.params, function (err, results) {
+    console.log("in result");
+    console.log("results in messagepost ", results);
+    if (err) {
+      console.log("Inside err");
+      res.json({
+        status: "error",
+        msg: "Error",
+      });
+      res.status(400).end();
+    } else {
+      console.log("Inside else", results);
+      res.status(200).send({ comments: results });
     }
-  } else {
-    res.status(200).send({ comments: commentsFinal });
-  }
+  });
 });
 
 router.post("/deleteComment", checkAuth, async function (req, res) {
