@@ -19,7 +19,7 @@
 3. Execute "npm install" to install all the dependencies.
 4. Update pool.js file in server folder with database name and connection details.
 5. Update the app.js file in server folder with frontend server's IP address and port.
-6. Execute "node app" to run the backend server.
+6. Execute "node index" to run the backend server.
 
 #### Launch the application
 
