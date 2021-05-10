@@ -6,96 +6,24 @@ const Activty = require("../model/Activity");
 const { checkAuth } = require("../Utils/passport");
 const mongoose = require("mongoose");
 const secret = "hello";
+var kafka = require("../kafka/client");
 
 router.post("/creategroup", checkAuth, async (req, res) => {
   console.log("Inside Create Group");
   console.log(checkAuth);
-  const groupName = req.body.groupName;
-  const form = req.body.value;
-  const email = req.body.email;
-  const userone = await Users.findOne({ email: email });
-  const membersArray = [];
-  /* for (let i = 0; i < form.length; i++) {
-    membersArray.push(mongoose.Types.ObjectId(form[i].value));
-  } */
-  membersArray.push(userone._id);
-  console.log(membersArray);
-  const newGroup = new Group({
-    groupName: req.body.groupName,
-    members: membersArray,
-  });
-  console.log(req.body);
-
-  Group.findOne({ groupName: req.body.groupName }, (error, group) => {
-    if (error) {
-      res.writeHead(500, {
-        "Content-Type": "text/plain",
+  kafka.make_request("creategroup", req.body, function (err, results) {
+    console.log("in result");
+    console.log("results in messagepost ", results);
+    if (err) {
+      console.log("Inside err");
+      res.json({
+        status: "error",
+        msg: "Error",
       });
-      res.end();
-    }
-    if (group) {
-      res.writeHead(400, {
-        "Content-Type": "text/plain",
-      });
-      res.end("Group with the name already exists");
+      res.status(400).end();
     } else {
-      newGroup.save(async (error, data) => {
-        if (error) {
-          res.writeHead(500, {
-            "Content-Type": "text/plain",
-          });
-          res.end();
-        } else {
-          console.log(data._id);
-          const userone = await Users.findOne({ email: email });
-          Users.findOneAndUpdate(
-            { _id: userone._id },
-            {
-              $push: {
-                group: data._id,
-              },
-            },
-            async function (err, doc) {
-              console.log("Hello1234");
-              if (err) return res.send(500, { error: err });
-              // return res.status(200).send("Succesfully saved.");
-              for (let i = 0; i < form.length; i++) {
-                console.log("yasdhasdh");
-                console.log(form[i].value);
-                const user = await Users.findById(form[i].value);
-                console.log(user);
-                // console.log(user.groupInivtedTo);
-                const activity = new Activty({
-                  user_id: mongoose.Types.ObjectId(form[i].value),
-                  message:
-                    userone.fullname +
-                    " has invited you to join the group " +
-                    groupName,
-                  group_id: data.groupName,
-                });
-                const saveActivity = await activity.save();
-                console.log(saveActivity);
-                Users.findOneAndUpdate(
-                  { _id: user._id },
-                  {
-                    $push: {
-                      groupInvitedTo: data._id,
-                    },
-                  },
-                  function (err, doc) {
-                    console.log("Hello6789");
-                    if (err) return res.send(500, { error: err });
-                    // return res.status(200).send("Succesfully saved.");
-                  }
-                );
-                if (i === form.length - 1) {
-                  return res.status(200).send("Succesfully saved.");
-                }
-              }
-            }
-          );
-        }
-      });
+      console.log("Inside else", results);
+      res.status(200).send("Succesfully saved.");
     }
   });
 });

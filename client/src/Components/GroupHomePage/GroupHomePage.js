@@ -127,6 +127,7 @@ function GroupHomePage() {
       .then((response) => {
         console.log(response.data);
         getComments(billId);
+        handleCloseDC();
       });
   };
 

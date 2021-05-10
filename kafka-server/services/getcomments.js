@@ -5,12 +5,14 @@ async function handle_request(msg, callback) {
   console.log("msg.type", msg);
 
   {
-    const billDetails = await Bills.findById(msg.billId);
+    const billDetails = await mongo.Bills.findById(msg.billId);
     const commentsArray = billDetails.comments;
     const commentsFinal = [];
     if (commentsArray.length > 0) {
       for (let i = 0; i < commentsArray.length; i++) {
-        const userDetails = await Users.findById(commentsArray[i].user_id);
+        const userDetails = await mongo.Users.findById(
+          commentsArray[i].user_id
+        );
         const comment = {
           comment: commentsArray[i].comment,
           user: userDetails.fullname,

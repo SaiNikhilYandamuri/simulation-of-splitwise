@@ -8,6 +8,7 @@ var invitegroups = require("./services/invitegroups");
 var getbillsofgroup = require("./services/getbillsofgroup");
 var getmembersofgroup = require("./services/getmembersofgroup");
 var getcommentsofbill = require("./services/getcomments");
+var creategroup = require("./services/creategroup");
 
 function handleTopicRequest(topic_name, fname) {
   //var topic_name = 'root_topic';
@@ -41,10 +42,11 @@ function handleTopicRequest(topic_name, fname) {
 // Add your TOPICs here
 //first argument is topic name
 //second argument is a function that will handle this topic request
-handleTopicRequest("mygroups", mygroups);
-handleTopicRequest("addbill", addbill);
+handleTopicRequest("mygroups1", mygroups);
+handleTopicRequest("addbill1", addbill);
 handleTopicRequest("addcomment", addcomment);
 handleTopicRequest("invitegroups", invitegroups);
 handleTopicRequest("getbillsofgroup", getbillsofgroup);
 handleTopicRequest("getmembersofgroup", getmembersofgroup);
 handleTopicRequest("getcommentsofbill", getcommentsofbill);
+handleTopicRequest("creategroup", creategroup);

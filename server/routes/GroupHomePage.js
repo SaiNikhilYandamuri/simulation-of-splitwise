@@ -174,7 +174,7 @@ router.post("/leaveGroup", checkAuth, async function (req, res) {
 
 /* Tested Using Postman */
 router.post("/addBill", checkAuth, async function (req, res) {
-  kafka.make_request("addbill", req.body, function (err, results) {
+  kafka.make_request("addbill1", req.body, function (err, results) {
     console.log("in result");
     console.log("results in messagepost ", results);
     if (err) {

@@ -15,6 +15,7 @@ async function handle_request(msg, callback) {
     const arrayOfGroup = user.group;
     const output = [];
     for (let i = 0; i < arrayOfGroup.length; i++) {
+      console.log("Hello inside mygroups");
       const groupDetails = await mongo.Groups.findById(arrayOfGroup[i]);
       //Groups.findOne({_id: ele}, )
       //if (groupDetails.groupName === null) {
