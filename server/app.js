@@ -11,6 +11,8 @@ const fs = require("fs");
 const { promisify } = require("util");
 const pipeline = promisify(require("stream").pipeline);
 const multer = require("multer");
+const { graphqlHTTP } = require("express-graphql");
+const schema = require("./schema/schema");
 // const { pipeline } = require("stream");
 
 const upload = multer();
@@ -24,6 +26,14 @@ app.use(
     origin: ["http://localhost:3000"],
     methods: ["GET", "POST"],
     credentials: true,
+  })
+);
+
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema,
+    graphiql: true,
   })
 );
 
@@ -45,30 +55,30 @@ app.use(
   })
 );
 
-// const con = mysql.createConnection({
-//   host: "splitwise-instance.cxfc1pmp6ndg.us-east-2.rds.amazonaws.com",
-//   user: "admin",
-//   password: "chakri96",
-//   ssl: true,
-//   database: "splitwise",
-// });
-
-const con = mysql.createPool({
-  connectionLimit: 10,
-  host: "splitwise-instance.cxfc1pmp6ndg.us-east-2.rds.amazonaws.com",
+const con = mysql.createConnection({
+  host: "splitwise.cxfc1pmp6ndg.us-east-2.rds.amazonaws.com",
   user: "admin",
-  password: "chakri96",
+  password: "password123",
   ssl: true,
   database: "splitwise",
 });
 
-// con.connect((err) => {
-//   if (err) {
-//     console.log(err);
-//   }
-//   console.log("Connected!");
-//   //con.end();
+// const con = mysql.createPool({
+//   connectionLimit: 10,
+//   host: "splitwise.cxfc1pmp6ndg.us-east-2.rds.amazonaws.com",
+//   user: "admin",
+//   password: "password123",
+//   ssl: true,
+//   database: "splitwise",
 // });
+
+con.connect((err) => {
+  if (err) {
+    console.log(err);
+  }
+  console.log("Connected!");
+  //con.end();
+});
 
 //Allow Access Control
 
@@ -77,7 +87,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/signup", function (req, res) {
-  // console.log(req.body);
+  console.log(req.body);
   const fullname = req.body.fullname;
   const email = req.body.email;
   const password = req.body.password;
@@ -594,7 +604,7 @@ app.get("/recentActivity/:email", function (req, res) {
 });
 
 app.listen(port, () => {
-  // console.l("Server connected to port 4000");
+  console.log("Server connected to port 4000");
 });
 
 module.exports = app;
