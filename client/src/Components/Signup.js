@@ -1,6 +1,6 @@
 import { React, useState } from 'react';
-import axios from 'axios';
-// import alert from 'alert';
+// import axios from 'axios';
+import { useMutation } from 'react-apollo';
 import { Redirect } from 'react-router';
 import cookie from 'react-cookies';
 import { useHistory } from 'react-router-dom';
@@ -11,7 +11,8 @@ import Form from 'react-bootstrap/Form';
 import { Row, Col, Alert } from 'react-bootstrap';
 import { signed } from '../actions';
 import NavBarBeforeLogin from './NavBarBeforeLogin';
-import backendServer from '../Config';
+// import backendServer from '../Config';
+import { signupQuery } from '../graphql/mutation';
 
 function Signup() {
   const [email, emailChangeHandler] = useState('');
@@ -19,8 +20,9 @@ function Signup() {
   const [fullname, fullnameChangeHandler] = useState('');
   const [alert, setAlert] = useState('');
   const history = useHistory();
+  const [signup, { data }] = useMutation(signupQuery);
 
-  const url = `${backendServer}/signup`;
+  // const url = `${backendServer}/signup`;
 
   const isLogged = useSelector((state) => state.isLogged);
   const dispatch = useDispatch();
@@ -37,38 +39,66 @@ function Signup() {
   const submitSignup = (e) => {
     e.preventDefault();
 
-    axios.defaults.withCredentials = true;
-    if (email.includes('@') && email.includes('.com')) {
-      axios
-        .post(url, {
-          fullname,
-          email,
-          password,
-        })
-        .then((response) => {
-          console.log(response);
-          console.log(isLogged);
-          cookie.save('name', response.data.fullname, {
-            path: '/',
-            httpOnly: false,
-            maxAge: 90000,
-          });
-          cookie.save('email', response.data.email, {
-            path: '/',
-            httpOnly: false,
-            maxAge: 90000,
-          });
-          sessionStorage.setItem('email', response.data.email);
-          sessionStorage.setItem('fullname', response.data.fullname);
-          loadSuccess();
-          dispatch(signed(response.data.fullname, response.data.email));
-        })
-        .catch((err) => {
-          setAlert(err.response.data.message);
-        });
-    } else {
-      setAlert('Email Format Wrong');
+    signup({
+      variables: {
+        email,
+        password,
+        fullname,
+      },
+    });
+
+    if (data) {
+      console.log(data);
+      console.log(isLogged);
+      cookie.save('name', data.signup.fullname, {
+        path: '/',
+        httpOnly: false,
+        maxAge: 90000,
+      });
+      cookie.save('email', data.signup.email, {
+        path: '/',
+        httpOnly: false,
+        maxAge: 90000,
+      });
+      sessionStorage.setItem('email', data.signup.email);
+      sessionStorage.setItem('fullname', data.signup.fullname);
+      dispatch(signed(data.signup.fullname, data.signup.email));
+      loadSuccess();
+      setAlert('Successful');
     }
+
+    // axios.defaults.withCredentials = true;
+    // if (email.includes('@') && email.includes('.com')) {
+    //   axios
+    //     .post(url, {
+    //       fullname,
+    //       email,
+    //       password,
+    //     })
+    //     .then((response) => {
+    //       console.log(response);
+    //       console.log(isLogged);
+    //       cookie.save('name', response.data.fullname, {
+    //         path: '/',
+    //         httpOnly: false,
+    //         maxAge: 90000,
+    //       });
+    //       cookie.save('email', response.data.email, {
+    //         path: '/',
+    //         httpOnly: false,
+    //         maxAge: 90000,
+    //       });
+    //       sessionStorage.setItem('email', response.data.email);
+    //       sessionStorage.setItem('fullname', response.data.fullname);
+    //       loadSuccess();
+    //       dispatch(signed(response.data.fullname, response.data.email));
+    //     })
+    //     .catch((err) => {
+    //       setAlert(err.response.data.message);
+    //     });
+    // } else {
+    //   setAlert('Email Format Wrong');
+    // }
   };
   return (
     <div>

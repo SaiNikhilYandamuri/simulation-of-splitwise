@@ -24,7 +24,7 @@ function InviteList() {
   const isLogged = useSelector((state) => state.isLogged);
   const emailId = isLogged.email;
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  if (!cookie.load('name')) {
     redirectVar = <Redirect to="/login" />;
   }
   const accepetInvitation = () => {

@@ -1,8 +1,14 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+import ApolloClient from 'apollo-boost';
+import { ApolloProvider } from 'react-apollo';
 import './App.css';
 
 import Main from './Components/Main';
+
+const client = new ApolloClient({
+  uri: 'http://localhost:4000/graphql',
+});
 
 class App extends React.Component {
   constructor(props) {
@@ -14,11 +20,13 @@ class App extends React.Component {
 
   render() {
     return (
-      <BrowserRouter>
-        <div>
-          <Main />
-        </div>
-      </BrowserRouter>
+      <ApolloProvider client={client}>
+        <BrowserRouter>
+          <div>
+            <Main />
+          </div>
+        </BrowserRouter>
+      </ApolloProvider>
     );
   }
 }

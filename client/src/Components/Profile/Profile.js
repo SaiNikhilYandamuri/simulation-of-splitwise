@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Row, Col, Button } from 'react-bootstrap';
 import cookie from 'react-cookies';
+import { useQuery, useMutation } from 'react-apollo';
 import { Redirect } from 'react-router';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
 import { Image } from 'react-bootstrap/esm';
 import numeral from 'numeral';
 import { useSelector, useDispatch } from 'react-redux';
 import logged from '../../actions';
 import NavBarAfterLogin from '../NavBarAfterLogin';
-import backendServer from '../../Config';
+// import backendServer from '../../Config';
 import './Profile.css';
+import { profileQuery } from '../../graphql/queries';
+import { profileUpdateQuery } from '../../graphql/mutation';
 // import image1 from '../assets/login_logo.png';
 
 function Profile() {
-  const [email, getEmail] = useState('');
+  // const [email, getEmail] = useState('');
   const [fullname, getFullname] = useState('');
   const [phonenumber, getPhonenumber] = useState('');
   const [file, setFile] = useState();
@@ -29,13 +32,23 @@ function Profile() {
   const [array, getArray] = useState([]);
   const [image, setImage] = useState('');
   const isLogged = useSelector((state) => state.isLogged);
-  const emailId = isLogged.email;
+  const { email } = isLogged;
+
+  console.log(email);
+
+  const { error, data } = useQuery(profileQuery, {
+    variables: {
+      email,
+    },
+  });
+
+  const [updateProfile, { loading }] = useMutation(profileUpdateQuery);
 
   const dispatch = useDispatch();
   const history = useHistory();
 
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  if (!cookie.load('name')) {
     redirectVar = <Redirect to="/login" />;
   }
   const changeNumberLocale = (locale) => {
@@ -46,85 +59,139 @@ function Profile() {
     }
   };
 
-  const updateProfile = () => {
-    // send();
+  const updateProfileFunc = () => {
+    console.log(file);
+    console.log(emailUpdate);
+    console.log(fullnameUpdate);
+    console.log(phonenumberUpdate);
+    console.log(currencyUpdate);
+    console.log(languageUpdate);
+    setImage('Yes');
 
-    // eslint-disable-next-line no-undef
-    const data = new FormData();
-    data.append('name', 'file_name.jpg');
-    data.append('file', file);
-    axios.post(`${backendServer}/uploadPicture/${email}`, data).then((res) => {
-      console.log(res);
-      setImage(`${backendServer}/${res.data.imagepath}`);
-    });
-    axios
-      .post(`${backendServer}/updateProfile`, {
-        emailId,
+    updateProfile({
+      variables: {
+        email,
         emailUpdate,
         fullnameUpdate,
-        phonenumberUpdate,
         currencyUpdate,
         languageUpdate,
-      })
-      .then((response) => {
-        console.log(response);
-
-        let fullnameCookie = '';
-        if (fullnameUpdate === '') {
-          fullnameCookie = fullname;
-        } else {
-          fullnameCookie = fullnameUpdate;
-        }
-        let emailCookie = '';
-        if (emailUpdate === '') {
-          emailCookie = email;
-        } else {
-          emailCookie = emailUpdate;
-        }
-        console.log(currencyUpdate);
-        let currencyCookie = '';
-        if (currencyUpdate === '') {
-          currencyCookie = currency;
-        } else {
-          currencyCookie = currencyUpdate;
-        }
-        cookie.save('name', fullnameCookie, {
-          path: '/',
-          httpOnly: false,
-          maxAge: 90000,
-        });
-        cookie.save('currency', currencyCookie, {
-          path: '/',
-          httpOnly: false,
-          maxAge: 90000,
-        });
-        console.log(currencyCookie);
-        dispatch(logged(fullnameCookie, emailCookie, currencyCookie));
-        history.push('/profile');
+      },
+    }).then((result) => {
+      console.log(result);
+      let fullnameCookie = '';
+      if (fullnameUpdate === '') {
+        fullnameCookie = fullname;
+      } else {
+        fullnameCookie = fullnameUpdate;
+      }
+      let emailCookie = '';
+      if (emailUpdate === '') {
+        emailCookie = email;
+      } else {
+        emailCookie = emailUpdate;
+      }
+      console.log(currencyUpdate);
+      let currencyCookie = '';
+      if (currencyUpdate === '') {
+        currencyCookie = currency;
+      } else {
+        currencyCookie = currencyUpdate;
+      }
+      cookie.save('name', fullnameCookie, {
+        path: '/',
+        httpOnly: false,
+        maxAge: 90000,
       });
+      cookie.save('currency', currencyCookie, {
+        path: '/',
+        httpOnly: false,
+        maxAge: 90000,
+      });
+      console.log(currencyCookie);
+      dispatch(logged(fullnameCookie, emailCookie, currencyCookie));
+      history.push('/profile');
+    });
+
+    // send();
+    // eslint-disable-next-line no-undef
+    // const data = new FormData();
+    // data.append('name', 'file_name.jpg');
+    // data.append('file', file);
+    // axios.post(`${backendServer}/uploadPicture/${email}`, data).then((res) => {
+    //   console.log(res);
+    //   setImage(`${backendServer}/${res.data.imagepath}`);
+    // });
+    // axios
+    //   .post(`${backendServer}/updateProfile`, {
+    //     emailId,
+    //     emailUpdate,
+    //     fullnameUpdate,
+    //     phonenumberUpdate,
+    //     currencyUpdate,
+    //     languageUpdate,
+    //   })
+    //   .then((response) => {
+    //     console.log(response);
+    //     let fullnameCookie = '';
+    //     if (fullnameUpdate === '') {
+    //       fullnameCookie = fullname;
+    //     } else {
+    //       fullnameCookie = fullnameUpdate;
+    //     }
+    //     let emailCookie = '';
+    //     if (emailUpdate === '') {
+    //       emailCookie = email;
+    //     } else {
+    //       emailCookie = emailUpdate;
+    //     }
+    //     console.log(currencyUpdate);
+    //     let currencyCookie = '';
+    //     if (currencyUpdate === '') {
+    //       currencyCookie = currency;
+    //     } else {
+    //       currencyCookie = currencyUpdate;
+    //     }
+    //     cookie.save('name', fullnameCookie, {
+    //       path: '/',
+    //       httpOnly: false,
+    //       maxAge: 90000,
+    //     });
+    //     cookie.save('currency', currencyCookie, {
+    //       path: '/',
+    //       httpOnly: false,
+    //       maxAge: 90000,
+    //     });
+    //     console.log(currencyCookie);
+    //     dispatch(logged(fullnameCookie, emailCookie, currencyCookie));
+    //     history.push('/profile');
+    //   });
   };
 
   useEffect(async () => {
-    const getURL = `${backendServer}/profile/${emailId}`;
-    const response = await axios.get(getURL);
-    console.log(response.data);
-    const arrayCurrency = [];
-    if (response.data.currency === 'GBP') {
-      arrayCurrency.push('GBP');
-      arrayCurrency.push('USD');
-    } else {
-      arrayCurrency.push('USD');
-      arrayCurrency.push('GBP');
+    console.log(loading);
+    console.log(error);
+    if (data) {
+      // const getURL = `${backendServer}/profile/${emailId}`;
+      // const response = await axios.get(getURL);
+      // console.log(response.data);
+      const arrayCurrency = [];
+      if (data.getprofile.currency === 'GBP') {
+        arrayCurrency.push('GBP');
+        arrayCurrency.push('USD');
+      } else {
+        arrayCurrency.push('USD');
+        arrayCurrency.push('GBP');
+      }
+      // setImage(`${backendServer}/${response.data.image}`);
+      // getEmail(data.getprofile.email);
+      getFullname(data.getprofile.fullname);
+      getPhonenumber(data.getprofile.phonenumber);
+      getCurrency(data.getprofile.currency);
+      getArray(arrayCurrency);
+      getTimeZone(data.getprofile.timezone);
+      getLanguage(data.getprofile.language);
     }
-    setImage(`${backendServer}/${response.data.image}`);
-    getEmail(response.data.email);
-    getFullname(response.data.fullname);
-    getPhonenumber(response.data.phonenumber);
-    getCurrency(response.data.currency);
-    getArray(arrayCurrency);
-    getTimeZone(response.data.timezone);
-    getLanguage(response.data.language);
-  }, []);
+  }, [data]);
   return (
     <div>
       {redirectVar}
@@ -210,7 +277,7 @@ function Profile() {
               </Col>
             </Row>
             <center>
-              <Button variant="primary" onClick={updateProfile}>
+              <Button variant="primary" onClick={updateProfileFunc}>
                 Update
               </Button>
             </center>

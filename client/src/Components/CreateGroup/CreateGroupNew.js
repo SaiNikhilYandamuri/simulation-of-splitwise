@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import cookie from 'react-cookies';
+import { useMutation } from 'react-apollo';
 import Select from 'react-select';
 import { Redirect } from 'react-router';
 import { Col, Row, Alert } from 'react-bootstrap';
@@ -9,6 +10,7 @@ import axios from 'axios';
 import NavBarAfterLogin from '../NavBarAfterLogin';
 import LeftSideNavBar from '../LeftSideNavBar';
 import backendServer from '../../Config';
+import { createGroupQuery } from '../../graphql/mutation';
 
 function CreateGroupNew() {
   const [selectOptions, setselectOptions] = useState(() => []);
@@ -20,23 +22,27 @@ function CreateGroupNew() {
   const name = cookie.load('name'); // sessionStorage.getItem('fullname');
   const history = useHistory();
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  const [createGroupGL, { loading }] = useMutation(createGroupQuery);
+  if (!cookie.load('name')) {
     redirectVar = <Redirect to="/login" />;
   }
   // const email = cookie.load('email');
   const createGroup = () => {
+    console.log(loading);
     // const formDetails = [sessionStorage.getItem('email'), form];
-    const groupDetails = {
-      groupName,
-      email,
-      value,
-    };
-    console.log(value.length);
-
-    axios
-      .post(`${backendServer}/creategroup`, groupDetails)
-      .then((response) => {
-        console.log(response);
+    const members = [];
+    value.forEach((ele) => {
+      members.push(ele.label);
+    });
+    createGroupGL({
+      variables: {
+        groupName,
+        email,
+        members,
+      },
+    })
+      .then((result) => {
+        console.log(result);
         cookie.save('groupSelected', groupName, {
           path: '/',
           httpOnly: false,
@@ -46,9 +52,32 @@ function CreateGroupNew() {
         history.push('/groupHomePage');
       })
       .catch((err) => {
-        console.log(err);
-        setAlert(err.response.data.message);
+        // console.log(err);
+        setAlert(err);
       });
+    // const groupDetails = {
+    //   groupName,
+    //   email,
+    //   value,
+    // };
+    console.log(value.length);
+
+    // axios
+    //   .post(`${backendServer}/creategroup`, groupDetails)
+    //   .then((response) => {
+    //     console.log(response);
+    //     cookie.save('groupSelected', groupName, {
+    //       path: '/',
+    //       httpOnly: false,
+    //       maxAge: 90000,
+    //     });
+    //     // sessionStorage.setItem('groupSelected', groupName);
+    //     history.push('/groupHomePage');
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //     setAlert(err.response.data.message);
+    //   });
   };
   useEffect(() => {
     const url = `${backendServer}/users/${email}`;

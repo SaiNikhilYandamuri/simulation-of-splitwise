@@ -28,7 +28,7 @@ function GroupHomePage() {
   const history = useHistory();
 
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  if (!cookie.load('name')) {
     redirectVar = <Redirect to="/login" />;
   }
   const handleClose = () => setShow(false);

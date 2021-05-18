@@ -14,7 +14,7 @@ function GroupsPage() {
   const { email } = isLogged;
   console.log(email);
   let redirectVar = null;
-  if (!cookie.load('cookie')) {
+  if (!cookie.load('name')) {
     redirectVar = <Redirect to="/login" />;
   }
   return (
