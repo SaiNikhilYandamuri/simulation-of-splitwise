@@ -3,9 +3,6 @@ const S3 = require("aws-sdk/clients/s3");
 
 const bucketName = "splitwise-images-sainikhilyandamuri";
 const region = "us-east-2";
-const accessKeyId = "AKIAYALWAOVHKDKSWET3";
-
-const secretAccessKey = "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";
 
 const s3 = new S3({
   region,
