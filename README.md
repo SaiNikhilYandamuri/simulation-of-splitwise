@@ -1,4 +1,4 @@
-# Splitwise
+# Simulation of Splitwise
 
 <p align="center">  
   <img  align="center" src="https://github.com/Yusuf-Juzar-Soni/CMPE-273-Splitwise-V1/blob/main/Frontend/src/Components/assets/splitwise_logo.png">
@@ -23,6 +23,8 @@ The following features from the original application were simulated
 
 ## Technologies used
 React.js,Node.js,Redux,MySQL,MongoDB,Kafka,Mocha,AWS EC2,Passport.js
+
+[Demo](https://www.youtube.com/watch?v=VJcALcUS6-U)
 
 <details>
   
